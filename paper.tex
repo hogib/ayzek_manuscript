@@ -78,7 +78,8 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
   C++23 detection pipeline whose networks reproduce their PyTorch counterparts to within
   floating-point rounding and whose replays of archived data are deterministic, and a
   replay protocol that measures detectors at their operating point, with chance
-  correction, pre-registered held-out sequences, paired tests and catalog-quiet data.
+  correction, held-out sequences with protocols committed in advance, paired tests and
+  catalog-quiet data.
   Applied to Turkish broadband stations, the protocol compares a
   convolutional--recurrent detector with a recursive short-term average/long-term
   average (\stalta{}) trigger, the FilterPicker multi-band picker and the published
@@ -92,7 +93,7 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
   data, the quietest \stalta{} settings raised 5 to 29 times as many alarms as the
   quietest learned ones, and FilterPicker matched the learned detector on events only
   at 55 times its alarm rate. On a 728-day record at one station, two detectors with
-  nearly equal ROC-AUC differed by a factor of 1.6 in recall at one false alarm per day.
+  nearly equal ROC-AUC differed by a factor of 1.6 in recall at one window false alarm per day.
   The pipeline runs unchanged on a Raspberry Pi~4, and its code, weights, public test
   datasets and reproduction scripts are openly available.
 \end{abstract}
@@ -104,9 +105,9 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 \begin{highlights}
 \item Self-contained C++ detection pipeline reproduces PyTorch networks to rounding
 \item Replay protocol scores detectors at their operating point with chance correction
-\item Learned detectors find more small events than STA/LTA at equal unmatched alarms
+\item Learned detector found 14.7 more events than STA/LTA on one of two held-out sequences
 \item Quietest STA/LTA settings raised 5--29 times the alarms of learned ones on quiet data
-\item Detectors with near-equal ROC-AUC differed 1.6-fold in recall at one alarm a day
+\item Near-equal ROC-AUC detectors differed 1.6-fold in recall at one false window a day
 \end{highlights}
 
 \begin{keywords}
@@ -116,7 +117,6 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 
 \maketitle
 
-\printcredits
 
 \doublespacing
 
@@ -199,7 +199,7 @@ reflect the number of false positives when negatives vastly outnumber positives,
 which precision--recall analysis \citep{davis2006,saito2015} and partial areas at low
 false positive rates \citep{mcclish1989} address. In seismic detection the operating
 region is extreme. A detector that scores a 6~s window every 0.5~s makes
-172\,800 decisions per station and day, and one false alarm per day then corresponds
+172\,800 decisions per station and day, and one window false alarm per day then corresponds
 to a false positive rate below $10^{-5}$. Measuring how often an alarm sequence
 matches a catalog by chance resembles the time-slide technique of gravitational-wave
 analysis, which shifts records by lags longer than any propagation time to measure
@@ -284,8 +284,12 @@ long-term noise statistics of the station (station scaling). Three strided
 convolutional layers reduce the window to 75 steps of 96 channels, and a bidirectional
 LSTM with 48 units per direction, a four-head self-attention block with residual
 connection \citep{vaswani2017} and a small perceptron produce a single logit
-(142\,059 parameters). The arrangement follows the one-dimensional channel of 1D2D-EDL
-\citep{wang2025}. The network was trained with label smoothing (targets 0.1 and 0.9),
+(142\,059 parameters). The arrangement follows the one-dimensional channel of 1D2D-EDL \citep{wang2025}, a
+network for vibration signals from bearing faults. The same sequence of operations
+suits seismic detection: the convolutions extract band-limited onset and amplitude
+features, the recurrent layer follows their evolution through the window from noise
+to P and coda, and the attention weights the segments that carry the onset, as in the
+encoders of CRED and EQTransformer \citep{mousavi2019cred,mousavi2020eqt}. The network was trained with label smoothing (targets 0.1 and 0.9),
 three seeds are averaged, and the ensemble reaches a ROC-AUC of 0.9785 on the held-out
 curated test set. A P/S picker, run only after a trigger, provides picks for location
 (Section~S19).
@@ -345,9 +349,10 @@ The static aarch64 build raises the same alarms at the same times on a Raspberry
 
 For the continuous-record ranking, records were cut into disjoint windows. Windows
 from 10~s before to 60~s after the P arrival of any cataloged event within 500~km form
-its guard, and the rest form the background. The threshold for a budget of $B$ false
-alarms per day is the score that $B$ background windows a day exceed, so that
-detectors are compared at equal false-alarm rates, and an event counts as detected
+its guard, and the rest form the background. The threshold for a budget of $B$ window false alarms per day is the score that $B$
+background windows a day exceed, so that detectors are compared at equal false-alarm
+rates at one station; a window false alarm is a single window above threshold, not
+the network alarm of the replays, and an event counts as detected
 when the highest score in its guard exceeds the threshold.
 
 On the replays, trigger settings for every detector were selected on the two tuning
@@ -357,6 +362,9 @@ are recorded in the same commit as their first held-out results, and every later
 protocol and selection was committed before the runs it governs (Table~S13). A declared event matches a catalog event if
 its epicenter lies within 30~km and its origin within 5~s, or if the predicted P
 arrival at a station that raised the alarm lies within 6~s of that station's P time.
+Each alarm is credited to the one catalog event it fits best, and each catalog event
+to the first alarm credited with it, so that no alarm counts for two events and a
+second alarm for the same event counts as unmatched.
 The chance level $c$ is the detection rate with every catalog time shifted by
 $\pm 127$, $\pm 263$ and $\pm 391$~s, and with observed rate $o$ the chance-corrected
 rate is
@@ -401,22 +409,24 @@ upward except 14, where both reach 38.6. A single threshold just below the plate
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{figures/fig1_pipeline.png}
-  \caption{Architecture of real-time pipeline. Each station runs an ingestion and a
+  \caption{Architecture of the real-time pipeline. Each station runs an ingestion and a
     processing thread; a network stage associates station detections, declares and
-    locates events and scores them against a catalog. Recursive \stalta{} never
-  triggers; it only supplies reported P time of a learned trigger.}\label{fig:pipeline}
+    locates events and scores them against a catalog. The recursive \stalta{} never
+    triggers; it only supplies the reported P time of a learned trigger.}\label{fig:pipeline}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{figures/fig7_operating_curves.pdf}
-  \caption{Every trigger setting of both detectors (60 of learned detector, 216 of
-    \stalta{}; dots), with each detector's envelope (lines) and selected settings
-    (markers). (a)~Held-out replay, post hoc: chance-corrected detections against
+  \caption{Every trigger setting of both detectors (60 of the learned detector, and the 216 of
+    \stalta{}'s 648 that have the re-arm ratio of 1.5 at which it was fixed,
+    Section~S18; dots), with each detector's envelope (lines) and the selected
+    settings (markers). (a)~Held-out replay, post hoc: chance-corrected detections against
     unmatched alarms. (b)~Alarms per day on 102.8~h of quiet data against
-    chance-corrected detections on tuning replays; settings without an alarm are
-    drawn on bottom edge. Open diamond: \stalta{} setting that equal-unmatched rule
-  selects when applied to 26 rather than 25 unmatched alarms (Section~S16).}\label{fig:curves}
+    chance-corrected detections on the tuning replays; settings without an alarm are
+    drawn on the bottom edge. Open diamond: the \stalta{} setting that the
+    equal-unmatched rule selects when applied to 26 rather than 25 unmatched alarms
+    (Section~S16).}\label{fig:curves}
 \end{figure}
 
 \subsection{Learned detector versus STA/LTA}\label{sec:vs-stalta}
@@ -433,7 +443,9 @@ M4--5 events and the learned detector five. At comparable detections (37.9 again
 36.4), \stalta{} raises about three times the unmatched alarms, 26 against 7 held out
 and 63 against 26 on the tuning data (Table~\ref{tab:detectors}, Section~S18).
 \stalta{} alarms 1.0--1.3~s earlier on the two largest events, because it triggers on
-the onset sample whereas the window detector must see the P wave inside a 6~s window.
+the onset sample whereas the window detector must see the P wave inside a 6~s window;
+the taper and the filter applied within each window also down-weight its newest
+samples, which may add to the delay.
 
 \subsection{Other detectors and a second held-out sequence}\label{sec:others}
 
@@ -450,8 +462,8 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
 
 \begin{table}[pos=htbp]
   \centering\footnotesize
-  \caption{Every detector at settings selected on tuning data: two held-out sequences,
-  quiet windows and public KOERI event sets.}\label{tab:detectors}
+  \caption{Every detector at the settings selected on the tuning data: the two held-out
+  sequences, the quiet windows and the public KOERI event sets.}\label{tab:detectors}
   \setlength{\tabcolsep}{2.6pt}
   \begin{tabular}{@{}lcccccccc@{}}
     \toprule
@@ -491,8 +503,8 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
   \includegraphics[width=\textwidth]{figures/fig3_detectors.pdf}
   \caption{Every detector of Table~\ref{tab:detectors}: chance-corrected detections on
     each held-out sequence against alarms per day on 102.8~h of quiet data
-    (logarithmic). Up and to left is better. Filled markers run in real time; hollow
-  markers use input past window and cannot.}\label{fig:detectors}
+    (logarithmic). Up and to the left is better. Filled markers run in real time; hollow markers use
+    input past the window and cannot.}\label{fig:detectors}
 \end{figure}
 
 On Simav the direction of the \stalta{} comparison repeats, but not its size. At
@@ -538,8 +550,8 @@ raised 1 alarm against 25 for \stalta{}.
 
 \begin{table}[pos=htbp]
   \centering\small
-  \caption{Alarms of learned detector on AFAD quiet windows (102.8~h), by criteria that
-  need no judgment of waveforms.}\label{tab:quietclass}
+  \caption{Alarms of the learned detector on the AFAD quiet windows (102.8~h), by criteria
+    that need no judgment of the waveforms.}\label{tab:quietclass}
   \begin{tabular}{@{}lcl@{}}
     \toprule
     Class & Alarms & Criterion \\
@@ -557,7 +569,7 @@ raised 1 alarm against 25 for \stalta{}.
     excluding picker-confirmed & 11 & 2.57 (1.28--4.60) per day \\
     \bottomrule
   \end{tabular}
-  \tablenote{Upper rows: pre-registered classification; last two rows: same picker rule
+  \tablenote{Upper rows: classification committed before it was run; last two rows: same picker rule
     on every pair of stations associated with an alarm, also specified before it was
     run. Rates: alarms per day with exact Poisson 95\% intervals. Each alarm is listed
   in Table~S11.}
@@ -577,23 +589,24 @@ three of the 323 \stalta{} alarms, all among the same events. Without them the r
 are 2.80 and 74.7 per day, and under a classification that is the same for both
 detectors the contrast is unchanged. KIRK's pulse, confined to May--June 2024 and
 absent from the event replays, is a single 0.3~s pulse locked to UTC
-(Figure~\ref{fig:quietexamples}), and without KIRK the learned detector's rate would
-be 1.40 per day. Of the 323 \stalta{} alarms, 263 rest on signals shorter than 3~s at both
+(Figure~\ref{fig:quietexamples}), and without KIRK the learned detector's rate would be 1.40 per day, a figure that
+also removes alarm~15, a picker-confirmed earthquake declared with KIRK outside the
+pulse slot (Table~S11). Of the 323 \stalta{} alarms, 263 rest on signals shorter than 3~s at both
 stations, most of them spikes under 0.5~s, such as the isolated spikes at CMH that
 the learned detector ignores.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{figures/fig6_quiet_alarms.pdf}
-  \caption{Alarms of learned detector on AFAD quiet windows. (a)~Alarm~2, an
-    uncataloged earthquake (M2.4 in EMSC catalog; origin time from EMSC) recorded at
-    both declaring stations, with pipeline's P (solid) and S (dashed) picks.
+  \caption{Alarms of the learned detector on the AFAD quiet windows. (a)~Alarm~2, an
+    uncataloged earthquake (M2.4 in the EMSC catalog; origin time from EMSC) recorded at
+    both declaring stations, with the pipeline's P (solid) and S (dashed) picks.
     (b)~Alarm~12: KIRK's instrumental pulse, about 0.3~s without S wave or coda,
     coinciding with background noise at KAND. Records band-passed 1--20~Hz.
     (c)~KIRK's 225 detections by time after each 10-minute mark in UTC (10~s bins).
-    (d)~Duration of signal behind each alarm at each declaring station, as time its
-    envelope stays above four times noise of preceding 25~s, for learned detector's
-  16 alarms and \stalta{}'s 323.}\label{fig:quietexamples}
+    (d)~Duration of the signal behind each alarm at each declaring station, as the
+    time its envelope stays above four times the noise of the preceding 25~s, for the
+    learned detector's 16 alarms and \stalta{}'s 323.}\label{fig:quietexamples}
 \end{figure}
 
 \subsection{Alert latency}\label{sec:latency}
@@ -615,22 +628,21 @@ pipeline's learned detector and \stalta{}, and four offline detectors, a classic
 only in their noise windows, and a 6~s detector with station scaling
 (Table~\ref{tab:roc}, Figure~\ref{fig:recall}). The pipeline's two detectors are almost
 indistinguishable by event AUC (0.9910 for \stalta{}, 0.9892 for the learned
-detector; difference 0.0016, 0.0000--0.0035), yet at one false alarm per day the
-learned detector finds 34.8\% of the events against 22.2\%, 1.6 times as many. Among
-the offline detectors, recall at one false alarm per day is in the exact reverse
+detector; difference 0.0016, 0.0000--0.0035), yet at one window false alarm per day the learned detector finds 34.8\% of the events against 22.2\%, 1.6 times as many. Among
+the offline detectors, recall at one window false alarm per day is in the exact reverse
 order of event AUC. Because all six are scored on the same record, the inversion is a
 property of the metric, which integrates over all false positive rates whereas
 operation uses rates of order $10^{-4}$. The guard over which an event is scored
 extends 60~s past P, so that every detector can also score the S wave. Scored only
 from windows that end at least 1~s before the predicted S, over the 12\,206 events with
-S$-$P of at least 7~s, the inversion at one false alarm per day remains (33.8\%
+S$-$P of at least 7~s, the inversion at one window false alarm per day remains (33.8\%
 against 21.4\%), although \stalta{} then draws level or ahead at ten per day
 (Section~S14).
 
 \begin{table}[pos=htbp]
   \centering\small
-  \caption{Recall of 13\,056 events with SNR~$\geq 3$ over 728 days at MANT at three
-  alarm budgets (false alarms per day).}\label{tab:roc}
+  \caption{Recall of 13\,056 events with SNR~$\geq 3$ over 728 days at MANT at three alarm
+    budgets (window false alarms per day at the one station, Section~\ref{sec:protocols}).}\label{tab:roc}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
     Detector & Event AUC & 100/day & 10/day & 1/day \\
@@ -654,9 +666,10 @@ against 21.4\%), although \stalta{} then draws level or ahead at ten per day
 \begin{figure}
   \centering
   \includegraphics[width=0.85\textwidth]{figures/fig5_recall_budget.pdf}
-  \caption{Recall of six detectors of Table~\ref{tab:roc} against alarm budget, 20
-    budgets a decade; dots mark budgets of table. Solid wide lines: detectors run by
-  pipeline; dashed: their offline counterparts.}\label{fig:recall}
+  \caption{Recall of the six detectors of Table~\ref{tab:roc} against the alarm budget
+    (window false alarms per day), 20 budgets a decade; dots mark the budgets of the
+    table. Solid wide lines: detectors run by the pipeline; dashed: their offline
+    counterparts.}\label{fig:recall}
 \end{figure}
 
 % ---------------------------------------------------------------------------
@@ -683,7 +696,7 @@ parameters per network.
 
 The computational design carries much of the protocol's weight. Cached window
 probabilities and deterministic replays made trigger grids of hundreds of settings,
-seven scoring passes per setting and pre-registered evaluations practical, and
+seven scoring passes per setting and evaluations committed in advance practical, and
 replaying every station subset separated the geometric term of the alert time from
 the terms the detector controls. The P travel time to the second station dominates
 the alert, and the detector contributes about 2~s after it, so that stations near
@@ -710,16 +723,19 @@ stations and a live shadow run beside AFAD's alerts would address these limits.
 \section{Conclusions}\label{sec:conclusions}
 
 A self-contained, verified real-time pipeline and a replay protocol with chance
-correction and pre-registered held-out sequences measure seismic detectors at their
+correction and held-out sequences with protocols committed in advance measure
+seismic detectors at their
 operating point. Under this protocol, a learned detector found 36.4 chance-corrected
 events of 66 against 21.7 for \stalta{} at comparable unmatched alarms on one held-out
 sequence and 35.1 of 56 against 29.1, within the uncertainty, on a second. On quiet
 data it raised a small fraction of the classical detectors' alarms, and causal
 PhaseNet matched it. Two detectors with nearly equal event AUC differed by a factor of
-1.6 in recall at one false alarm per day, and detectors for early warning are
+1.6 in recall at one window false alarm per day, and detectors for early warning are
 therefore best compared on continuous records at fixed alarm budgets.
 
 % ---------------------------------------------------------------------------
+\printcredits
+
 \section*{Code availability}
 
 Name of the software: ayzek. Developer: H. O\u{g}uz Bolat

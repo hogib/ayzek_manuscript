@@ -51,6 +51,7 @@
 Protocol Applied to Turkish Broadband Stations}
 \author{H. O\u{g}uz Bolat, Sibel \c{C}imen, B\"ulent Bolat, T\"ulay Y\i{}ld\i{}r\i{}m}
 
+\date{29 October 2026}
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
@@ -70,8 +71,9 @@ Table~\ref{t:stations}a lists the stations of the replays. All TU stations
 record HH channels at 100~Hz. No TU station contributed a window to the
 training, validation or test sets of the pipeline's detector; the KOERI datasets
 do not share this guarantee, and the role of each KO station in the detector's
-station split is given. The replay of the S\i{}nd\i{}rg\i{} 30-minute window
-uses DEMI, MANT and BAND only.
+station split is given. The replay of the S\i{}nd\i{}rg\i{} 30-minute window uses DEMI, MANT and BAND only.
+The eleventh station of the continuous archive, GCAM, is in none of the replays and is
+not listed.
 
 Table~\ref{t:stations}b lists the 23 AFAD quiet windows, in which no cataloged event lies within 250~km of any of the eight stations during the window or for 30~min
 on either side of it. Each window is replayed on its own; its first 30~min warm
@@ -893,16 +895,17 @@ and \tool{tools/significance.py} give the paired tests of the main text.
 
 % ---------------------------------------------------------------------------
 \clearpage
-\section{Pre-registration record}\label{s:prereg}
+\section{Record of protocols committed in advance}\label{s:prereg}
 
 Every choice that fixed a setting or an analysis before held-out or quiet data
 were scored, with the commit that records it. Commits in \emph{ayzek} are in the
 pipeline's repository, the others in the paper's. Times are commit times
-(UTC+3).
+(UTC+3), recorded by the authors' own repositories and not timestamped by a third
+party; the order of steps therefore rests on these records.
 
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
-  \caption{The pre-registered steps, their records and what preceded each.}\label{t:prereg}
+  \caption{The steps committed in advance, their records and what preceded each.}\label{t:prereg}
   \begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm}l>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{6.2cm}@{}}
     \toprule
     Step & Commit & Date & Run before it \\
@@ -977,12 +980,12 @@ random stretch of record of the same length, clear of every cataloged event.
   \end{tabular}
 \end{table}
 
-\noindent At one false alarm per day the ranking by recall is the reverse of the
+\noindent At one window false alarm per day the ranking by recall is the reverse of the
 ranking by event AUC with and without the S wave, for the pipeline's pair and for
 the four offline detectors. Without the S wave the learned detectors lose most,
-and at ten false alarms per day \stalta{} draws level or ahead in both pairs.
+and at ten window false alarms per day \stalta{} draws level or ahead in both pairs.
 Margins of 0~s (12{,}566 events) and 2~s (11{,}944 events) give the same rankings
-at one false alarm per day; the pipeline's detector then finds 0.339 and 0.336 of
+at one window false alarm per day; the pipeline's detector then finds 0.339 and 0.336 of
 the events against 0.213 and 0.211 for its \stalta{}. Over the full guard, the
 values on this subset differ from Table~4, which counts all 13{,}056 events, by
 at most 0.010 in recall and 0.003 in AUC.
