@@ -17,6 +17,17 @@
 \usepackage{setspace}
 \usepackage[nomarkers,figuresonly]{endfloat}
 \usepackage{lineno}
+% The template's \cortext ends up printing its "[COR: Number]" trace on the
+% first page in this build; send the trace to the log only.
+\ExplSyntaxOn
+\cs_set_protected:Npn \msg_term:n #1 { \iow_log:n {#1} }
+\ExplSyntaxOff
+% The template records the page count for its "Page X of N" footer before
+% endfloat has output the figures at the end; record every shipped page's
+% number instead, so that the last one wins.
+\makeatletter
+\AddToHook{shipout/before}{\immediate\write\@auxout{\string\csxdef{lastpage}{\thepage}}}
+\makeatother
 \linenumbers
 
 \newcommand{\Mw}{$M_\mathrm{w}$}
@@ -264,7 +275,8 @@ windows belong to the same sequence.
 
 Each 6~s window ($600 \times 3$ samples at 100~Hz) is detrended, tapered,
 band-passed at 1--45~Hz with a zero-phase filter applied to the window, whose last
-sample is the current time, standardized per component, and compressed with an
+sample is the current time, so that no later sample is used, unlike the look-ahead
+mode of Section~\ref{sec:others}, standardized per component, and compressed with an
 inverse hyperbolic sine. The pipeline's detector standardizes each window by its own
 statistics, $\tilde{x}_{c}[n] = (x_{c}[n] - \mu_{c})/\sigma_{c}$, which removes gain
 and site amplitude, whereas the offline networks of Section~\ref{sec:ranking} use the
@@ -486,8 +498,8 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
 On Simav the direction of the \stalta{} comparison repeats, but not its size. At
 comparable unmatched alarms (17 and 14) the learned detector detected 35.1
 chance-corrected events against 29.1, a difference of 6.0 whose interval includes
-zero, and the gain again lies in M2--4 events. Most of Simav's events are below M2,
-where no detector separates reliably from noise. Pooled over both sequences, with the
+zero, and the gain again lies in M2--4 events. Most of Simav's events are below M2, the lower limit of the detector's training
+events, where no detector separates reliably from noise. Pooled over both sequences, with the
 chance correction and bootstrap within each, the difference is 20.7 (8.8--32.8; exact
 McNemar $p = 0.001$), a summary that neither protocol specified.
 
@@ -553,7 +565,10 @@ raised 1 alarm against 25 for \stalta{}.
 
 The 16 alarms were classified by criteria that need no judgment of the waveforms
 (Table~\ref{tab:quietclass}). Nine were declared with KIRK, whose detection fell
-58.6--58.8~s after a 10-minute mark, the slot of a periodic instrumental pulse. A rule
+58.6--58.8~s after a 10-minute mark, the slot of a periodic instrumental pulse.
+Detections associate within the P travel time between their stations plus 3~s, 14 to
+67~s for the pairs with KIRK, so a faulty station raises the network's alarm rate
+through chance coincidences with the other stations' triggers. A rule
 fixed before it was run confirms a seismic source when a published picker finds P and
 S at two declaring stations and the two S$-$P distances fit the station separation
 and the P-time difference. It confirms four alarms of the learned detector, one an
@@ -682,9 +697,9 @@ shifted later samples in time and lost 15 of 44 detections.
 
 The study rests on one regional network and two held-out sequences, the second with
 an advantage over \stalta{} that was not significant, and the first scored repeatedly
-for post hoc analyses. The ranking on a continuous record rests on one station. The
-catalog is incomplete for small events, so that unmatched alarms only bound false
-alarms, and the quiet-window classes use no analyst picks. The published models ran
+for post hoc analyses. The ranking on a continuous record rests on one station. The catalog is incomplete for small events, so that unmatched alarms only bound false
+alarms, and absorbing detections within 40~s as coda trades the resolution of closely
+spaced events, a doublet among them, for fewer false alarms in dense sequences, and the quiet-window classes use no analyst picks. The published models ran
 with pre-trained weights and the pipeline's trigger rule, and fine-tuning them on the
 detector's training split might improve them. The input is a replay of archived
 files, and a live SeedLink client, with its latency, packet loss and clock problems,

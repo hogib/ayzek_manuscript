@@ -1246,7 +1246,7 @@ dropout rate of 0.4 and early stopping, and the three seeds' probabilities are
 averaged.
 
 \paragraph{Phase picker.} Location relies on the waveform arm of a P/S picker whose
-dual-channel design follows Wang and Zhao\ (2025); in an ablation its second,
+dual-channel design follows Wang and Zhao (2025); in an ablation its second,
 image-based arm added nothing to pick accuracy. The waveform arm comprises three
 strided convolutions (kernels of 9, 9 and 7 samples, each followed by batch
 normalization and ReLU), average pooling to 250 segments of 0.24~s, a bidirectional
@@ -1278,5 +1278,21 @@ pipeline's detector with station scaling in place of per-window standardization
 (curated test ROC-AUC 0.9896). The pipeline's per-window detector, scored on the same
 disjoint windows, reproduces the pipeline's scores to a median of $2\times10^{-6}$
 (maximum $1.3\times10^{-4}$ over 3\,702 windows).
+
+% ---------------------------------------------------------------------------
+\section*{References}
+
+The two works cited in this supplement, both also in the references of the main text.
+
+\begin{description}\setlength{\itemsep}{2pt}\small
+\item[] Lomax, A., Satriano, C., Vassallo, M., 2012. Automatic picker developments
+  and optimization: FilterPicker---a robust, broadband picker for real-time seismic
+  monitoring and earthquake early warning. Seismological Research Letters 83(3),
+  531--540. \url{https://doi.org/10.1785/gssrl.83.3.531}
+\item[] Wang, L., Zhao, W., 2025. An ensemble deep learning network based on 2D
+  convolutional neural network and 1D LSTM with self-attention for bearing fault
+  diagnosis. Applied Soft Computing 172, 112889.
+  \url{https://doi.org/10.1016/j.asoc.2025.112889}
+\end{description}
 
 \end{document}
