@@ -1,0 +1,23 @@
+record,time_utc,station_a,station_b,title,stem
+quiet_20240522_1924.rec,1716427866.94,BAND,CMH,"Alarm 1: KIRK pulse, pair BAND–CMH",alarm01_BAND_CMH
+quiet_20240522_1924.rec,1716427858.63,BAND,KIRK,"Alarm 1: KIRK pulse, pair BAND–KIRK",alarm01_BAND_KIRK
+quiet_20240522_1924.rec,1716427858.63,CMH,KIRK,"Alarm 1: KIRK pulse, pair CMH–KIRK",alarm01_CMH_KIRK
+quiet_20240523_0352.rec,1716439378.66,BAND,CMH,"Alarm 2: seismic, picker-confirmed, pair BAND–CMH",alarm02_BAND_CMH
+quiet_20240523_0352.rec,1716439382.75,BAND,SEMS,"Alarm 2: seismic, picker-confirmed, pair BAND–SEMS",alarm02_BAND_SEMS
+quiet_20240523_0352.rec,1716439378.66,CMH,SEMS,"Alarm 2: seismic, picker-confirmed, pair CMH–SEMS",alarm02_CMH_SEMS
+quiet_20240523_2121.rec,1716512327.89,BAND,CMH,"Alarm 4: undetermined, pair BAND–CMH",alarm04_BAND_CMH
+quiet_20240523_2121.rec,1716504058.66,CMH,KIRK,"Alarm 3: KIRK pulse, pair CMH–KIRK",alarm03_CMH_KIRK
+quiet_20240523_2121.rec,1716504049.56,CMH,MANT,"Alarm 3: KIRK pulse, pair CMH–MANT",alarm03_CMH_MANT
+quiet_20240523_2121.rec,1716504049.56,KIRK,MANT,"Alarm 3: KIRK pulse, pair KIRK–MANT",alarm03_KIRK_MANT
+quiet_20240529_0638.rec,1716976858.65,KIRK,SEMS,"Alarm 5: KIRK pulse, pair KIRK–SEMS",alarm05_KIRK_SEMS
+quiet_20240530_1515.rec,1717092058.62,BAND,KIRK,"Alarm 6: KIRK pulse, pair BAND–KIRK",alarm06_BAND_KIRK
+quiet_20240602_2300.rec,1717396258.64,BAND,KIRK,"Alarm 7: KIRK pulse, pair BAND–KIRK",alarm07_BAND_KIRK
+quiet_20240602_2300.rec,1717397029.50,BAND,SEMS,"Alarm 8: undetermined, pair BAND–SEMS",alarm08_BAND_SEMS
+quiet_20240605_0140.rec,1717557658.62,BAND,KIRK,"Alarm 9: KIRK pulse, pair BAND–KIRK",alarm09_BAND_KIRK
+quiet_20240605_0140.rec,1717585258.75,KIRK,SEMS,"Alarm 10: KIRK pulse, pair KIRK–SEMS",alarm10_KIRK_SEMS
+quiet_20240609_1210.rec,1717937451.00,KAND,KIRK,"Alarm 11: KIRK pulse, pair KAND–KIRK",alarm11_KAND_KIRK
+quiet_20240609_1210.rec,1717941053.50,KAND,KIRK,"Alarm 12: KIRK pulse, pair KAND–KIRK",alarm12_KAND_KIRK
+quiet_20250226_1625.rec,1740590272.58,BAND,CMH,"Alarm 13: seismic, picker-confirmed, pair BAND–CMH",alarm13_BAND_CMH
+quiet_20250226_1625.rec,1740590879.93,BAND,CMH,"Alarm 14: seismic, picker-confirmed, pair BAND–CMH",alarm14_BAND_CMH
+quiet_20250227_1157.rec,1740660499.83,KIRK,VIZE,"Alarm 15: seismic, picker-confirmed, pair KIRK–VIZE",alarm15_KIRK_VIZE
+quiet_20250302_1424.rec,1740929407.82,BAND,CMH,"Alarm 16: undetermined, pair BAND–CMH",alarm16_BAND_CMH

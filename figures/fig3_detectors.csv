@@ -1,0 +1,12 @@
+detector,family,mode,rule,short,quiet_alarms,quiet_per_day,heldout_corrected,simav_corrected
+learned,learned,causal,,learned,16,3.74,36.4,35.1
+stalta_eqfa,stalta,causal,equal unmatched,"STA/LTA, eq. unm.",323,75.42,21.7,29.1
+stalta_eqdet,stalta,causal,equal detections,"STA/LTA, eq. det.",544,127.02,37.9,40.9
+fp_fa,filterpicker,causal,equal unmatched,"FilterPicker, eq. unm.",353,82.42,28.8,33.8
+fp_det,filterpicker,causal,equal detections,"FilterPicker, eq. det.",887,207.11,34.9,39.0
+pn_causal,phasenet,causal,both,PhaseNet,15,3.50,33.3,36.8
+eqt_causal_fa,eqtransformer,causal,equal unmatched,"EQT, eq. unm.",7,1.63,11.0,22.7
+eqt_causal_det,eqtransformer,causal,equal detections,"EQT, eq. det.",26,6.07,34.0,32.3
+pn_look_fa,phasenet,look-ahead,equal unmatched,"PhaseNet LA, eq. unm.",31,7.24,42.8,41.2
+pn_look_det,phasenet,look-ahead,equal detections,"PhaseNet LA, eq. det.",14,3.27,38.8,41.4
+eqt_look,eqtransformer,look-ahead,both,EQT LA,11,2.57,32.2,33.4

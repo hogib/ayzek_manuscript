@@ -1,0 +1,20 @@
+% Cover letter for Computers & Geosciences; the text is cover_text.tex, which the
+% manuscript also includes (the journal's template puts the letter first).
+\documentclass[11pt,a4paper]{article}
+\usepackage{iftex}
+\ifPDFTeX
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\else
+\usepackage{fontspec}
+\fi
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\begin{document}
+\today
+
+\bigskip
+\input{cover_text}
+\end{document}

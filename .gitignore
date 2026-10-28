@@ -1,0 +1,15 @@
+# built documents and LaTeX intermediates
+/paper.pdf
+/supplement.pdf
+/cover_letter.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.xdv
+*.fff
+*.lof
+*.ttt

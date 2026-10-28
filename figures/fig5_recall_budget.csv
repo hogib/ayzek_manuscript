@@ -1,0 +1,367 @@
+detector,label,group,event_auc,budget_per_day,threshold,recall_snr3,events
+pw,6 s detector,deployed,0.9892,0.1,0.90262,0.056526,13056
+pw,6 s detector,deployed,0.9892,0.112202,0.902481,0.066789,13056
+pw,6 s detector,deployed,0.9892,0.125893,0.902343,0.076363,13056
+pw,6 s detector,deployed,0.9892,0.141254,0.902241,0.082797,13056
+pw,6 s detector,deployed,0.9892,0.158489,0.902153,0.089537,13056
+pw,6 s detector,deployed,0.9892,0.177828,0.902005,0.101639,13056
+pw,6 s detector,deployed,0.9892,0.199526,0.901868,0.111366,13056
+pw,6 s detector,deployed,0.9892,0.223872,0.901651,0.129749,13056
+pw,6 s detector,deployed,0.9892,0.251189,0.901526,0.139706,13056
+pw,6 s detector,deployed,0.9892,0.281838,0.901357,0.153952,13056
+pw,6 s detector,deployed,0.9892,0.316228,0.9012,0.165441,13056
+pw,6 s detector,deployed,0.9892,0.354813,0.900968,0.183364,13056
+pw,6 s detector,deployed,0.9892,0.398107,0.900695,0.204121,13056
+pw,6 s detector,deployed,0.9892,0.446684,0.900494,0.217678,13056
+pw,6 s detector,deployed,0.9892,0.501187,0.900301,0.230852,13056
+pw,6 s detector,deployed,0.9892,0.562341,0.900007,0.249540,13056
+pw,6 s detector,deployed,0.9892,0.630957,0.899636,0.270604,13056
+pw,6 s detector,deployed,0.9892,0.707946,0.899375,0.283471,13056
+pw,6 s detector,deployed,0.9892,0.794328,0.898986,0.306296,13056
+pw,6 s detector,deployed,0.9892,0.891251,0.898521,0.328508,13056
+pw,6 s detector,deployed,0.9892,1.0,0.89807,0.348116,13056
+pw,6 s detector,deployed,0.9892,1.122018,0.897628,0.365885,13056
+pw,6 s detector,deployed,0.9892,1.258925,0.897165,0.383119,13056
+pw,6 s detector,deployed,0.9892,1.412538,0.896659,0.401961,13056
+pw,6 s detector,deployed,0.9892,1.584893,0.896083,0.421722,13056
+pw,6 s detector,deployed,0.9892,1.778279,0.895483,0.441559,13056
+pw,6 s detector,deployed,0.9892,1.995262,0.894832,0.459865,13056
+pw,6 s detector,deployed,0.9892,2.238721,0.894071,0.479473,13056
+pw,6 s detector,deployed,0.9892,2.511886,0.893317,0.499847,13056
+pw,6 s detector,deployed,0.9892,2.818383,0.892471,0.516085,13056
+pw,6 s detector,deployed,0.9892,3.162278,0.891519,0.535309,13056
+pw,6 s detector,deployed,0.9892,3.548134,0.890497,0.555836,13056
+pw,6 s detector,deployed,0.9892,3.981072,0.889409,0.575368,13056
+pw,6 s detector,deployed,0.9892,4.466836,0.888225,0.595895,13056
+pw,6 s detector,deployed,0.9892,5.011872,0.886936,0.614200,13056
+pw,6 s detector,deployed,0.9892,5.623413,0.885404,0.636872,13056
+pw,6 s detector,deployed,0.9892,6.309573,0.883652,0.657858,13056
+pw,6 s detector,deployed,0.9892,7.079458,0.881626,0.678845,13056
+pw,6 s detector,deployed,0.9892,7.943282,0.879481,0.700061,13056
+pw,6 s detector,deployed,0.9892,8.912509,0.87674,0.723958,13056
+pw,6 s detector,deployed,0.9892,10.0,0.873448,0.743413,13056
+pw,6 s detector,deployed,0.9892,11.220185,0.869202,0.766468,13056
+pw,6 s detector,deployed,0.9892,12.589254,0.864472,0.789828,13056
+pw,6 s detector,deployed,0.9892,14.125375,0.858572,0.812500,13056
+pw,6 s detector,deployed,0.9892,15.848932,0.850763,0.832338,13056
+pw,6 s detector,deployed,0.9892,17.782794,0.839966,0.855469,13056
+pw,6 s detector,deployed,0.9892,19.952623,0.825718,0.875383,13056
+pw,6 s detector,deployed,0.9892,22.387211,0.807431,0.890472,13056
+pw,6 s detector,deployed,0.9892,25.118864,0.781929,0.904029,13056
+pw,6 s detector,deployed,0.9892,28.183829,0.75042,0.918581,13056
+pw,6 s detector,deployed,0.9892,31.622777,0.71242,0.930990,13056
+pw,6 s detector,deployed,0.9892,35.481339,0.670022,0.940947,13056
+pw,6 s detector,deployed,0.9892,39.810717,0.628046,0.950214,13056
+pw,6 s detector,deployed,0.9892,44.668359,0.584699,0.956112,13056
+pw,6 s detector,deployed,0.9892,50.118723,0.535613,0.961397,13056
+pw,6 s detector,deployed,0.9892,56.234133,0.483449,0.966222,13056
+pw,6 s detector,deployed,0.9892,63.095734,0.434154,0.969822,13056
+pw,6 s detector,deployed,0.9892,70.794578,0.394573,0.972963,13056
+pw,6 s detector,deployed,0.9892,79.432823,0.364623,0.975031,13056
+pw,6 s detector,deployed,0.9892,89.125094,0.334167,0.977175,13056
+pw,6 s detector,deployed,0.9892,100.0,0.304237,0.978937,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.1,27.5648,0.061964,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.112202,27.5022,0.063189,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.125893,27.3851,0.066253,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.141254,27.327,0.068244,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.158489,27.1799,0.073376,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.177828,27.0825,0.076440,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.199526,26.9915,0.078738,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.223872,26.8393,0.082567,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.251189,26.642,0.088771,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.281838,26.4349,0.094593,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.316228,26.1932,0.104013,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.354813,25.9765,0.110294,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.398107,25.7059,0.118643,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.446684,25.443,0.126455,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.501187,25.1616,0.136183,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.562341,24.7851,0.149280,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.630957,24.3332,0.161612,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.707946,24.1145,0.169424,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.794328,23.6274,0.187806,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,0.891251,23.1795,0.202665,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.0,22.6118,0.221737,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.122018,22.0039,0.242494,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.258925,21.4193,0.265089,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.412538,20.8567,0.284544,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.584893,20.3549,0.303768,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.778279,19.6301,0.333716,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,1.995262,19.0361,0.357154,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,2.238721,18.4151,0.385646,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,2.511886,17.8652,0.411382,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,2.818383,17.3635,0.434972,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,3.162278,16.7627,0.462546,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,3.548134,16.1837,0.490502,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,3.981072,15.6615,0.516314,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,4.466836,15.118,0.544424,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,5.011872,14.6536,0.569164,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,5.623413,14.14,0.597580,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,6.309573,13.6154,0.625536,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,7.079458,13.0888,0.655025,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,7.943282,12.649,0.678615,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,8.912509,12.15,0.705729,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,10.0,11.6816,0.729933,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,11.220185,11.2204,0.752987,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,12.589254,10.7878,0.776348,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,14.125375,10.3547,0.800475,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,15.848932,9.94238,0.823759,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,17.782794,9.52341,0.847886,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,19.952623,9.13157,0.870328,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,22.387211,8.74753,0.890319,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,25.118864,8.37355,0.909926,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,28.183829,8.01107,0.926394,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,31.622777,7.65274,0.938266,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,35.481339,7.29123,0.948912,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,39.810717,6.94567,0.959559,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,44.668359,6.59794,0.968520,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,50.118723,6.26573,0.974035,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,56.234133,5.93941,0.979396,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,63.095734,5.61867,0.983073,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,70.794578,5.31236,0.986060,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,79.432823,5.01186,0.988051,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,89.125094,4.73557,0.989660,13056
+ps,"STA/LTA, causal 2–20 Hz",deployed,0.9910,100.0,4.46962,0.990962,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.1,0.901444,0.061657,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.112202,0.901253,0.069317,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.125893,0.901094,0.078508,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.141254,0.900881,0.089001,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.158489,0.900688,0.098805,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.177828,0.900482,0.106924,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.199526,0.900329,0.114430,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.223872,0.900117,0.123315,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.251189,0.899905,0.132123,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.281838,0.899658,0.142540,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.316228,0.89944,0.151884,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.354813,0.899027,0.170190,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.398107,0.898755,0.180760,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.446684,0.898374,0.195006,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.501187,0.898005,0.208946,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.562341,0.897644,0.222197,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.630957,0.897262,0.237439,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.707946,0.896778,0.255132,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.794328,0.896327,0.270833,13056
+6s,"6 s detector, station scaling",offline,0.9403,0.891251,0.895678,0.293888,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.0,0.894991,0.316176,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.122018,0.894341,0.336320,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.258925,0.893641,0.358073,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.412538,0.892899,0.377374,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.584893,0.892061,0.398667,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.778279,0.891078,0.421032,13056
+6s,"6 s detector, station scaling",offline,0.9403,1.995262,0.889904,0.444776,13056
+6s,"6 s detector, station scaling",offline,0.9403,2.238721,0.88875,0.467907,13056
+6s,"6 s detector, station scaling",offline,0.9403,2.511886,0.887584,0.489583,13056
+6s,"6 s detector, station scaling",offline,0.9403,2.818383,0.886119,0.514476,13056
+6s,"6 s detector, station scaling",offline,0.9403,3.162278,0.884499,0.534620,13056
+6s,"6 s detector, station scaling",offline,0.9403,3.548134,0.882532,0.559360,13056
+6s,"6 s detector, station scaling",offline,0.9403,3.981072,0.880417,0.582108,13056
+6s,"6 s detector, station scaling",offline,0.9403,4.466836,0.87806,0.603477,13056
+6s,"6 s detector, station scaling",offline,0.9403,5.011872,0.875543,0.624770,13056
+6s,"6 s detector, station scaling",offline,0.9403,5.623413,0.872853,0.647442,13056
+6s,"6 s detector, station scaling",offline,0.9403,6.309573,0.870061,0.667433,13056
+6s,"6 s detector, station scaling",offline,0.9403,7.079458,0.867063,0.686428,13056
+6s,"6 s detector, station scaling",offline,0.9403,7.943282,0.863857,0.704427,13056
+6s,"6 s detector, station scaling",offline,0.9403,8.912509,0.860433,0.722809,13056
+6s,"6 s detector, station scaling",offline,0.9403,10.0,0.856851,0.741039,13056
+6s,"6 s detector, station scaling",offline,0.9403,11.220185,0.853201,0.760953,13056
+6s,"6 s detector, station scaling",offline,0.9403,12.589254,0.849646,0.780254,13056
+6s,"6 s detector, station scaling",offline,0.9403,14.125375,0.846108,0.798254,13056
+6s,"6 s detector, station scaling",offline,0.9403,15.848932,0.842999,0.814108,13056
+6s,"6 s detector, station scaling",offline,0.9403,17.782794,0.840254,0.828508,13056
+6s,"6 s detector, station scaling",offline,0.9403,19.952623,0.838521,0.838848,13056
+6s,"6 s detector, station scaling",offline,0.9403,22.387211,0.837849,0.842984,13056
+6s,"6 s detector, station scaling",offline,0.9403,25.118864,0.837453,0.845282,13056
+6s,"6 s detector, station scaling",offline,0.9403,28.183829,0.837152,0.847273,13056
+6s,"6 s detector, station scaling",offline,0.9403,31.622777,0.836898,0.848805,13056
+6s,"6 s detector, station scaling",offline,0.9403,35.481339,0.836672,0.850490,13056
+6s,"6 s detector, station scaling",offline,0.9403,39.810717,0.836468,0.852022,13056
+6s,"6 s detector, station scaling",offline,0.9403,44.668359,0.836268,0.853401,13056
+6s,"6 s detector, station scaling",offline,0.9403,50.118723,0.836075,0.855009,13056
+6s,"6 s detector, station scaling",offline,0.9403,56.234133,0.835892,0.856541,13056
+6s,"6 s detector, station scaling",offline,0.9403,63.095734,0.835712,0.857767,13056
+6s,"6 s detector, station scaling",offline,0.9403,70.794578,0.835533,0.859145,13056
+6s,"6 s detector, station scaling",offline,0.9403,79.432823,0.835351,0.860524,13056
+6s,"6 s detector, station scaling",offline,0.9403,89.125094,0.835168,0.862515,13056
+6s,"6 s detector, station scaling",offline,0.9403,100.0,0.834985,0.863894,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.1,0.900319,0.075291,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.112202,0.900152,0.078891,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.125893,0.900027,0.082567,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.141254,0.899829,0.087469,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.158489,0.899534,0.095205,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.177828,0.899332,0.100260,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.199526,0.898982,0.109988,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.223872,0.898822,0.113434,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.251189,0.898495,0.119638,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.281838,0.898181,0.127374,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.316228,0.897736,0.135417,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.354813,0.897357,0.141238,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.398107,0.896805,0.150735,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.446684,0.896426,0.157016,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.501187,0.895903,0.165748,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.562341,0.895225,0.175628,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.630957,0.894673,0.182598,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.707946,0.893995,0.192172,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.794328,0.893287,0.201287,13056
+pnat,"P-wave, natural negatives",offline,0.9516,0.891251,0.892582,0.210555,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.0,0.891719,0.218673,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.122018,0.89066,0.229779,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.258925,0.889545,0.241958,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.412538,0.88831,0.252911,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.584893,0.886865,0.268536,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.778279,0.885214,0.282858,13056
+pnat,"P-wave, natural negatives",offline,0.9516,1.995262,0.883521,0.296492,13056
+pnat,"P-wave, natural negatives",offline,0.9516,2.238721,0.881627,0.309819,13056
+pnat,"P-wave, natural negatives",offline,0.9516,2.511886,0.879217,0.326057,13056
+pnat,"P-wave, natural negatives",offline,0.9516,2.818383,0.876013,0.345435,13056
+pnat,"P-wave, natural negatives",offline,0.9516,3.162278,0.872512,0.365119,13056
+pnat,"P-wave, natural negatives",offline,0.9516,3.548134,0.868816,0.385034,13056
+pnat,"P-wave, natural negatives",offline,0.9516,3.981072,0.864182,0.404335,13056
+pnat,"P-wave, natural negatives",offline,0.9516,4.466836,0.858472,0.426164,13056
+pnat,"P-wave, natural negatives",offline,0.9516,5.011872,0.851721,0.448683,13056
+pnat,"P-wave, natural negatives",offline,0.9516,5.623413,0.843807,0.467218,13056
+pnat,"P-wave, natural negatives",offline,0.9516,6.309573,0.833814,0.488971,13056
+pnat,"P-wave, natural negatives",offline,0.9516,7.079458,0.821792,0.509574,13056
+pnat,"P-wave, natural negatives",offline,0.9516,7.943282,0.808099,0.529182,13056
+pnat,"P-wave, natural negatives",offline,0.9516,8.912509,0.791712,0.553156,13056
+pnat,"P-wave, natural negatives",offline,0.9516,10.0,0.774001,0.572993,13056
+pnat,"P-wave, natural negatives",offline,0.9516,11.220185,0.753788,0.595282,13056
+pnat,"P-wave, natural negatives",offline,0.9516,12.589254,0.731295,0.616881,13056
+pnat,"P-wave, natural negatives",offline,0.9516,14.125375,0.709296,0.637025,13056
+pnat,"P-wave, natural negatives",offline,0.9516,15.848932,0.686821,0.657246,13056
+pnat,"P-wave, natural negatives",offline,0.9516,17.782794,0.664409,0.674403,13056
+pnat,"P-wave, natural negatives",offline,0.9516,19.952623,0.642102,0.692249,13056
+pnat,"P-wave, natural negatives",offline,0.9516,22.387211,0.620913,0.708716,13056
+pnat,"P-wave, natural negatives",offline,0.9516,25.118864,0.598913,0.724571,13056
+pnat,"P-wave, natural negatives",offline,0.9516,28.183829,0.577501,0.739200,13056
+pnat,"P-wave, natural negatives",offline,0.9516,31.622777,0.555919,0.754902,13056
+pnat,"P-wave, natural negatives",offline,0.9516,35.481339,0.536086,0.768765,13056
+pnat,"P-wave, natural negatives",offline,0.9516,39.810717,0.517658,0.781327,13056
+pnat,"P-wave, natural negatives",offline,0.9516,44.668359,0.50051,0.792662,13056
+pnat,"P-wave, natural negatives",offline,0.9516,50.118723,0.484642,0.804305,13056
+pnat,"P-wave, natural negatives",offline,0.9516,56.234133,0.469994,0.815640,13056
+pnat,"P-wave, natural negatives",offline,0.9516,63.095734,0.456271,0.824525,13056
+pnat,"P-wave, natural negatives",offline,0.9516,70.794578,0.443934,0.833946,13056
+pnat,"P-wave, natural negatives",offline,0.9516,79.432823,0.432078,0.843367,13056
+pnat,"P-wave, natural negatives",offline,0.9516,89.125094,0.421091,0.851792,13056
+pnat,"P-wave, natural negatives",offline,0.9516,100.0,0.410819,0.861137,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.1,0.901818,0.025276,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.112202,0.901751,0.028876,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.125893,0.901685,0.032705,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.141254,0.901576,0.037760,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.158489,0.90153,0.040977,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.177828,0.901453,0.045879,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.199526,0.901363,0.051394,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.223872,0.901234,0.059360,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.251189,0.901166,0.063572,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.281838,0.901041,0.071385,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.316228,0.90092,0.078355,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.354813,0.900685,0.090380,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.398107,0.900458,0.101409,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.446684,0.900269,0.110294,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.501187,0.900049,0.117570,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.562341,0.899779,0.127221,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.630957,0.899446,0.138787,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.707946,0.899123,0.146982,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.794328,0.898709,0.158471,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,0.891251,0.898242,0.171262,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.0,0.897753,0.183441,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.122018,0.897119,0.196308,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.258925,0.896417,0.212163,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.412538,0.89539,0.230622,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.584893,0.89435,0.247932,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.778279,0.893058,0.267540,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,1.995262,0.891557,0.288067,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,2.238721,0.889717,0.311121,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,2.511886,0.88746,0.336091,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,2.818383,0.885032,0.357154,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,3.162278,0.881774,0.382200,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,3.548134,0.877944,0.408012,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,3.981072,0.873375,0.433824,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,4.466836,0.868078,0.459099,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,5.011872,0.861558,0.482920,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,5.623413,0.853798,0.506051,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,6.309573,0.844454,0.530407,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,7.079458,0.833108,0.555377,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,7.943282,0.819806,0.579121,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,8.912509,0.804802,0.603324,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,10.0,0.78855,0.626608,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,11.220185,0.769773,0.648361,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,12.589254,0.749824,0.668811,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,14.125375,0.729444,0.690334,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,15.848932,0.709575,0.706955,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,17.782794,0.689125,0.723422,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,19.952623,0.668699,0.739583,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,22.387211,0.648183,0.757353,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,25.118864,0.628879,0.771369,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,28.183829,0.610743,0.784237,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,31.622777,0.593692,0.796645,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,35.481339,0.577889,0.810049,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,39.810717,0.5631,0.822763,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,44.668359,0.549619,0.833640,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,50.118723,0.537517,0.845512,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,56.234133,0.526515,0.857384,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,63.095734,0.516843,0.865885,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,70.794578,0.507721,0.875383,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,79.432823,0.49973,0.885570,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,89.125094,0.492607,0.894608,13056
+ponly,"P-wave, amplitude-matched",offline,0.9622,100.0,0.486496,0.903339,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.1,18.7655,0.021140,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.112202,18.6536,0.025812,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.125893,18.5374,0.030561,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.141254,18.4229,0.033854,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.158489,18.3414,0.036918,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.177828,18.2089,0.041131,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.199526,18.0966,0.046492,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.223872,17.9946,0.050245,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.251189,17.8849,0.054228,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.281838,17.7522,0.059896,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.316228,17.6466,0.063725,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.354813,17.5025,0.070849,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.398107,17.3621,0.076593,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.446684,17.2311,0.082950,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.501187,17.0763,0.089231,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.562341,16.9561,0.095435,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.630957,16.8128,0.101103,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.707946,16.6571,0.108073,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.794328,16.477,0.114430,13056
+stalta,"STA/LTA, classical",offline,0.9795,0.891251,16.3111,0.122013,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.0,16.078,0.131970,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.122018,15.8591,0.139476,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.258925,15.6261,0.149663,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.412538,15.3713,0.159620,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.584893,15.0631,0.173100,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.778279,14.7006,0.190411,13056
+stalta,"STA/LTA, classical",offline,0.9795,1.995262,14.3096,0.210018,13056
+stalta,"STA/LTA, classical",offline,0.9795,2.238721,13.9776,0.225950,13056
+stalta,"STA/LTA, classical",offline,0.9795,2.511886,13.5886,0.246400,13056
+stalta,"STA/LTA, classical",offline,0.9795,2.818383,13.22,0.267080,13056
+stalta,"STA/LTA, classical",offline,0.9795,3.162278,12.8441,0.286458,13056
+stalta,"STA/LTA, classical",offline,0.9795,3.548134,12.4418,0.309283,13056
+stalta,"STA/LTA, classical",offline,0.9795,3.981072,12.0249,0.332338,13056
+stalta,"STA/LTA, classical",offline,0.9795,4.466836,11.6184,0.356771,13056
+stalta,"STA/LTA, classical",offline,0.9795,5.011872,11.208,0.381127,13056
+stalta,"STA/LTA, classical",offline,0.9795,5.623413,10.7739,0.409620,13056
+stalta,"STA/LTA, classical",offline,0.9795,6.309573,10.3516,0.437960,13056
+stalta,"STA/LTA, classical",offline,0.9795,7.079458,9.92419,0.465610,13056
+stalta,"STA/LTA, classical",offline,0.9795,7.943282,9.50777,0.492417,13056
+stalta,"STA/LTA, classical",offline,0.9795,8.912509,9.11359,0.519378,13056
+stalta,"STA/LTA, classical",offline,0.9795,10.0,8.74401,0.547794,13056
+stalta,"STA/LTA, classical",offline,0.9795,11.220185,8.38366,0.574831,13056
+stalta,"STA/LTA, classical",offline,0.9795,12.589254,8.02367,0.603937,13056
+stalta,"STA/LTA, classical",offline,0.9795,14.125375,7.69798,0.630515,13056
+stalta,"STA/LTA, classical",offline,0.9795,15.848932,7.38539,0.651501,13056
+stalta,"STA/LTA, classical",offline,0.9795,17.782794,7.08634,0.675628,13056
+stalta,"STA/LTA, classical",offline,0.9795,19.952623,6.80274,0.698529,13056
+stalta,"STA/LTA, classical",offline,0.9795,22.387211,6.54404,0.718827,13056
+stalta,"STA/LTA, classical",offline,0.9795,25.118864,6.29894,0.737515,13056
+stalta,"STA/LTA, classical",offline,0.9795,28.183829,6.06752,0.758502,13056
+stalta,"STA/LTA, classical",offline,0.9795,31.622777,5.8442,0.777727,13056
+stalta,"STA/LTA, classical",offline,0.9795,35.481339,5.61803,0.795803,13056
+stalta,"STA/LTA, classical",offline,0.9795,39.810717,5.40935,0.811964,13056
+stalta,"STA/LTA, classical",offline,0.9795,44.668359,5.19453,0.831189,13056
+stalta,"STA/LTA, classical",offline,0.9795,50.118723,4.97997,0.847733,13056
+stalta,"STA/LTA, classical",offline,0.9795,56.234133,4.77179,0.864737,13056
+stalta,"STA/LTA, classical",offline,0.9795,63.095734,4.5621,0.880591,13056
+stalta,"STA/LTA, classical",offline,0.9795,70.794578,4.35699,0.893919,13056
+stalta,"STA/LTA, classical",offline,0.9795,79.432823,4.15984,0.907629,13056
+stalta,"STA/LTA, classical",offline,0.9795,89.125094,3.9697,0.918964,13056
+stalta,"STA/LTA, classical",offline,0.9795,100.0,3.78893,0.928385,13056

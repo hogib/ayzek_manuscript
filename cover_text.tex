@@ -1,0 +1,48 @@
+% Cover letter text, used by paper.tex (coverletter environment) and cover_letter.tex.
+Dear Editors-in-Chief,
+
+\medskip
+Please find enclosed the manuscript ``A Self-Contained Real-Time Detection Pipeline
+and an Operating-Point Replay Protocol Applied to Turkish Broadband Stations'', which
+we submit for exclusive consideration as a research article in Computers \&
+Geosciences. We confirm that the submission follows the journal's requirements and
+includes every item of its submission checklist.
+
+\medskip
+The manuscript contributes in both dimensions that the journal asks for.
+Computationally, it presents ayzek, a self-contained C++23 pipeline for the detection
+stage of earthquake early warning. Its hand-written inference reproduces the PyTorch
+networks to within floating-point rounding, its replays of archived data are
+deterministic, and the same build runs on a Raspberry Pi~4. It also presents a replay
+protocol, implemented as a reproducible workflow, that measures detectors at their
+operating point with chance correction, pre-registered held-out sequences, paired
+tests and catalog-quiet data. Geoscientifically, it measures how a learned detector,
+two classical triggers and two published models behave on continuous records of
+Turkish broadband stations. At comparable unmatched alarms the learned detector
+detected 36.4 of 66 held-out events after chance correction against 21.7 for
+STA/LTA, and on a second held-out sequence the difference was not significant. Causal
+PhaseNet matched the learned detector, and on 102.8~h of catalog-quiet data the
+quietest STA/LTA settings raised 5 to 29 times as many alarms as the quietest learned
+ones. On a 728-day record, two detectors with nearly equal ROC-AUC differed by a
+factor of 1.6 in recall at one false alarm per day.
+
+\medskip
+The source code, model weights, public test datasets and reproduction scripts are in
+a public repository under the GNU General Public License, with the details listed in
+the section ``Code availability''. The AFAD waveforms cannot be redistributed, and
+public KOERI datasets reproduce the principal results.
+
+\medskip
+The use of generative AI tools during this work is declared in the manuscript, and the
+authors reviewed and edited all content and take full responsibility for it. The
+manuscript has not been published and is not under consideration elsewhere, all
+authors approve its submission, and they declare no competing interests.
+
+\medskip
+Sincerely,
+
+\medskip
+H. O\u{g}uz Bolat, on behalf of the authors\\
+Department of Geomatics Engineering, Y\i{}ld\i{}z Technical University, Davutpa\c{s}a
+Campus, 34220 Esenler, \.Istanbul, T\"urkiye\\
+\href{mailto:oguz.bolat@std.yildiz.edu.tr}{oguz.bolat@std.yildiz.edu.tr}

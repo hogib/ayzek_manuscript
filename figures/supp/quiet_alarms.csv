@@ -1,0 +1,17 @@
+alarm,window,alarm_utc,declared_by,class,evidence,phasenet_ethz,phasenet_stead,eqtransformer_ethz,eqtransformer_stead
+1,quiet_20240522_1924,2024-05-23 01:31:11.50,CMH KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark; the pipeline's own picks also suggest an earthquake at BAND and CMH,1,1,1,1
+2,quiet_20240523_0352,2024-05-23 04:43:07.00,BAND CMH,"seismic, picker-confirmed","confirmed by EQTransformer ETHZ, EQTransformer STEAD; EMSC M2.4, origin 04:42:52, 53/78 km from CMH/BAND",1,1,C,C
+3,quiet_20240523_2121,2024-05-23 22:41:02.50,KIRK MANT,KIRK pulse,KIRK's detection 58.7 s past a 10-minute mark,0,0,0,1
+4,quiet_20240523_2121,2024-05-24 00:58:59.00,BAND CMH,undetermined,no P and S pair at both stations in any picker run,0,0,1,1
+5,quiet_20240529_0638,2024-05-29 10:01:35.50,KIRK SEMS,KIRK pulse,KIRK's detection 58.7 s past a 10-minute mark,1,1,1,1
+6,quiet_20240530_1515,2024-05-30 18:01:24.00,BAND KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark,0,0,0,1
+7,quiet_20240602_2300,2024-06-03 06:31:33.00,BAND KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark,0,0,0,0
+8,quiet_20240602_2300,2024-06-03 06:44:17.50,BAND SEMS,undetermined,no P and S pair at both stations in any picker run,0,1,0,1
+9,quiet_20240605_0140,2024-06-05 03:21:29.00,BAND KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark,0,0,0,0
+10,quiet_20240605_0140,2024-06-05 11:01:45.50,KIRK SEMS,KIRK pulse,KIRK's detection 58.8 s past a 10-minute mark,1,1,0,1
+11,quiet_20240609_1210,2024-06-09 12:51:02.50,KAND KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark,0,0,0,0
+12,quiet_20240609_1210,2024-06-09 13:51:03.00,KAND KIRK,KIRK pulse,KIRK's detection 58.6 s past a 10-minute mark,0,0,0,0
+13,quiet_20250226_1625,2025-02-26 17:18:01.00,BAND CMH,"seismic, picker-confirmed","confirmed by PhaseNet ETHZ, PhaseNet STEAD, EQTransformer STEAD",C,C,1,C
+14,quiet_20250226_1625,2025-02-26 17:28:08.50,BAND CMH,"seismic, picker-confirmed","confirmed by EQTransformer ETHZ, EQTransformer STEAD",1,1,C,C
+15,quiet_20250227_1157,2025-02-27 12:48:41.00,KIRK VIZE,"seismic, picker-confirmed",confirmed by EQTransformer STEAD; KIRK's detection is outside the pulse slot,0,0,0,C
+16,quiet_20250302_1424,2025-03-02 15:30:20.50,BAND CMH,undetermined,picks at both stations fail the S-P test in one run; no pair in the others,1,1,I,1
