@@ -29,7 +29,8 @@
 \newcommand{\tool}[1]{\nolinkurl{#1}}
 % A note under a table, as in the paper.
 \newcommand{\tablenote}[1]{\par\vspace{4pt}%
-  \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1\end{minipage}}
+  \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1
+\end{minipage}}
 
 \setlist{itemsep=2pt,topsep=4pt}
 \setlength{\emergencystretch}{1.5em}
@@ -677,7 +678,7 @@ seismic source they have no physical meaning.
 \paragraph{Sensitivity analyses.} Two analyses, specified before they were run
 (Table~S13), test how conservative the classification is. Applied to
 every pair of stations associated with an alarm (the declaring stations and any
-station whose detection is compatible with theirs under the pipeline's association
+  station whose detection is compatible with theirs under the pipeline's association
 rule) rather than to the first two declaring stations, the rule also confirms alarm~1 in three of its four runs, through the BAND--CMH pair, as a local event that coincided with KIRK's pulse. It confirms no other pulse alarm and leaves alarms 4,
 8 and 16 undetermined. For \stalta{} it confirms six alarms, two of them on events
 the learned detector did not alarm on. Without the confirmed alarms the rates are
@@ -851,7 +852,7 @@ the pipeline's.
 The protocol was committed before the tuning grid was run (Section~\ref{s:prereg}).
 Two runs preceded it as checks of the port, both on tuning data at the published defaults. They replayed the AFAD S\i{}nd\i{}rg\i{} half hour on all seven stations of its data directory, and the Marmara replay. The grid on the tuning replays crossed two sets
 of windows (filter, long-term and $T_\mathrm{up}$: 3, 5 and 0.2~s, the values of
-Lomax et al.\ (2012) at 100~Hz; 6, 10 and 0.4~s, those of Earthworm's
+  Lomax et al.\ (2012) at 100~Hz; 6, 10 and 0.4~s, those of Earthworm's
 \texttt{pick\_FP} at 100~Hz) with trigger thresholds of 3, 4, 5, 6, 8, 10, 12, 15
 and 20 and acceptance thresholds of 3, 4, 6, 8, 10, 15 and 20 (126 settings), each
 scored at the catalog times and the six shifts. The two rules of the main text
@@ -862,7 +863,7 @@ higher thresholds (equal unmatched), or to more detections (equal detections).
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
   \caption{FilterPicker on the tuning replays (S\i{}nd\i{}rg\i{} 30~min and Marmara,
-    66 catalog events).}\label{t:filterpicker}
+  66 catalog events).}\label{t:filterpicker}
   \begin{tabular}{@{}llcccc@{}}
     \toprule
     Setting & Windows (s) & Thresholds & Detected & Chance-corrected & Unmatched \\
@@ -907,33 +908,33 @@ pipeline's repository, the others in the paper's. Times are commit times
     Step & Commit & Date & Run before it \\
     \midrule
     learned detector: trigger rule chosen on the tuning replays &
-      \emph{ayzek} 500254a & 2026-09-17 02:51 &
-      the tuning grid; the first held-out result is in the same commit, and the order therefore rests on the authors' record \\
+    \emph{ayzek} 500254a & 2026-09-17 02:51 &
+    the tuning grid; the first held-out result is in the same commit, and the order therefore rests on the authors' record \\
     \stalta{}: the two selection rules &
-      \emph{ayzek} a04dc9c & 2026-09-17 20:49 &
-      the tuning grid; the held-out results are in the same commit \\
+    \emph{ayzek} a04dc9c & 2026-09-17 20:49 &
+    the tuning grid; the held-out results are in the same commit \\
     published models: protocol & 91b9ee1 & 2026-10-22 16:27 &
-      one adapter check on the S\i{}nd\i{}rg\i{} 30~min tuning replay, recorded in
-      571ef5f \\
+    one adapter check on the S\i{}nd\i{}rg\i{} 30~min tuning replay, recorded in
+    571ef5f \\
     published models: selection & 4973cb8 & 2026-10-22 17:54 &
-      the tuning grid; no held-out, Simav or quiet-window run \\
+    the tuning grid; no held-out, Simav or quiet-window run \\
     second held-out sequence (Simav): protocol & 51067a1 & 2026-10-23 09:49 &
-      a list of candidate sequences by catalog counts and station distances;
-      no waveform, score or replay \\
+    a list of candidate sequences by catalog counts and station distances;
+    no waveform, score or replay \\
     quiet-window alarms: classification rule, PhaseNet & 0a0dff8 & 2026-10-23 10:27 &
-      no picker run \\
+    no picker run \\
     quiet-window alarms: EQTransformer cross-check & 8380650 & 2026-10-23 10:36 &
-      the PhaseNet run of the rule above \\
+    the PhaseNet run of the rule above \\
     FilterPicker: protocol & 851f3fb & 2026-10-26 20:43 &
-      two runs at the published defaults on tuning data (Section~\ref{s:filterpicker}) \\
+    two runs at the published defaults on tuning data (Section~\ref{s:filterpicker}) \\
     FilterPicker: selection & 9580e0f & 2026-10-26 21:15 &
-      the tuning grid; no held-out, Simav or quiet-window run \\
+    the tuning grid; no held-out, Simav or quiet-window run \\
     quiet-window alarms: any-pair rule and catalog search & c78517b & 2026-10-27 18:24 &
-      no run of either \\
+    no run of either \\
     published models, 1--2~s look-ahead: protocol & 761d22b & 2026-10-27 21:13 &
-      one check that \tool{--ahead 0} reproduces the causal scores \\
+    one check that \tool{--ahead 0} reproduces the causal scores \\
     published models, 1--2~s look-ahead: selection & a6bdd22 & 2026-10-27 21:58 &
-      the tuning grid; no held-out, Simav or quiet-window run \\
+    the tuning grid; no held-out, Simav or quiet-window run \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -956,7 +957,7 @@ random stretch of record of the same length, clear of every cataloged event.
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
   \caption{Recall at three alarm budgets and event AUC on the 728-day MANT record,
     with each event scored over its full guard and only before its S wave (margin
-    1~s; 12{,}206 events with SNR~$\geq 3$ and S$-$P~$\geq 7$~s).}\label{t:swave}
+  1~s; 12{,}206 events with SNR~$\geq 3$ and S$-$P~$\geq 7$~s).}\label{t:swave}
   \begin{tabular}{@{}lcccccccc@{}}
     \toprule
     & \multicolumn{4}{c}{Full guard} & \multicolumn{4}{c}{Before the S wave} \\
@@ -1011,7 +1012,7 @@ tuning replays and committed before the one evaluation run (Table~S13). Alarm ti
 \begin{table}[htbp]
   \centering\scriptsize\setlength{\tabcolsep}{2.5pt}
   \caption{Published models with 1 or 2~s of input past the window, beside the
-    causal (0~s) and centered settings of main-text Section~4.3.}\label{t:ahead}
+  causal (0~s) and centered settings of main-text Section~4.3.}\label{t:ahead}
   \begin{tabular}{@{}llcccccc@{}}
     \toprule
     Model, look-ahead & Rule, setting & \multicolumn{2}{c}{Held out} & \multicolumn{2}{c}{Simav} & Quiet & \Mw{}~6.1 \\
@@ -1131,7 +1132,7 @@ detector and favors none.
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
   \caption{Chance level $c$ per detector and replay: as used / without the shifted
-    catalog events that land within 60~s of a real one.}\label{t:chance}
+  catalog events that land within 60~s of a real one.}\label{t:chance}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
     Detector & S\i{}nd\i{}rg\i{} 30~min & Marmara & S\i{}nd\i{}rg\i{} \Mw{}~6.1 & Simav \\
@@ -1150,7 +1151,7 @@ detector and favors none.
   \end{tabular}
   \tablenote{$c$ is the mean over the six shifts of the share of shifted events
     detected; the last row counts the shifted catalog events over all six shifts.
-    On the 30-minute replay few events remain, and $c$ moves in steps of one event.}
+  On the 30-minute replay few events remain, and $c$ moves in steps of one event.}
 \end{table}
 
 \noindent Reproduction: \tool{tools/chance_sensitivity.py report} and \tool{filter}
@@ -1245,7 +1246,7 @@ dropout rate of 0.4 and early stopping, and the three seeds' probabilities are
 averaged.
 
 \paragraph{Phase picker.} Location relies on the waveform arm of a P/S picker whose
-dual-channel design follows Wang et al.\ (2025); in an ablation its second,
+dual-channel design follows Wang and Zhao\ (2025); in an ablation its second,
 image-based arm added nothing to pick accuracy. The waveform arm comprises three
 strided convolutions (kernels of 9, 9 and 7 samples, each followed by batch
 normalization and ReLU), average pooling to 250 segments of 0.24~s, a bidirectional

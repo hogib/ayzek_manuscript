@@ -24,7 +24,8 @@
 \newcommand{\VS}{$V_\mathrm{S}$}
 \newcommand{\stalta}{STA/LTA}
 \newcommand{\tablenote}[1]{\par\vspace{4pt}%
-  \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1\end{minipage}}
+  \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1
+\end{minipage}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \begin{document}
@@ -41,52 +42,52 @@ Operating-Point Replay Protocol Applied to Turkish Broadband Stations}
 \cormark[1]
 \ead{oguz.bolat@std.yildiz.edu.tr}
 \credit{Conceptualization, Methodology, Software, Investigation, Formal analysis,
-  Data curation, Visualization, Writing -- original draft}
+Data curation, Visualization, Writing -- original draft}
 
 \author[2]{Sibel \c{C}imen}[orcid=0000-0003-3790-7362]
 \credit{Writing -- review and editing}
 
 \author[2]{B\"ulent Bolat}[orcid=0000-0002-2468-8618]
-\credit{Writing -- review and editing}
+\credit{Writing -- review and editing, Supervision}
 
 \author[2]{T\"ulay Y\i{}ld\i{}r\i{}m}[orcid=0000-0001-9993-5583]
-\credit{Writing -- review and editing}
+\credit{Writing -- review and editing, Supervision}
 
 \address[1]{Department of Geomatics Engineering, Y\i{}ld\i{}z Technical University,
-  Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye}
+Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye}
 \address[2]{Department of Electronics and Communication Engineering, Y\i{}ld\i{}z
-  Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye}
+Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye}
 
 \cortext[1]{Corresponding author}
 
 \begin{abstract}
-Earthquake early warning (EEW) requires detectors that run continuously on every
-station, where false alarms accumulate over hours without seismicity, yet learned
-detectors are mostly evaluated on curated windows. We present ayzek, a self-contained
-C++23 detection pipeline whose networks reproduce their PyTorch counterparts to within
-floating-point rounding and whose replays of archived data are deterministic, and a
-replay protocol that measures detectors at their operating point, with chance
-correction, pre-registered held-out sequences, paired tests and catalog-quiet data.
-Applied to Turkish broadband stations, the protocol compares a
-convolutional--recurrent detector with a recursive short-term average/long-term
-average (\stalta{}) trigger, the FilterPicker multi-band picker and the published
-EQTransformer and PhaseNet models, all run through the same pipeline. At comparable
-unmatched alarms the learned detector detected 36.4 of 66 events after correction for
-chance matches against 21.7 for \stalta{} on the first held-out sequence (difference
-14.7, 95\% interval 5.9--23.7), and 35.1 of 56 against 29.1 on the second, where the
-difference is not significant. Causal PhaseNet matched the learned detector on both,
-which indicates that the gain is a property of learned detection rather than of this
-detector. On 102.8~h without cataloged seismicity, at equal detections on the tuning
-data, the quietest \stalta{} settings raised 5 to 29 times as many alarms as the
-quietest learned ones, and FilterPicker matched the learned detector on events only
-at 55 times its alarm rate. On a 728-day record at one station, two detectors with
-nearly equal ROC-AUC differed by a factor of 1.6 in recall at one false alarm per day.
-The pipeline runs unchanged on a Raspberry Pi~4, and its code, weights, public test
-datasets and reproduction scripts are openly available.
+  Earthquake early warning (EEW) requires detectors that run continuously on every
+  station, where false alarms accumulate over hours without seismicity, yet learned
+  detectors are mostly evaluated on curated windows. We present ayzek, a self-contained
+  C++23 detection pipeline whose networks reproduce their PyTorch counterparts to within
+  floating-point rounding and whose replays of archived data are deterministic, and a
+  replay protocol that measures detectors at their operating point, with chance
+  correction, pre-registered held-out sequences, paired tests and catalog-quiet data.
+  Applied to Turkish broadband stations, the protocol compares a
+  convolutional--recurrent detector with a recursive short-term average/long-term
+  average (\stalta{}) trigger, the FilterPicker multi-band picker and the published
+  EQTransformer and PhaseNet models, all run through the same pipeline. At comparable
+  unmatched alarms the learned detector detected 36.4 of 66 events after correction for
+  chance matches against 21.7 for \stalta{} on the first held-out sequence (difference
+  14.7, 95\% interval 5.9--23.7), and 35.1 of 56 against 29.1 on the second, where the
+  difference is not significant. Causal PhaseNet matched the learned detector on both,
+  which indicates that the gain is a property of learned detection rather than of this
+  detector. On 102.8~h without cataloged seismicity, at equal detections on the tuning
+  data, the quietest \stalta{} settings raised 5 to 29 times as many alarms as the
+  quietest learned ones, and FilterPicker matched the learned detector on events only
+  at 55 times its alarm rate. On a 728-day record at one station, two detectors with
+  nearly equal ROC-AUC differed by a factor of 1.6 in recall at one false alarm per day.
+  The pipeline runs unchanged on a Raspberry Pi~4, and its code, weights, public test
+  datasets and reproduction scripts are openly available.
 \end{abstract}
 
 \begin{coverletter}
-\input{cover_text}
+  \input{cover_text}
 \end{coverletter}
 
 \begin{highlights}
@@ -98,8 +99,8 @@ datasets and reproduction scripts are openly available.
 \end{highlights}
 
 \begin{keywords}
-Earthquake early warning \sep Seismic event detection \sep Deep learning \sep
-Real-time processing \sep False alarms \sep Replay testing
+  Earthquake early warning \sep Seismic event detection \sep Deep learning \sep
+  Real-time processing \sep False alarms \sep Replay testing
 \end{keywords}
 
 \maketitle
@@ -256,7 +257,7 @@ windows belong to the same sequence.
   \tablenote{Catalog events are counted within 250~km of station centroid. Held-out
     replays were not consulted for any choice of settings. Stations of each replay are
     listed in Table~S1; of 15 KO stations, 11 contributed training or validation
-    windows.}
+  windows.}
 \end{table}
 
 \subsection{Detectors}\label{sec:detectors}
@@ -438,7 +439,7 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
 \begin{table}[pos=htbp]
   \centering\footnotesize
   \caption{Every detector at settings selected on tuning data: two held-out sequences,
-    quiet windows and public KOERI event sets.}\label{tab:detectors}
+  quiet windows and public KOERI event sets.}\label{tab:detectors}
   \setlength{\tabcolsep}{2.6pt}
   \begin{tabular}{@{}lcccccccc@{}}
     \toprule
@@ -470,7 +471,7 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
     10 (equal det.); published models with INSTANCE weights at threshold $\times$
     windows $0.7\times2$ (PhaseNet), $0.8\times2$ and $0.3\times8$ (EQTransformer),
     and with look-ahead $0.4\times8$, $0.6\times8$ (PhaseNet) and $0.5\times8$
-    (EQTransformer).}
+  (EQTransformer).}
 \end{table}
 
 \begin{figure}
@@ -479,7 +480,7 @@ them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
   \caption{Every detector of Table~\ref{tab:detectors}: chance-corrected detections on
     each held-out sequence against alarms per day on 102.8~h of quiet data
     (logarithmic). Up and to left is better. Filled markers run in real time; hollow
-    markers use input past window and cannot.}\label{fig:detectors}
+  markers use input past window and cannot.}\label{fig:detectors}
 \end{figure}
 
 On Simav the direction of the \stalta{} comparison repeats, but not its size. At
@@ -516,7 +517,7 @@ alarms, 3.74 per day (95\% interval 2.14--6.07), against 323, 75.4 per day
 \stalta{} was matched on unmatched rather than false alarms. Over the full grids
 (Figure~\ref{fig:curves}b), at equal tuning detections, the quietest \stalta{}
 setting raises 5 to 29 times the alarms of the quietest learned setting (4.9 against
-0.93 per day at 30 chance-corrected detections, 14.7 against 1.63 at 44 and 60.5
+  0.93 per day at 30 chance-corrected detections, 14.7 against 1.63 at 44 and 60.5
 against 2.1 at 48.7). The rate of \stalta{} is similar in the held-out event window (72
 per day) and on quiet data, whereas the learned detector's falls from 56 to 3.7 per
 day, which suggests that most of its unmatched alarms in the event windows were
@@ -526,7 +527,7 @@ raised 1 alarm against 25 for \stalta{}.
 \begin{table}[pos=htbp]
   \centering\small
   \caption{Alarms of learned detector on AFAD quiet windows (102.8~h), by criteria that
-    need no judgment of waveforms.}\label{tab:quietclass}
+  need no judgment of waveforms.}\label{tab:quietclass}
   \begin{tabular}{@{}lcl@{}}
     \toprule
     Class & Alarms & Criterion \\
@@ -547,7 +548,7 @@ raised 1 alarm against 25 for \stalta{}.
   \tablenote{Upper rows: pre-registered classification; last two rows: same picker rule
     on every pair of stations associated with an alarm, also specified before it was
     run. Rates: alarms per day with exact Poisson 95\% intervals. Each alarm is listed
-    in Table~S11.}
+  in Table~S11.}
 \end{table}
 
 The 16 alarms were classified by criteria that need no judgment of the waveforms
@@ -614,7 +615,7 @@ against 21.4\%), although \stalta{} then draws level or ahead at ten per day
 \begin{table}[pos=htbp]
   \centering\small
   \caption{Recall of 13\,056 events with SNR~$\geq 3$ over 728 days at MANT at three
-    alarm budgets (false alarms per day).}\label{tab:roc}
+  alarm budgets (false alarms per day).}\label{tab:roc}
   \begin{tabular}{@{}lcccc@{}}
     \toprule
     Detector & Event AUC & 100/day & 10/day & 1/day \\
@@ -632,7 +633,7 @@ against 21.4\%), although \stalta{} then draws level or ahead at ten per day
   \end{tabular}
   \tablenote{Event AUC: maximum score within each event's guard window against maximum
     score over random stretches of equal length, away from cataloged events, of same
-    record.}
+  record.}
 \end{table}
 
 \begin{figure}
