@@ -2,36 +2,45 @@
 Dear Editors-in-Chief,
 
 \medskip
-Please find enclosed the manuscript ``A Self-Contained Real-Time Detection Pipeline
-and an Operating-Point Replay Protocol Applied to Turkish Broadband Stations'', which
-we submit for exclusive consideration as a research article in Computers \&
+Please find enclosed the manuscript ``A Lightweight Earthquake Early Warning Pipeline
+and Its Evaluation on Three Seismic Networks'', which we
+submit for exclusive consideration as a research article in Computers \&
 Geosciences. We confirm that the submission follows the journal's requirements and
 includes every item of its submission checklist.
 
 \medskip
-The manuscript contributes in both dimensions that the journal asks for.
-Computationally, it presents ayzek, a self-contained C++23 pipeline for the detection
-stage of earthquake early warning. Its hand-written inference reproduces the PyTorch
-networks to within floating-point rounding, its replays of archived data are
-deterministic, and the same build runs on a Raspberry Pi~4. It also presents a replay
-protocol, implemented as a reproducible workflow, that measures detectors at their
-operating point with chance correction, held-out sequences with protocols committed in
-advance, paired
-tests and catalog-quiet data. Geoscientifically, it measures how a learned detector,
-two classical triggers and two published models behave on continuous records of
-Turkish broadband stations. At comparable unmatched alarms the learned detector
-detected 36.4 of 66 held-out events after chance correction against 21.7 for
-STA/LTA, and on a second held-out sequence the difference was not significant. Causal
-PhaseNet matched the learned detector, and on 102.8~h of catalog-quiet data the
-quietest STA/LTA settings raised 5 to 29 times as many alarms as the quietest learned
-ones. On a 728-day record, two detectors with nearly equal ROC-AUC differed by a
-factor of 1.6 in recall at one false alarm per day.
+The manuscript addresses both of the journal's scopes. Computationally, it presents
+ayzek, a self-contained C++23 pipeline for the detection stage of earthquake early
+warning that also reports a P-wave displacement magnitude. Its
+hand-written inference reproduces the PyTorch networks to within floating-point
+rounding, its replays of archived data are deterministic, and the same build runs on a
+Raspberry Pi~4. It also presents a replay protocol, implemented as a reproducible
+workflow, that measures detectors at their operating point with chance correction,
+paired tests and catalog-quiet data, whose settings, including the baselines', were
+fixed in a public, timestamped release before any test waveform was fetched. Geoscientifically, it measures how a learned detector, two classical
+triggers and two published models behave on continuous records of three networks
+under that protocol: the Greek networks served by the National Observatory of
+Athens and New Zealand's GeoNet, which no model had seen, and the Turkish KO network
+the detector was trained on, held out in time. At the settings matched on unmatched
+alarms the learned detector detected 22.4 more chance-corrected events than STA/LTA of
+177 on the Greek sequences, though with twice its unmatched alarms, and 18.1 more of
+151 on the New Zealand sequences, with equal unmatched alarms; the KO test, under its
+target in its two-month pool, was not significant. Causal PhaseNet was equivalent to
+the learned detector on both unseen networks. On New Zealand's catalog-quiet windows
+the learned detector raised a fraction of the classical detectors' alarms; on Greece it
+did not, and an exploratory analysis traces half of its quiet-window alarms to one
+station's emergent noise that STA/LTA ignores. On a
+728-day record, two detectors with nearly equal ROC-AUC differed by a factor of 1.6 in
+recall at one false alarm per day.
 
 \medskip
-The source code, model weights, public test datasets and reproduction scripts are in
-a public repository under the GNU General Public License, with the details listed in
-the section ``Code availability''. The AFAD waveforms cannot be redistributed, and
-public KOERI datasets reproduce the principal results.
+The source code, model weights, the protocol and the test settings, and the reproduction
+scripts are in a public repository under the GNU General Public License, archived on
+Zenodo, with the details listed in the section ``Code availability''. The test
+waveforms are open at their data centers and are not redistributed; the released
+request records and file hashes let anyone fetch and check the same data. The AFAD
+development waveforms cannot be redistributed, and public KOERI datasets reproduce the
+development results.
 
 \medskip
 The use of generative AI tools during this work is declared in the manuscript, and the

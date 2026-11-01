@@ -1,0 +1,69 @@
+role,network,station,lat,lon,elevation_m,placed,sets_chosen,sets_probed,coverage_min,reason,provenance
+usable,NZ,APZ,-46.83180552,167.988825498,601.0,map,2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,BFZ,-40.679647283,176.246245098,283.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,BKZ,-39.165665643,176.492543736,706.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,COVZ,-39.199914229,175.542401907,1133.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3,1 2 3,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,CTZ,-43.73549,-176.61719,99.0,Chatham Islands inset,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,CVZ,-44.38318,171.00616,454.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,DCZ,-45.464713192,167.153533463,71.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,DSZ,-41.744960821,171.804614445,650.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,EAZ,-45.231053397,169.308253387,350.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,ETVZ,-39.1357,175.7106,1236.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,FOZ,-43.532099313,169.815479827,54.0,map,1 2 3,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,FWVZ,-39.254945374,175.55295183,2043.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,GRZ,-36.2502,175.4578,146.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,GVZ,-42.967365,173.03475,400.5,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,HAZ,-37.7561,177.7826,81.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,HIZ,-38.51292897,174.855686101,237.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,INZ,-42.7245,171.4441,165.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,JCZ,-44.07321036,168.785473425,1062.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,KHEZ,-39.2942,174.0145,929.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,KHZ,-42.41598,173.53897,64.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,KNZ,-39.021755222,177.673668799,32.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,KUZ,-36.745228533,175.720872942,76.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,LBZ,-44.385552844,170.184419859,438.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,LTZ,-42.781667157,172.27103538,648.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MAVZ,-39.2679133,175.5616533,2624.1,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MKAZ,-37.10413,175.16117,140.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MLZ,-45.366543525,168.118406813,594.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MQZ,-43.706081677,172.653765807,57.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MRZ,-40.66054537,175.578526763,286.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MSZ,-44.673333781,167.92639864,55.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MWZ,-38.334001396,177.527779304,573.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,MXZ,-37.562258507,178.306631253,106.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,NNZ,-41.217102661,173.379476754,130.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,NTVZ,-39.0984817,175.6759733,1260.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,ODZ,-45.043982113,170.644622213,274.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,OPRZ,-37.844300073,176.554929138,134.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,OPZ,-45.884355667,170.597766739,375.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,OTVZ,-39.163113759,175.665073554,1506.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,OUZ,-35.219688708,173.596133449,63.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,OXZ,-43.3259,172.0383,360.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,PUZ,-38.071547867,178.257209049,430.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,PXZ,-40.030644463,176.862145221,103.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,PYZ,-46.166251683,166.680692489,277.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,QRZ,-40.825521618,172.529147829,263.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,RATZ,-38.866498038,175.772175968,653.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,RPZ,-43.714607582,171.053864882,453.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,RTZ,-38.61544,176.980518,867.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,SYZ,-46.536890349,169.138823018,52.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,THZ,-41.762474128,172.905218304,747.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TLZ,-38.3294,175.538,660.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TMVZ,-39.11561,175.704064,1200.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TOZ,-37.73095563,175.501846822,85.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TRVZ,-39.298816259,175.547821602,2062.0,"map, labelled in the Tongariro and Ruapehu inset",1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TSZ,-40.058553101,175.961123866,531.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,TUZ,-45.953974846,169.631143307,110.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,URZ,-38.259249093,177.110894471,95.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,VRZ,-39.12434088,174.758452563,166.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WAZ,-39.754644424,174.985532904,382.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WCZ,-35.938642,174.345043,108.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WEL,-41.284047578,174.768184021,138.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WHSZ,-43.29065,170.40645,110.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WHVZ,-39.2825,175.5886,2105.0,"map, labelled in the Tongariro and Ruapehu inset",2 3 4,2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WHZ,-45.892427899,167.947031165,345.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WIZ,-37.524510539,177.189301882,40.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WKZ,-44.827021353,169.017561979,558.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WSRZ,-37.51811,177.177805,292.4,map,1,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WTAZ,-36.932419121,174.573368623,340.0,map,4,4,1.0,,data/tune_nz_{1..4}/stations.json: chosen
+usable,NZ,WVZ,-43.074350291,170.73675416,91.0,map,1 2 3 4,1 2 3 4,1.0,,data/tune_nz_{1..4}/stations.json: chosen

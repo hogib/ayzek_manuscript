@@ -1,11 +1,12 @@
-%% A Self-Contained Real-Time Detection Pipeline and an Operating-Point Replay
-%% Protocol Applied to Turkish Broadband Stations.
-%% Computers & Geosciences submission draft (v12), in the
-%% journal's template (cas-sc.cls, cas-common.sty, cas-model2-names.bst, from
-%% github.com/cageo/CAGEO_LaTeXTemplate, commit 965ebcc).
+%% A Lightweight Earthquake Early Warning Pipeline and Its Evaluation on Three
+%% Seismic Networks.
+%% Computers & Geosciences submission draft (v13, the rewrite around the
+%% held-out tests), in the journal's template (cas-sc.cls, cas-common.sty,
+%% cas-model2-names.bst, from github.com/cageo/CAGEO_LaTeXTemplate, commit 965ebcc).
 %%
 %%   make            paper.pdf
 %%
+%% \tbd{...} marks a value that waits for the held-out runs (red in the draft).
 \documentclass[a4paper,fleqn]{cas-sc}
 
 \usepackage[authoryear]{natbib}
@@ -15,7 +16,7 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{setspace}
-\usepackage[nomarkers,figuresonly]{endfloat}
+% Figures are placed in the text (endfloat, which the template suggests, is off).
 \usepackage{lineno}
 % The template's \cortext ends up printing its "[COR: Number]" trace on the
 % first page in this build; send the trace to the log only.
@@ -34,6 +35,7 @@
 \newcommand{\VP}{$V_\mathrm{P}$}
 \newcommand{\VS}{$V_\mathrm{S}$}
 \newcommand{\stalta}{STA/LTA}
+\newcommand{\tbd}[1]{\textcolor{red}{[#1]}}
 \newcommand{\tablenote}[1]{\par\vspace{4pt}%
   \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1
 \end{minipage}}
@@ -43,11 +45,11 @@
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
-\shorttitle{A self-contained detection pipeline and an operating-point replay protocol}
+\shorttitle{A lightweight early warning pipeline and its evaluation on three networks}
 \shortauthors{H.O. Bolat et al.}
 
-\title [mode = title]{A Self-Contained Real-Time Detection Pipeline and an
-Operating-Point Replay Protocol Applied to Turkish Broadband Stations}
+\title [mode = title]{A Lightweight Earthquake Early Warning Pipeline and Its
+Evaluation on Three Seismic Networks}
 
 \author[1]{H. O\u{g}uz Bolat}[orcid=0009-0000-8522-7746]
 \cormark[1]
@@ -72,30 +74,26 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 \cortext[1]{Corresponding author}
 
 \begin{abstract}
-  Earthquake early warning (EEW) requires detectors that run continuously on every
-  station, where false alarms accumulate over hours without seismicity, yet learned
-  detectors are mostly evaluated on curated windows. We present ayzek, a self-contained
-  C++23 detection pipeline whose networks reproduce their PyTorch counterparts to within
-  floating-point rounding and whose replays of archived data are deterministic, and a
-  replay protocol that measures detectors at their operating point, with chance
-  correction, held-out sequences with protocols committed in advance, paired tests and
-  catalog-quiet data.
-  Applied to Turkish broadband stations, the protocol compares a
-  convolutional--recurrent detector with a recursive short-term average/long-term
-  average (\stalta{}) trigger, the FilterPicker multi-band picker and the published
-  EQTransformer and PhaseNet models, all run through the same pipeline. At comparable
-  unmatched alarms the learned detector detected 36.4 of 66 events after correction for
-  chance matches against 21.7 for \stalta{} on the first held-out sequence (difference
-  14.7, 95\% interval 5.9--23.7), and 35.1 of 56 against 29.1 on the second, where the
-  difference is not significant. Causal PhaseNet matched the learned detector on both,
-  which indicates that the gain is a property of learned detection rather than of this
-  detector. On 102.8~h without cataloged seismicity, at equal detections on the tuning
-  data, the quietest \stalta{} settings raised 5 to 29 times as many alarms as the
-  quietest learned ones, and FilterPicker matched the learned detector on events only
-  at 55 times its alarm rate. On a 728-day record at one station, two detectors with
-  nearly equal ROC-AUC differed by a factor of 1.6 in recall at one window false alarm per day.
-  The pipeline runs unchanged on a Raspberry Pi~4, and its code, weights, public test
-  datasets and reproduction scripts are openly available.
+  Earthquake early-warning detectors run continuously, where false alarms
+  accumulate, yet learned detectors are typically evaluated on curated windows or tuned
+  on the records they are tested on. We present
+  ayzek, a lightweight, self-contained C++23 detection pipeline whose networks
+  reproduce their PyTorch counterparts to within rounding and whose replays are
+  deterministic, and a replay protocol that measures detectors at their operating
+  point with chance correction, paired tests and catalog-quiet data. All settings of
+  the method and of its baselines were chosen on Turkish development data and fixed in
+  a timestamped release before testing on three networks: the Greek networks and New
+  Zealand's GeoNet, unseen by any model, and the KOERI network, held out in time. The
+  learned detector is compared with a short-term average/long-term average
+  (\stalta{}) trigger, FilterPicker, EQTransformer and PhaseNet in the same pipeline. At the settings matched on unmatched alarms, it detected 150.3 of 177
+  Greek events after chance correction against 127.9 for \stalta{} (difference 22.4,
+  95\% interval 11.7--33.5), though with 371 unmatched alarms against 189, and 84.2 of
+  151 New Zealand events against 66.1 (18.1, 7.2--29.5); KOERI's two-month pool held
+  36 events, a difference of 2.5 ($-0.5$ to 5.9). Causal PhaseNet was equivalent
+  to it on both unseen networks. On catalog-quiet data it raised 0.9 alarms per day
+  against 1.6 for \stalta{} on New Zealand, but 19.3 against 20.7 on Greece, half from
+  one noisy station. Each alarm carries a P-wave displacement magnitude.
+  The pipeline runs on a Raspberry Pi~4; code and protocol are open.
 \end{abstract}
 
 \begin{coverletter}
@@ -104,19 +102,18 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 
 \begin{highlights}
 \item Self-contained C++ detection pipeline reproduces PyTorch networks to rounding
-\item Replay protocol scores detectors at their operating point with chance correction
-\item Learned detector found 14.7 more events than STA/LTA on one of two held-out sequences
-\item Quietest STA/LTA settings raised 5--29 times the alarms of learned ones on quiet data
-\item Near-equal ROC-AUC detectors differed 1.6-fold in recall at one false window a day
+\item Method and baselines fixed in a timestamped release before any test data
+\item Learned detector found 18 and 22 more events than STA/LTA on two unseen networks
+\item Quiet-data alarm rates of all detectors measured per network at equal alarms
+\item Causal PhaseNet was equivalent to the learned detector on both unseen networks
 \end{highlights}
 
 \begin{keywords}
   Earthquake early warning \sep Seismic event detection \sep Deep learning \sep
-  Real-time processing \sep False alarms \sep Replay testing
+  Real-time processing \sep False alarms \sep Replay testing \sep Pre-registration
 \end{keywords}
 
 \maketitle
-
 
 \doublespacing
 
@@ -126,612 +123,774 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 Earthquake early warning (EEW) systems run a detector continuously on every station,
 and the P travel time to the stations needed to declare an event bounds the warning
 they can give \citep{allen2009}. Over hours without seismicity, the detector's false
-alarms accumulate. Learned detectors, however, are mostly evaluated on curated windows
+alarms accumulate. Learned detectors, however, are typically evaluated on curated windows
 with balanced classes, where a metric such as the area under the receiver operating
 characteristic curve (ROC-AUC) says little about the false-alarm rate at the
-operating point.
+operating point. When a detector is evaluated on continuous records, it and its
+baselines are usually tuned on records from the same network and period.
 
-This study contributes in both computational and geoscientific terms. Its
-computational contribution is twofold. The first part is ayzek, a self-contained C++23
-pipeline from miniSEED decoding to the network alarm, with hand-written inference and
-no machine-learning runtime. Its networks are verified against their PyTorch
-counterparts, its replays of archived data are deterministic, and the same build runs
-on a Raspberry Pi~4. The second part is a replay protocol, implemented as a
-reproducible workflow, that measures detection at the operating point. Trigger
-settings are chosen on tuning data by rules stated in advance and then tested on
-held-out sequences, one of them chosen and committed before its data were extracted.
-Chance matches with the catalog are corrected by shifting the catalog in time, only
-the stations that raised an alarm are matched, detectors are compared with paired
-tests, and false alarms are counted on data without cataloged seismicity.
+The computational contribution of this study is twofold. The first is ayzek, a
+lightweight, self-contained C++23 pipeline from miniSEED decoding to the network
+alarm and a first magnitude, with hand-written inference and no machine-learning
+runtime, verified against its PyTorch models, deterministic in replay, and running
+unchanged on a Raspberry Pi~4. The second is a replay protocol,
+implemented as a reproducible workflow, that measures detection at the operating
+point. Chance matches with the catalog are corrected by shifting the catalog in time,
+only the stations that raised an alarm are matched, detectors are compared with
+paired tests, and false alarms are counted on data without cataloged seismicity.
+Every setting of the detector and of the baselines was chosen on development data
+by rules stated in advance, and the whole method, the selection rules for the test
+data and the endpoints were then committed to a public release and timestamped
+before any test waveform was fetched.
 
 The geoscientific contribution is a measurement of how learned and classical
-detectors behave on continuous seismic records from Turkish broadband stations. The
-pipeline's convolutional--recurrent detector is compared with two classical detectors,
-a recursive \stalta{} trigger and FilterPicker \citep{lomax2012}, and with two
-published learned models, EQTransformer \citep{mousavi2020eqt} and PhaseNet
-\citep{zhu2019}, to test whether any gain over the classical trigger is specific to
-our detector. The comparison quantifies the false-alarm rates of these detectors on
-catalog-quiet data and shows on a 728-day record that ROC-AUC can rank detectors
-differently from their recall at operational alarm budgets. The study concerns the
-detection stage, which is the first stage of an alert. Magnitude estimation is
-outside its scope, and an alarm here is a network detection rather than a warning
-that an operational system could issue. All results come from replays of archived
-data from one network.
+detectors behave on continuous seismic records from three networks under that
+protocol: the five Greek networks served by the National Observatory of
+Athens and the New Zealand national network, neither used in training, and the
+Turkish KO network on which the detector was trained, held out in time. The
+pipeline's learned detector is compared with a recursive \stalta{} trigger,
+FilterPicker \citep{lomax2012} and the published EQTransformer
+\citep{mousavi2020eqt} and PhaseNet \citep{zhu2019} models, to test whether any gain
+over the classical trigger is specific to our detector. In this study an alarm is a network detection with a first magnitude rather
+than a warning that an operational system could issue, and all results come from
+replays of archived data. The study asks whether the advantage of a learned detector
+over classical triggers, measured on development data, survives on networks it has
+not seen, at equal false-alarm rates, under a comparison fixed in advance.
 
 % ---------------------------------------------------------------------------
 \section{Background}\label{sec:lit}
 
-Operational EEW systems are evaluated for latency as well as accuracy. The testing
-platform of ShakeAlert \citep{kohler2018} replays archived waveforms through the
-complete system \citep{cochran2018}, which is the practice that the protocol of this
-study follows. Its detection stages are tuned against false as well as missed events,
-as for ElarmS-3 \citep{chung2019}, and the alerts of the public system are reported in
-operation \citep{kohler2020}. In the Marmara region, the Istanbul Earthquake Rapid
-Response and Early Warning System raises an alarm when filtered peak acceleration or
-cumulative absolute velocity exceeds a threshold at three or more strong-motion
-stations within 10~s \citep{alcik2009}.
+Public EEW systems share a design: a telemetered network, a pipeline that detects
+and characterizes the event from the first seconds of P waves, and an alert policy.
+Japan's nationwide system has run since 2007 on point-source estimates from the
+stations nearest the hypocenter \citep{hoshiba2008}, joined in 2018 by PLUM, which
+propagates observed shaking instead of a source \citep{kodera2020}. Taiwan's reports an
+event within 20~s from a strong-motion network \citep{hsiao2009} densified by
+low-cost MEMS sensors \citep{wu2013}.
+ShakeAlert's EPIC and FinDer were tested on a replay platform before public rollout
+\citep{kohler2018,cochran2018,chung2019,kohler2020}; Mexico's SASMEX has alerted for
+thirty years \citep{suarez2022}; Israel's TRUAA \citep{nof2021} and Istanbul's
+threshold-based system \citep{alcik2009} are regional examples. In Europe, PRESTo
+\citep{zollo2009} is a free regional platform, tested on Greek Ionian stations
+\citep{bracale2021}, and the Virtual Seismologist and FinDer run as modules of the
+SeisComP monitoring framework \citep{behr2016,massin2021,porras2021}; EPIC has been
+replayed on Turkish data \citep{tunc2024,marcou2025,budakoglu2026}. \citet{meier2020}
+ran PLUM, EPIC and FinDer on 219 Japanese earthquakes with common scoring, the
+closest precedent to the replay comparisons of this study. Low-cost designs move processing
+toward the sensor, from fixed smartphones with a cloud back end \citep{brooks2021} to
+PLUM on Raspberry Shake nodes \citep{prasanna2022}; deep-learning workflows such as
+QuakeFlow \citep{zhu2023} and single-station models such as CREIME
+\citep{chakraborty2022} run under Python runtimes, offline or in the cloud. All of
+these detect with amplitude or picker triggers, or with learned models that need a
+runtime, inside a hosting framework. The pipeline of this study differs in
+both respects: the station stage is a learned detector with hand-written inference in one
+binary that runs on a single-board computer, and the whole pipeline, with its
+classical and published baselines, is evaluated by replay under a comparison fixed
+before the test data were chosen.
 
-Classical detection relies on characteristic functions of the waveform, such as the
-ratio of short- to long-term averages \citep{allen1978}, whose sensitivity to its
-parameters is well documented \citep{withers1998}. Multi-band pickers designed for
-early warning, such as FilterPicker \citep{lomax2012}, remain in operational use
-because they are inexpensive and interpretable and time an onset to the sample. Their
-weakness is specificity, because an amplitude criterion that is sensitive enough for
-small earthquakes is just as sensitive to impulsive cultural and instrumental
-transients. Deep networks have since been trained to detect earthquakes
+Classical triggers such as the ratio of short- to long-term averages
+\citep{allen1978,withers1998} and multi-band pickers such as FilterPicker
+\citep{lomax2012} are inexpensive and time an onset to the sample, but an amplitude
+criterion sensitive enough for small earthquakes also fires on impulsive cultural and
+instrumental transients. Deep networks trained to detect earthquakes
 \citep{perol2018,ross2018,mousavi2019cred} and to pick phases
-\citep{zhu2019,mousavi2020eqt}, and CRED \citep{mousavi2019cred}, which passes
-convolutional features to a bidirectional recurrent layer, is the closest precedent
-of the detector evaluated here. Standardized datasets such as STEAD
-\citep{mousavi2019stead} and the models and datasets unified by SeisBench
-\citep{woollam2022} have made evaluation on curated windows predominant. Learned
-pickers do run on continuous data \citep{mousavi2020eqt,yeck2021}, learned
-classifiers have been trained to separate earthquakes from impulsive noise for early
-warning \citep{meier2019}, and pickers transfer well between regions at similar
-distances \citep{munchmeyer2022}. A comparison of detectors at a fixed alarm budget
-on continuous records, with false alarms measured on catalog-quiet data, remains
-rare. Learned methods also address other stages of warning, from shaking prediction
-\citep{munchmeyer2021} to magnitude \citep{mousavi2020mag} and detection from GNSS
-velocities \citep{basar2026}, which lie outside the scope of this study.
-
-ROC-AUC is insensitive to class prevalence \citep{fawcett2006}. It therefore does not
-reflect the number of false positives when negatives vastly outnumber positives,
-which precision--recall analysis \citep{davis2006,saito2015} and partial areas at low
-false positive rates \citep{mcclish1989} address. In seismic detection the operating
-region is extreme. A detector that scores a 6~s window every 0.5~s makes
-172\,800 decisions per station and day, and one window false alarm per day then corresponds
-to a false positive rate below $10^{-5}$. Measuring how often an alarm sequence
-matches a catalog by chance resembles the time-slide technique of gravitational-wave
-analysis, which shifts records by lags longer than any propagation time to measure
-accidental coincidences \citep{was2010}. Low-cost warning networks
-\citep{wu2015,kong2016,anthony2019} and learned detectors on edge devices
-\citep{huang2020,bassetti2021} motivate the self-contained implementation.
+\citep{zhu2019,mousavi2020eqt} are mostly evaluated on curated windows, as the
+standardized datasets \citep{mousavi2019stead} and model collections
+\citep{woollam2022} encourage, although learned pickers do run on continuous data
+\citep{mousavi2020eqt,yeck2021} and transfer well between regions at similar
+distances \citep{munchmeyer2022}. Comparisons of detectors at a fixed alarm budget on
+continuous records remain rare, and rarer still with false alarms measured on
+catalog-quiet data and the method fixed before the test data were seen. ROC-AUC is
+insensitive to class prevalence \citep{fawcett2006}, which precision--recall analysis
+\citep{davis2006,saito2015} and partial areas at low false positive rates
+\citep{mcclish1989} address; in seismic detection the operating region is extreme,
+one window false alarm per day among 172\,800 decisions per station and day being a
+false positive rate below $10^{-5}$.
 
 % ---------------------------------------------------------------------------
 \section{Material and methods}\label{sec:methods}
 
-\subsection{Data}\label{sec:data}
+\subsection{Development and test data}\label{sec:data}
 
-The detector was trained on 6~s three-component windows from 181 stations of the KO
-\citep{koeri1971}, 6G \citep{koeri2013marsite} and IJ \citep{iu2013} networks,
-retrieved from the FDSN service of the Kandilli Observatory and Earthquake Research
-Institute (KOERI) around cataloged events of $M \geq 2$. Earthquake windows start 2~s
-before the IASP91 P arrival, noise windows come from records 3~h before each event,
-and the two classes are balanced 1:1. The set was partitioned by station into 120,
-27 and 34 stations (76\,494, 18\,830 and 15\,812 windows), so that no station appears
-in two of the training, validation and test sets (Section~S19 of the supplement).
-
-The evaluation uses the continuous archive of eleven broadband stations of the
-Turkish National Seismic Network \citep[TU;][]{afad1990}, operated by the Disaster and
-Emergency Management Authority (AFAD) in the Marmara and northern Aegean regions,
-40 to 453~km apart and absent from the training set; two further stations, ARNA and
-CATL, are in the archive only around the Marmara replay. Events are scored only at
-stations where they are visible, with the signal-to-noise ratio of the 2--20~Hz
-vertical component around the IASP91 P arrival $t_P$ (times in seconds),
+All choices in this study were made on development data; the test results come from
+data that none of these choices used, with one exception, the per-station \stalta{}
+ratios of Section~\ref{sec:protocol}. The learned detector was trained on 6~s
+three-component windows from 181 stations of the KO \citep{koeri1971}, 6G
+\citep{koeri2013marsite} and IJ \citep{iu2013} networks of the Kandilli Observatory
+and Earthquake Research Institute (KOERI), around cataloged events of $M \geq 2$ up
+to 29~August 2026, partitioned by station into training, validation and test sets
+(Section~S19). The development
+replays (Table~\ref{tab:replays}, Figure~\ref{fig:map-dev}) come from the continuous
+archive of broadband stations of the Turkish National Seismic Network
+\citep[TU;][]{afad1990}, operated by the Disaster and Emergency Management Authority
+(AFAD) in the Marmara and northern Aegean regions and absent from the training set.
+With three public KOERI sets, they comprise two tuning windows, two sequences and 23
+quiet windows (102.8~h). One KOERI set overlaps the detector's training data and
+serves as a demonstration only.
+Events are scored only at stations where they are visible, with the signal-to-noise
+ratio of the 2--20~Hz vertical component around the IASP91 P arrival $t_P$ (times in
+seconds),
 \begin{equation}\label{eq:snr}
   \mathrm{SNR} = \mathrm{RMS}\bigl(x[t_P - 1,\ t_P + 12]\bigr)/
   \mathrm{RMS}\bigl(x[t_P - 60,\ t_P - 10]\bigr),
 \end{equation}
-of at least 3. Of the cataloged events within 500~km, 30\,438 reach this level at one
-or more stations.
-
-The pipeline is evaluated on replays of the archive (Table~\ref{tab:replays}). Two
-event windows tune the trigger settings, and two held-out sequences test them: the
-2025 S\i{}nd\i{}rg\i{} \Mw{}~6.1 sequence and the 2026 Simav \Mw{}~4.8 sequence, the
-second chosen and its protocol committed before its data were extracted. Twenty-three
-quiet windows with no cataloged event within 250~km of any station measure the
-false-alarm rate. Three public KOERI datasets, attached to the pipeline release,
-allow the principal results to be reproduced without the AFAD archive. The catalog is
-incomplete for small events during aftershock sequences, so that an alarm without a
-catalog counterpart is not necessarily false, and the tuning and first held-out
-windows belong to the same sequence.
+of at least 3.
 
 \begin{table}[pos=htbp]
   \centering\small
-  \caption{Replay datasets.}\label{tab:replays}
+  \caption{Development replays. All settings of this study were chosen on them, and no
+  test result comes from them.}\label{tab:replays}
   \setlength{\tabcolsep}{4pt}
-  \begin{tabular}{@{}L{2.9cm}lL{3.3cm}L{1.6cm}ccL{2.4cm}@{}}
+  \begin{tabular}{@{}L{2.9cm}lL{3.3cm}L{1.6cm}ccL{2.6cm}@{}}
     \toprule
     Dataset & Network & Start (UTC) & Duration & Stations & \makecell{Catalog\\events} & Role \\
     \midrule
     S\i{}nd\i{}rg\i{} & TU & 2025-11-10 18:04:04 & 30 min & 3 & 9 & tuning \\
     Marmara Sea & TU & 2025-04-23 08:29:01 & 3 h & 8 & 57 & tuning \\
-    S\i{}nd\i{}rg\i{} \Mw{} 6.1 & TU & 2025-08-10 16:00 & 3 h & 6 & 66 & held out \\
-    Simav \Mw{} 4.8 & TU & 2026-04-11 14:00 & 3 h & 6 & 56 & second held out \\
-    Quiet windows (23) & TU & 2024-05-22 to 2025-03-07 & 102.8 h & 7--8 & 0 & false-alarm rate \\
+    S\i{}nd\i{}rg\i{} \Mw{} 6.1 & TU & 2025-08-10 16:00 & 3 h & 6 & 66 & tuning (baselines) \\
+    Simav \Mw{} 4.8 & TU & 2026-04-11 14:00 & 3 h & 6 & 56 & tuning (baselines) \\
+    Quiet windows (23) & TU & 2024-05-22 to 2025-03-07 & 102.8 h & 7--8 & 0 & alarm rate \\
     \addlinespace
-    Quiet window & KO & 2024-01-03 11:25:00 & 5.8 h & 6 & 0 & false-alarm rate, public \\
-    S\i{}nd\i{}rg\i{} \Mw{} 4.9 & KO & 2025-11-10 18:04:00 & 31 min & 6 & 9 & public reproduction \\
-    Marmara \Mw{} 6.2 & KO & 2025-04-23 09:00:00 & 1 h 45 min & 8 & 37 & public reproduction \\
+    Quiet window & KO & 2024-01-03 11:25:00 & 5.8 h & 6 & 0 & alarm rate, public \\
+    S\i{}nd\i{}rg\i{} \Mw{} 4.9 & KO & 2025-11-10 18:04:00 & 31 min & 6 & 9 & tuning (baselines), public \\
+    Marmara \Mw{} 6.2 & KO & 2025-04-23 09:00:00 & 1 h 45 min & 8 & 37 & demonstration, public \\
     \bottomrule
   \end{tabular}
-  \tablenote{Catalog events are counted within 250~km of station centroid. Held-out
-    replays were not consulted for any choice of settings. Stations of each replay are
-    listed in Table~S1; of 15 KO stations, 11 contributed training or validation
-  windows.}
+  \tablenote{Catalog events are counted within 250~km of the station centroid. The
+    learned detector's trigger rule was chosen on the first two replays; the baselines'
+    final settings on the four event sequences and the KO \Mw{}~4.9 window
+    (Section~\ref{sec:protocol}). The two AFAD sequences and the quiet windows also
+    served, before the release date, as this study's development test bed (Section~S20).
+    Stations are listed in Table~S1; of 15 KO stations, 11 contributed training or
+  validation windows.}
 \end{table}
+
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/fig_map_development.pdf}
+  \caption{The development data: TU stations of the AFAD archive, KO stations of the
+    public KOERI sets, the largest event of each replayed sequence, and the area within
+    250~km of the quiet-window stations, in which no cataloged event may lie during a
+  quiet window. Relief from ETOPO~2022 \citep{etopo2022}.}\label{fig:map-dev}
+\end{figure}
+
+The tests use three networks, each reported separately and not pooled
+(Table~\ref{tab:test-networks}, Figure~\ref{fig:map-tests}): the Greek networks HL
+\citep{hl1975}, HT \citep{ht1981}, HA \citep{ha2008}, HP \citep{hp2000} and HC
+\citep{hc2006}, served by one EIDA node; the New Zealand network NZ
+\citep{geonet2021waveforms}; and KO \citep{koeri1971}, the network the detector was
+trained on, held out in time from 30~August 2026, after the last training window of
+any model. Of the Greek and New Zealand data, only four 6~h windows per network from
+before the test period were used, to set the per-station \stalta{} ratios.
+
+\begin{table}
+  \centering\small
+  \caption{Test networks, each reported separately.}\label{tab:test-networks}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lL{4.2cm}L{1.9cm}llcc@{}}
+    \toprule
+    Group & Networks (operator) & Data center & Catalog & Period from & Target & \makecell{Stations\\usable / probed} \\
+    \midrule
+    Greece & HL (NOA), HT (AUTH), HA (University of Athens), HP (University of
+    Patras), HC (Crete) & NOA EIDA node & NOA & 2023-01-01 & 150 & 81 / 200 \\
+    New Zealand & NZ (GeoNet) & GeoNet & GeoNet & 2023-01-01 & 150 & 36 / 134 \\
+    KO & KO (KOERI) & KOERI EIDA node & EMSC & 2026-08-30 & 240 & 123 / 155 \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{All test periods end at the release date, 2026-10-30 12:55:36 UTC. Target:
+    scorable cataloged events of this study's sequences (Section~\ref{sec:protocol}).
+    Stations: usable over the test period (three HH channels at 100~Hz, at least 90\%
+    coverage, rotatable components) out of those probed, determined from the
+    availability listings when the sequences were selected, after the release date. For New
+    Zealand the listing is the day files of GeoNet's open-data bucket, which bound
+    coverage from above, since GeoNet runs no availability service. NOA, National
+    Observatory of Athens; AUTH, Aristotle University of Thessaloniki; HC is operated
+  by the Technological Educational Institute of Crete.}
+\end{table}
+
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[height=0.49\textwidth]{figures/fig_map_greece.pdf}\hfill
+  \includegraphics[height=0.49\textwidth]{figures/fig_map_nz.pdf}\\[6pt]
+  \includegraphics[width=\textwidth]{figures/fig_map_ko.pdf}
+  \caption{Stations of the test networks: Greece (top left; HL, HT, HA, HP and HC by
+    symbol), New Zealand (top right; the Tongariro and Ruapehu stations in a zoom inset,
+    and the Chatham Islands station, east of 180\textdegree, in a second inset) and KO
+    (bottom). Filled symbols are the stations usable in at least one of the four
+    pre-test windows that set the per-station \stalta{} ratios, open symbols in their
+    network's shape the stations probed there but not usable. The maps were drawn before
+    the release date and show no event; the sequences selected afterwards are listed in
+  Table~\ref{tab:selected}. Relief from ETOPO~2022 \citep{etopo2022}.}\label{fig:map-tests}
+\end{figure}
+
+A station is used if it records three HH channels at 100~Hz with at least 90\%
+coverage of the test period, checked before any waveform was fetched, and its
+components can be rotated to north and east; coordinates and gains come from each
+network's StationXML (Table~\ref{tab:test-networks}).
+
+\paragraph{Sequences.} Each network's test pool holds all events of $M \geq 4.5$ in
+its catalog within its test period that have at least five usable stations within
+150~km; the catalogs are EMSC's \citep{emsc2026catalogue} for KO, NOA's for Greece
+and GeoNet's \citep{geonet1970catalogue} for New Zealand. In time order, each such event
+starts a sequence unless it lies within 3~h after the first event of an earlier
+sequence with which its stations share at least one; it then belongs to that
+sequence. A sequence is replayed for 3~h from 10~min before its first event on its
+nearest usable stations within 150~km, at most eight and at least five, and its
+cataloged events within 250~km of the stations' centroid are scored as on the
+development data. The test periods end at the release date (2026-10-30 12:55:36 UTC).
+Each sequence is assigned, in time order, to this study or to a reserve for later
+tests by a pseudo-random draw (seed 42). This study's sequences are taken in time
+order until their scorable cataloged events, counted from the catalog before any
+waveform is fetched, reach the target, 240 on KO and 150 on Greece and New Zealand,
+the crossing sequence included whole; a network that does not reach its target uses
+all of its sequences and is reported as under the target, as KO's two-month pool was
+expected to be.
+
+\paragraph{Quiet windows.} Each network also contributes up to 24 windows of 6~h,
+drawn at random over its test period with seed 43 on the station sets of its
+sequences, and accepted only if no cataloged event lies within 250~km of any of
+their stations during the window or 30~min on either side and their data cover 90\%
+of it, small distant events being disregarded if 10\,000 draws give fewer than 24.
+The first 30~min of each window are not scored.
 
 \subsection{Detectors}\label{sec:detectors}
 
-Each 6~s window ($600 \times 3$ samples at 100~Hz) is detrended, tapered,
-band-passed at 1--45~Hz with a zero-phase filter applied to the window, whose last
-sample is the current time, so that no later sample is used, unlike the look-ahead
-mode of Section~\ref{sec:others}, standardized per component, and compressed with an
-inverse hyperbolic sine. The pipeline's detector standardizes each window by its own
-statistics, $\tilde{x}_{c}[n] = (x_{c}[n] - \mu_{c})/\sigma_{c}$, which removes gain
-and site amplitude, whereas the offline networks of Section~\ref{sec:ranking} use the
-long-term noise statistics of the station (station scaling). Three strided
-convolutional layers reduce the window to 75 steps of 96 channels, and a bidirectional
-LSTM with 48 units per direction, a four-head self-attention block with residual
-connection \citep{vaswani2017} and a small perceptron produce a single logit
-(142\,059 parameters). The arrangement follows the one-dimensional channel of 1D2D-EDL \citep{wang2025}, a
-network for vibration signals from bearing faults. The same sequence of operations
-suits seismic detection: the convolutions extract band-limited onset and amplitude
-features, the recurrent layer follows their evolution through the window from noise
-to P and coda, and the attention weights the segments that carry the onset, as in the
-encoders of CRED and EQTransformer \citep{mousavi2019cred,mousavi2020eqt}. The network was trained with label smoothing (targets 0.1 and 0.9),
-three seeds are averaged, and the ensemble reaches a ROC-AUC of 0.9785 on the held-out
-curated test set. A P/S picker, run only after a trigger, provides picks for location
-(Section~S19).
+The pipeline's own detector, called the learned detector throughout, scores 6~s
+windows. Each window ($600 \times 3$ samples at 100~Hz) is detrended, tapered,
+band-passed at 1--45~Hz, standardized per component and compressed with an inverse
+hyperbolic sine. The filter is zero-phase but applied within the window, whose last
+sample is the current time, so that no later sample is used; the standardization uses
+the window's own statistics, which removes gain and site amplitude. Three strided convolutional layers reduce
+the window to 75 steps of 96 channels, and a bidirectional LSTM with 48 units per
+direction, a four-head self-attention block with residual connection
+\citep{vaswani2017} and a small perceptron produce a single logit (142\,059
+parameters). The arrangement is that of CRED \citep{mousavi2019cred} with the self-attention of
+EQTransformer's encoder \citep{mousavi2020eqt}, adapted from 1D2D-EDL
+\citep{wang2025}. The network was trained with label smoothing, three seeds are averaged, and the
+ensemble reaches a ROC-AUC of 0.9785 on the station-disjoint curated test set. A P/S
+picker, run only after a trigger, provides picks for location (Section~S19).
 
 The recursive \stalta{} band-passes the trace with fourth-order Butterworth sections,
 forms the squared vertical component or the three-component energy, and agrees with
 SciPy \citep{virtanen2020} and ObsPy \citep{beyreuther2010,krischer2015} to within
-rounding (Section~S2). FilterPicker takes the maximum over a bank of band-pass
-characteristic functions, triggers at a first threshold and declares a pick when its
-mean over a window $T_\mathrm{up}$ reaches a second; the pipeline's port of Lomax's C
-code (FilterPicker5 v5.0.3) gives identical picks (Section~S12). Either classical
-detector can replace the network, with every trigger, at most one per 15~s per
-station, giving P at the onset and everything downstream unchanged.
+rounding (Section~S2). FilterPicker takes the maximum over a bank of band-pass characteristic functions
+and declares a pick when its mean over a window reaches a second threshold; the
+pipeline's port of Lomax's C code gives identical picks (Section~S12). EQTransformer and
+PhaseNet run through SeisBench 0.12.6 in place of the learned detector, each 6~s window
+receiving the largest model output within it, EQTransformer's detection trace or
+PhaseNet's P probability. In the \emph{causal} mode the model input ends at the end
+of the window, as in real-time operation; in the \emph{look-ahead} mode it is
+centered on it, an offline upper bound (Section~S8). Each baseline replaces only the learned detector's output;
+triggers are limited to one per 15~s per station, and everything downstream is
+unchanged.
 
 \subsection{Real-time pipeline}\label{sec:pipeline}
 
-The pipeline performs ingestion, conditioning, detection, picking, association and
-grid-search location (Figure~\ref{fig:pipeline}). Each station is served by an
+The pipeline runs from ingestion to location and magnitude (Figure~\ref{fig:pipeline}). Each station is served by an
 ingestion and a processing thread that feed one network stage through an ordered
 message bus, and the build is one binary and a directory of weights. Records are
-released when the replay clock reaches the time of their last sample, which
-reproduces the arrival order of a live feed. Samples are held in a ring of $2^{17}$
-samples per component, with gaps written as marker values, and because a sample's
-time is derived from its position, writes never drop or wait and flow control is
-applied at the source. A replay across a 35-minute network-wide outage reproduces
-exactly the alarms of the same data split around it (Section~S2). A magnitude
-regressor is part of the pipeline but was disabled for every result here.
+released when the replay clock reaches their last sample, which reproduces the
+arrival order of a live feed, and samples are held in a ring whose positions give
+their times, so that writes do not drop or wait (Section~S2).
 
 Windows are scored on an absolute grid every 0.5~s. Label smoothing makes the
-detector's outputs saturate between 0.90 and 0.907, so that a single threshold at
-$p \geq 0.9$, the rule first used, depends on the third decimal; a logit threshold
-selects the same windows, since the sigmoid is monotone. The adopted rule has a
-persistence branch, which fires when eight consecutive windows reach $p \geq 0.8$,
-3.5~s after the first, and an instant branch, which fires when one window reaches
-$p \geq 0.9$. A trigger re-arms after two windows below 0.3, and no window within
-15~s of the previous trigger may start a run. The P time of a learned trigger is the
-first sample in its window at which a recursive \stalta{} (2--20~Hz, 1 and 30~s,
-vertical) running alongside reaches a ratio of 3, otherwise 3.5~s into the window.
-This sample always lies in the past, and the anchoring adds no latency. Two
+learned detector's outputs saturate between 0.90 and 0.907, so that a single threshold at
+$p \geq 0.9$ depends on the third decimal. The adopted rule, chosen on the tuning
+replays (Table~S13), fires when eight
+consecutive windows reach $p \geq 0.8$, 3.5~s after the first, or when one window
+reaches $p \geq 0.9$; a trigger re-arms after two windows below 0.3, and no window
+within 15~s of the previous trigger may start a run. The P time of a learned trigger
+is the first sample in its window at which a recursive \stalta{} (2--20~Hz, 1 and
+30~s, vertical) running alongside reaches a ratio of 3, otherwise 3.5~s into the
+window; this sample always lies in the past, and the anchoring adds no latency. Two
 detections are associated when their P times differ by no more than the P travel time
 between the stations plus 3~s, an event is declared when two stations agree, and
 later detections at a station within 40~s are absorbed as its coda. Location, a
 two-stage grid search in a half-space from accepted P and S picks, serves the report
 after the alarm and is not evaluated (Section~S16).
 
-All layers are implemented by hand and load the PyTorch \citep{paszke2019} parameter
-names unchanged, and agreement tests compare every stage with PyTorch, SciPy,
-torchaudio and ObsPy on real waveforms. The worst-case error of the detector logit is
-$6.0 \times 10^{-7}$, and repeated and concurrent replays produce byte-identical
-reports. On a Ryzen~5 5600, a window of the three-model ensemble costs 5.2~ms against
-0.0005~ms for the \stalta{} over the same 0.5~s, and one thread sustains 95 stations.
-The static aarch64 build raises the same alarms at the same times on a Raspberry Pi~4
-(Cortex-A72, 1.8~GHz), where an ensemble window costs 36.3~ms and four cores sustain
-52 stations (Table~S4).
+All layers are implemented by hand and load the PyTorch \citep{paszke2019}
+parameters unchanged; agreement tests on real waveforms put the worst-case error of
+the detector logit at $6.0 \times 10^{-7}$, and repeated and concurrent replays
+produce byte-identical reports. On a Ryzen~5 5600 a window of the three-model
+ensemble costs 5.2~ms against 0.0005~ms for the \stalta{}, and one thread sustains
+95 stations; on a Raspberry Pi~4 the static aarch64 build raises the same alarms at
+the same times and four cores sustain 52 stations (Table~S4). The tests run the
+release's static x86-64 build, whose reports on all development replays equal the
+development build's.
 
-\subsection{Evaluation protocols}\label{sec:protocols}
+\begin{figure}[pos=htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig1_pipeline.png}
+  \caption{Architecture of the real-time pipeline. Each station runs an ingestion and a
+    processing thread; a network stage associates station detections, declares,
+    locates and sizes events and scores them against a catalog. The recursive
+    \stalta{} never triggers; it only supplies the reported P time of a learned
+  trigger.}\label{fig:pipeline}
+\end{figure}
 
-For the continuous-record ranking, records were cut into disjoint windows. Windows
-from 10~s before to 60~s after the P arrival of any cataloged event within 500~km form
-its guard, and the rest form the background. The threshold for a budget of $B$ window false alarms per day is the score that $B$
-background windows a day exceed, so that detectors are compared at equal false-alarm
-rates at one station; a window false alarm is a single window above threshold, not
-the network alarm of the replays, and an event counts as detected
-when the highest score in its guard exceeds the threshold.
+\subsection{Magnitude and early location}\label{sec:magnitude}
 
-On the replays, trigger settings for every detector were selected on the two tuning
-replays by rules stated in advance, and neither held-out sequence was used to choose
-any setting. The learned detector's trigger rule and the \stalta{} selection rules
-are recorded in the same commit as their first held-out results, and every later
-protocol and selection was committed before the runs it governs (Table~S13). A declared event matches a catalog event if
-its epicenter lies within 30~km and its origin within 5~s, or if the predicted P
-arrival at a station that raised the alarm lies within 6~s of that station's P time.
+The magnitude is estimated from the peak displacement of the P wave, Pd
+\citep{wu2005,kanamori2005}, rather than learned. At each station with a gain, the
+raw vertical passes through a causal chain: a two-pole high-pass at 0.075~Hz,
+integration and the same high-pass. Pd($\tau$) is the largest absolute displacement
+in the $\tau$~s after the station's onset, for $\tau$ of 1, 2, 3, 4, 5, 7 and 10~s,
+with the noise level taken over the 10~s ending 1~s before it. The relation
+between $\log_{10}$Pd, magnitude and hypocentral distance has two magnitude slopes
+and three distance slopes per window and a term per station. An event's magnitude is
+the posterior mean of this relation's likelihood over its stations' values under a
+Gutenberg--Richter prior; a value below three times its noise level enters as an
+upper bound. The relation was fitted on 96\,908 values from 11\,806 KO events in a separate
+station-disjoint data set; on its test stations, from M3 upward, the estimate at
+$\tau = 5$~s has a bias within $\pm 0.05$ and a mean absolute error of 0.12 to 0.21.
+With each estimate the pipeline reports the posterior probability of three size
+classes, below M4, M4 to 5.5, and above; for events larger than about M6.5 the
+estimate and its class are lower bounds. On KO
+the calibration's gains, station terms and noise levels apply, with its exclusion of
+channels whose noise lies far from their median. On Greece and New Zealand the gains
+come from each set's StationXML, and a vertical channel is accepted only if its
+response divided by the stated sensitivity lies within 0.8--1.25 between 0.1 and
+5~Hz. On these two networks the station terms are set to zero and no noise levels
+apply, so that no channel is excluded for being dead or in a coda. KO's station terms average $+0.07$ to
+$+0.10$ in $\log_{10}$Pd, so zero terms bias an average station by about $+0.1$,
+against the relation's scatter of about 0.3.
+
+Pd requires hypocentral distances before the picks of the 60~s picker window can
+locate an event. Each declared event is therefore also located from its detections'
+onsets alone, by a grid search in a uniform half-space at 10~km depth from three
+stations on, the onsets coming from a FilterPicker that runs beside the learned
+detector and triggers nothing (median onset error 0.06~s on 418 development arrivals).
+This location serves the Pd distances only, once its 68\% radius is below 20~km, until
+a pick location replaces it (Section~S16). None of this touches detection,
+association or matching: all development replays give the same alarms with and
+without it.
+
+\subsection{Scoring}\label{sec:protocols}
+
+Alarms without a catalog counterpart are called unmatched rather than false, because
+the catalogs are incomplete for small events during aftershock sequences; the
+false-alarm rate is measured on the quiet windows, as alarms per day with exact
+Poisson intervals. A declared event matches a catalog event if its epicenter lies
+within 30~km and its origin within 5~s, or if the predicted P arrival at a station that raised the alarm
+lies within 6~s of that station's P time, P being predicted in a uniform half-space.
 Each alarm is credited to the one catalog event it fits best, and each catalog event
 to the first alarm credited with it, so that no alarm counts for two events and a
-second alarm for the same event counts as unmatched.
-The chance level $c$ is the detection rate with every catalog time shifted by
-$\pm 127$, $\pm 263$ and $\pm 391$~s, and with observed rate $o$ the chance-corrected
-rate is
+second alarm for the same event counts as unmatched. The chance level $c$ is the
+detection rate with all catalog times shifted by $\pm 127$, $\pm 263$ and $\pm 391$~s,
+as the time slides of gravitational-wave analysis measure accidental coincidences
+\citep{was2010},
+and with observed rate $o$ the chance-corrected rate is
 \begin{equation}\label{eq:chance}
   \hat{o} = (o - c)/(1 - c),
 \end{equation}
-reported as an equivalent number of events. Inside aftershock sequences the shifts
-inflate $c$ for every detector, and removing shifted events near real ones moves no
-paired difference by more than 0.8 events (Section~S17). Window probabilities are
-cached, which reproduces full inference exactly and makes large trigger grids
-feasible. Two detectors are compared on per-event outcomes by an exact McNemar test
-and a paired bootstrap of the difference in chance-corrected detections (10\,000
-resamples within each replay), accompanied by a bootstrap over 10-minute blocks of
-origin time. The comparisons fixed by a committed protocol are confirmatory, and the
-full grids, selection sensitivities and subgroup splits are exploratory. Alarms
-without a catalog counterpart are called unmatched rather than false.
+reported as an equivalent number of events; inside aftershock sequences most shifted
+events land within 60~s of a real one, so $c$ overstates chance matching and the
+correction is conservative (Section~S17). Window probabilities are cached, which
+reproduces full inference exactly. Two detectors are compared on per-event outcomes
+by an exact McNemar test and a paired bootstrap of the difference in chance-corrected
+detections (10\,000 resamples within each sequence).
 
-The false-alarm rate was measured on 23 quiet windows, with no cataloged event within
-250~km of any station during the window or 30~min on either side, replayed on seven
-or eight stations after a 30~min lead-in (102.8~h of scored data between May 2024 and
-March 2025). Every detector ran with its selected settings, and both trigger grids
-were also replayed on these windows. Rates are given as alarms per day with exact
-Poisson intervals.
+\subsection{Test protocol}\label{sec:protocol}
+
+The protocol was committed to the pipeline's public repository and timestamped on
+Zenodo before any test waveform was fetched (release v1.0.0, commit 3e43064,
+2026-10-30, doi:10.5281/zenodo.23806743), with the release that is tested, the
+hashes of each model file and of the static binary, and the code that fetches,
+replays and scores the data. It is summarized here and given in full in Section~S24.
+
+\paragraph{Detectors.} The learned detector keeps the rule fixed on the tuning data.
+All baselines, \stalta{}, FilterPicker and the published PhaseNet and EQTransformer
+models, were retuned on 29~October 2026 on all development event replays, the four
+AFAD sequences and the KOERI \Mw{}~4.9 window, 197 cataloged events, by three rules
+stated in advance. The first takes the most chance-corrected detections at no more
+unmatched alarms than the learned detector, the second the fewest unmatched alarms at
+no fewer chance-corrected detections, and the third the most chance-corrected
+detections at no more alarms than the learned detector on the AFAD quiet windows.
+Because some unmatched alarms in aftershock sequences are uncataloged earthquakes,
+more of them for a sensitive detector, the third rule matches the rate on data without
+cataloged seismicity instead. For the published models the third rule is applied
+within the weights the first two select. A per-station \stalta{} stands for the
+per-station tuning of operational practice: the first rule's setting with each
+station's own trigger ratio, the lowest of eight values at which the station's trigger
+rate on four 6~h windows from before the test period does not exceed its network's
+median rate at ratio~8 (Section~S24). Table~\ref{tab:settings} lists all settings.
+The pipeline's transformer detector is fixed in the same release and tested under the
+same protocol at its defaults; it is reported in a companion paper.
+
+\begin{table}
+  \centering\small
+  \caption{Detector settings of the tests, selected on the development event replays.}\label{tab:settings}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{4.1cm}cL{5.7cm}rrr@{}}
+    \toprule
+    Detector & Rule & Setting & Corr. & Unm. & Quiet \\
+    \midrule
+    Learned & -- & 0.8 $\times$ 8, or 0.9 once & 128.2 & 52 & 16 \\
+    \addlinespace
+    \stalta{} & 1 & 1--10~Hz, 0.5/10~s, ratio 8, vertical & 110.3 & 47 & 63 \\
+    & 2 & 1--10~Hz, 1/10~s, ratio 4, vertical & 131.6 & 113 & 224 \\
+    & 3 & 1--10~Hz, 0.5/10~s, ratio 10, 3 components & 64.8 & 27 & 12 \\
+    \stalta{}, per station & -- & rule 1, each station's own ratio (3--15) & & & \\
+    \addlinespace
+    FilterPicker & 1 & 6/10/0.4~s, thresholds 20 and 10 & 102.5 & 44 & 291 \\
+    & 2 & 6/10/0.4~s, thresholds 15 and 8 & 130.9 & 101 & 954 \\
+    & 3 & 6/10/0.4~s, thresholds 6 and 15 & 52.0 & 9 & 9 \\
+    \addlinespace
+    PhaseNet, causal & 1 & INSTANCE, 0.8 $\times$ 1 & 119.7 & 52 & 49 \\
+    & 2 & INSTANCE, 0.5 $\times$ 4 & 128.3 & 70 & 29 \\
+    & 3 & INSTANCE, 0.7 $\times$ 2 & 126.1 & 62 & 15 \\
+    \addlinespace
+    EQTransformer, causal & 1 & INSTANCE, 0.7 $\times$ 8 & 62.1 & 49 & 7 \\
+    & 2 & INSTANCE, 0.3 $\times$ 8 & 128.5 & 183 & 26 \\
+    & 3 & INSTANCE, 0.6 $\times$ 2 & 94.4 & 130 & 14 \\
+    \addlinespace
+    PhaseNet, look-ahead & 1 & INSTANCE, 0.7 $\times$ 4 & 123.2 & 52 & 12 \\
+    & 2 & INSTANCE, 0.6 $\times$ 8 & 135.9 & 61 & 14 \\
+    & 3 & INSTANCE, 0.7 $\times$ 1 & 138.1 & 74 & 16 \\
+    \addlinespace
+    EQTransformer, look-ahead & 1 & INSTANCE, 0.6 $\times$ 4 & 113.0 & 50 & 11 \\
+    & 2 & original, 0.7 $\times$ 8 & 140.0 & 88 & 13 \\
+    & 3 & original, 0.6 $\times$ 2 & 153.2 & 116 & 16 \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{Rules: 1, equal unmatched alarms; 2, equal chance-corrected detections; 3,
+    equal quiet alarms. Corr.\ and Unm.: chance-corrected detections and unmatched alarms
+    over the five development event replays (197 cataloged events); Quiet: alarms on the
+    23 AFAD quiet windows (102.8~h). \stalta{}: band, STA and LTA lengths, trigger ratio,
+    components; it re-arms at a ratio of 1.5. FilterPicker: its three windows and two
+    thresholds. Learned detector and published models: probability threshold $\times$
+    consecutive windows, with their weights \citep{michelini2021}; the instant branch
+    is off for the published models. The candidates were the original, STEAD, INSTANCE
+    and ETHZ weights of EQTransformer and the STEAD, INSTANCE and ETHZ weights of
+    PhaseNet. The look-ahead variants use input past the window and run offline only.
+    The per-station \stalta{} has no development counts; its ratios come from each test
+  network's own pre-test windows.}
+\end{table}
+
+\paragraph{Endpoints.} The primary endpoint, on each network, is (i) the difference in
+chance-corrected detections between the learned detector and \stalta{} at equal
+unmatched alarms over its sequences, with a 95\% paired bootstrap interval resampled
+within each sequence. The secondary endpoints are (ii) the same difference against
+\stalta{} at equal quiet alarms and (iii) against each other detector; (iv)
+equivalence with causal PhaseNet by two one-sided tests at 5\% with a margin of 10\%
+of the scorable events; (v) each detector's alarm rate on the quiet windows, also
+without the network's two stations of most \stalta{} detections; (vi) the rule's
+adjacent settings (thresholds 0.75 and 0.85, 6 and 10 windows); (vii) the share of
+alarm detections declared before the predicted S, and the primary comparison on the
+events detected before S; (viii) on KO, the primary comparison on test-split stations
+apart from training-split ones; (ix) the magnitude's error, bias and class accuracy
+by band and the share of alarmed events with an estimate, for events no deeper than
+40~km; and (x) alarm delay and warning time before S. Because the matcher predicts P
+and S in a uniform half-space, 3 to 12~s late for events deeper than 100~km, each
+detection endpoint is also reported for the events no deeper than 40~km. No
+multiplicity correction is applied, each secondary result is labeled as such, and
+nothing is retuned on test data. The stopping rule counts events from the catalog
+before any waveform is fetched; the endpoints use the events ayzek scores (those with
+a depth and a magnitude, with origin from 30~s after the replay's start to 30~s before
+its end), a few fewer per sequence.
+
+\paragraph{Prospective tests.} The same protocol is applied to New Zealand and KO
+data recorded after the release date, data that did not exist when the method was
+fixed: all qualifying sequences from that date on, until the target or 12 months,
+each fetched once when four weeks old, with 24 quiet windows drawn once the span has
+closed (Section~S24). The archive delivers these data intact, so the test replays
+them and is not a live run.
 
 % ---------------------------------------------------------------------------
 \section{Results}\label{sec:results}
 
-\subsection{Trigger rule}\label{sec:trigger-results}
+Section~\ref{sec:dev-results} summarizes what the development data showed before the
+release, which fixed the method and is not a test. Sections~\ref{sec:selected}
+to~\ref{sec:latency} report the protocol's endpoints on the three test
+networks, each separately. On a continuous 728-day record at one development station,
+the learned detector and the pipeline's \stalta{} have nearly equal event ROC-AUC
+(0.9892 and 0.9910) but the learned detector finds 1.6 times as many events at one
+window false alarm per day, and four offline detectors rank in the reverse order of
+event AUC at that budget (Section~S14).
 
-Relative to the single window at $p \geq 0.9$, the adopted rule detects 39 instead of
-24 of the 66 held-out events, at 7 instead of 2 unmatched alarms (Section~S18). The
-gain lies in M2--4 events, and large events, which saturate the detector and fire
-the instant branch, keep their alarm times (\Mw{}~6.2 at +11.0~s, \Mw{}~6.1 at
-+17.0~s and \Mw{}~4.9 at +18.0~s after origin). On the held-out replay 8, 10 and 12
-windows detect 39, 29 and 25 events, so that the adopted setting lies at the edge of a
-steep decline. Over the full grids (Figure~\ref{fig:curves}a), the learned detector's
-envelope lies above that of \stalta{} at every count of unmatched alarms from 1
-upward except 14, where both reach 38.6. A single threshold just below the plateau
-($p \geq 0.895$) performs comparably but is as sensitive to the plateau's height
-(Section~S10).
+\subsection{Development results}\label{sec:dev-results}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig1_pipeline.png}
-  \caption{Architecture of the real-time pipeline. Each station runs an ingestion and a
-    processing thread; a network stage associates station detections, declares and
-    locates events and scores them against a catalog. The recursive \stalta{} never
-    triggers; it only supplies the reported P time of a learned trigger.}\label{fig:pipeline}
-\end{figure}
+On the development data, at the settings in use before the retuning, the learned
+detector detected 36.4 of 66 events after correction for chance against 21.7 for
+\stalta{} at comparable unmatched alarms on the S\i{}nd\i{}rg\i{} \Mw{}~6.1 sequence
+(difference 14.7, 95\% interval 5.9--23.7) and 35.1 of 56 against 29.1 on Simav, not
+significant; causal PhaseNet matched it on both. On the 102.8~h of quiet windows it
+raised 3.74 alarms per day against 75.4 for \stalta{} at equal unmatched alarms.
+Section~S20 gives these results in full.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig7_operating_curves.pdf}
-  \caption{Every trigger setting of both detectors (60 of the learned detector, and the 216 of
-    \stalta{}'s 648 that have the re-arm ratio of 1.5 at which it was fixed,
-    Section~S18; dots), with each detector's envelope (lines) and the selected
-    settings (markers). (a)~Held-out replay, post hoc: chance-corrected detections against
-    unmatched alarms. (b)~Alarms per day on 102.8~h of quiet data against
-    chance-corrected detections on the tuning replays; settings without an alarm are
-    drawn on the bottom edge. Open diamond: the \stalta{} setting that the
-    equal-unmatched rule selects when applied to 26 rather than 25 unmatched alarms
-    (Section~S16).}\label{fig:curves}
-\end{figure}
+\subsection{The selected test sets}\label{sec:selected}
 
-\subsection{Learned detector versus STA/LTA}\label{sec:vs-stalta}
-
-\stalta{} settings were tuned over 648 combinations, and two rules fixed before the
-held-out run selected one setting at equal unmatched alarms (2--20~Hz, 1 and 30~s,
-ratio 8, vertical) and one at equal detections (2--10~Hz, 0.5 and 10~s, ratio 6,
-vertical). At comparable unmatched alarms (7 and 9), the learned detector detects
-68\% more held-out events, with 36.4 against 21.7 chance-corrected detections, a
-difference of 14.7 (95\% interval 5.9--23.7; 7.9--22.2 with 10-minute blocks; exact
-McNemar $p = 0.003$). The difference lies in M2--4 events (12 against 4 of 27 M2--3
-events and 21 against 14 of 32 M3--4 events), whereas \stalta{} detects all six
-M4--5 events and the learned detector five. At comparable detections (37.9 against
-36.4), \stalta{} raises about three times the unmatched alarms, 26 against 7 held out
-and 63 against 26 on the tuning data (Table~\ref{tab:detectors}, Section~S18).
-\stalta{} alarms 1.0--1.3~s earlier on the two largest events, because it triggers on
-the onset sample whereas the window detector must see the P wave inside a 6~s window;
-the taper and the filter applied within each window also down-weight its newest
-samples, which may add to the delay.
-
-\subsection{Other detectors and a second held-out sequence}\label{sec:others}
-
-EQTransformer and PhaseNet were run through SeisBench 0.12.6 in place of the
-detector, each 6~s window receiving the largest model output within it, with
-everything downstream unchanged. In the \emph{causal} mode the model input ends at the
-end of the window, as in real-time operation, and in the \emph{look-ahead} mode it is
-centered on the window, which gives an offline upper bound. For each model and for
-FilterPicker, the weights and trigger setting were selected on the tuning replays by
-the two rules above, and both rules chose the INSTANCE weights \citep{michelini2021}
-for the published models. The Simav sequence was replayed once with every setting
-frozen, on the six archive stations within 300~km, against 56 cataloged events, 39 of
-them below M2 (Table~\ref{tab:detectors}, Figure~\ref{fig:detectors}).
+The selections were run after the release date, on 30 and 31~October 2026, and each
+set was fetched and verified against its request record (Table~\ref{tab:selected}).
+Greece reached its target with 11 sequences and 178 scorable events, New Zealand with
+13 sequences and 154. KO's two-month pool held three qualifying sequences, two of them
+assigned to this study, with 36 scorable events against a target of 240; as the
+protocol provides, both are used and the KO result is reported as under the target,
+an outcome the protocol anticipated. KO's quiet draws also fell short, 6 windows in
+10\,000 strict draws and 14 in 10\,000 relaxed ones, against 24 for the other two
+networks. Two Greek stations, ZKR and KOKK, delivered no data in their window, so two
+Greek replays run on 5 and 7 stations. Four of New Zealand's 13 sequences start with
+an event deeper than 170~km.
 
 \begin{table}[pos=htbp]
   \centering\footnotesize
-  \caption{Every detector at the settings selected on the tuning data: the two held-out
-  sequences, the quiet windows and the public KOERI event sets.}\label{tab:detectors}
-  \setlength{\tabcolsep}{2.6pt}
-  \begin{tabular}{@{}lcccccccc@{}}
+  \caption{The test sets selected after the release date.}\label{tab:selected}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lccccccc@{}}
     \toprule
-    & \multicolumn{3}{c}{S\i{}nd\i{}rg\i{} \Mw{}~6.1 (66)} & \multicolumn{3}{c}{Simav \Mw{}~4.8 (56)} & Quiet & KO (46) \\
-    \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-8}\cmidrule(lr){9-9}
-    Detector, rule & Corr. & Unm. & Difference & Corr. & Unm. & Difference & per day & Det./Unm. \\
+    Network & \makecell{Catalog\\events} & \makecell{Qualifying\\sequences} & \makecell{This study's /\\selected} & \makecell{Scorable\\events (target)} & \makecell{Stations\\per seq.} & \makecell{Quiet windows\\(draws)} & \makecell{Quiet\\hours} \\
     \midrule
-    learned                       & 36.4 & 7  &                       & 35.1 & 17 &                      & 3.7   & 36/25 \\
-    \stalta{}, equal unm.         & 21.7 & 9  & $+14.7$ (5.9, 23.7)   & 29.1 & 14 & $+6.0$ ($-2.4$, 14.3) & 75.4  & 23/5 \\
-    \stalta{}, equal det.         & 37.9 & 26 & $-1.5$ ($-9.7$, 6.6)  & 40.9 & 41 & $-5.8$ ($-12.5$, 0.8) & 127.0 & 39/17 \\
-    FilterPicker, equal unm.      & 28.8 & 8  & $+7.6$ (1.4, 14.1)    & 33.8 & 18 & $+1.3$ ($-7.4$, 9.8)  & 82.4  & 31/12 \\
-    FilterPicker, equal det.      & 34.9 & 16 & $+1.5$ ($-5.6$, 8.7)  & 39.0 & 49 & $-3.9$ ($-12.7$, 4.7) & 207.1 & 36/32 \\
-    PhaseNet, both                & 33.3 & 12 & $+3.1$ ($-4.0$, 10.5) & 36.8 & 28 & $-1.8$ ($-8.2$, 4.1)  & 3.5   & 32/15 \\
-    EQTransformer, equal unm.     & 11.0 & 13 & $+25.5$ (15.3, 35.4)  & 22.7 & 15 & $+12.4$ (2.9, 21.5)  & 1.6   & 24/16 \\
-    EQTransformer, equal det.     & 34.0 & 50 & $+2.4$ ($-9.1$, 13.9) & 32.3 & 55 & $+2.8$ ($-5.5$, 11.1) & 6.1   & 34/37 \\
-    \addlinespace
-    \multicolumn{9}{@{}l}{\emph{Look-ahead, offline only}} \\
-    PhaseNet, equal unm.          & 42.8 & 23 & $-6.4$ ($-15.4$, 2.3) & 41.2 & 35 & $-6.1$ ($-13.5$, 1.0) & 7.2   & 38/23 \\
-    PhaseNet, equal det.          & 38.8 & 9  & $-2.3$ ($-9.2$, 4.3)  & 41.4 & 27 & $-6.3$ ($-13.1$, 0.3) & 3.3   & 32/14 \\
-    EQTransformer, both           & 32.2 & 11 & $+4.2$ ($-6.7$, 15.3) & 33.4 & 25 & $+1.7$ ($-6.2$, 9.7)  & 2.6   & 35/15 \\
+    Greece & 90\,382 & 84 & 42 / 11 & 178 (150) & 6--8 & 24 (2\,059) & 132 \\
+    New Zealand & 81\,990 & 29 & 16 / 13 & 154 (150) & 5--8 & 24 (551) & 132 \\
+    KO & 5\,693 & 3 & 2 / 2 & 36 (240), under & 7, 6 & 14 (20\,000, relaxed) & 77 \\
     \bottomrule
   \end{tabular}
-  \tablenote{Corr.: chance-corrected detections; Unm.: unmatched alarms; difference:
-    learned detector's chance-corrected detections minus other's, with 95\% paired
-    bootstrap interval by events. Quiet: alarms per day on 102.8~h of AFAD quiet
-    windows. KO: detected events and unmatched alarms on demo\_ko and marmara\_ko
-    together. Settings: \stalta{} as in Section~\ref{sec:vs-stalta}; FilterPicker
-    windows 6/10/0.4~s with thresholds 15 and 10 (equal unm.) and 3/5/0.2~s with 4 and
-    10 (equal det.); published models with INSTANCE weights at threshold $\times$
-    windows $0.7\times2$ (PhaseNet), $0.8\times2$ and $0.3\times8$ (EQTransformer),
-    and with look-ahead $0.4\times8$, $0.6\times8$ (PhaseNet) and $0.5\times8$
-  (EQTransformer).}
+  \tablenote{Catalog events: all events of the network's catalog in the test period; KO's
+    36 are under its target.
+    Qualifying: sequences by the rule of Section~\ref{sec:data}; this study's are those
+    the draw assigned to it, selected those taken before the target was reached. Scorable
+    events: the stopping rule's count. Quiet windows: accepted of the draws made; KO's
+    first 10\,000 draws accepted 6, the relaxed pass 14. Scored quiet hours: 5.5~h per
+    window after the unscored lead-in. The sequences, their stations and the windows are
+  listed in Section~S21.}
 \end{table}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig3_detectors.pdf}
-  \caption{Every detector of Table~\ref{tab:detectors}: chance-corrected detections on
-    each held-out sequence against alarms per day on 102.8~h of quiet data
-    (logarithmic). Up and to the left is better. Filled markers run in real time; hollow markers use
-    input past the window and cannot.}\label{fig:detectors}
-\end{figure}
+\subsection{Detection: the primary endpoint}\label{sec:primary}
 
-On Simav the direction of the \stalta{} comparison repeats, but not its size. At
-comparable unmatched alarms (17 and 14) the learned detector detected 35.1
-chance-corrected events against 29.1, a difference of 6.0 whose interval includes
-zero, and the gain again lies in M2--4 events. Most of Simav's events are below M2, the lower limit of the detector's training
-events, where no detector separates reliably from noise. Pooled over both sequences, with the
-chance correction and bootstrap within each, the difference is 20.7 (8.8--32.8; exact
-McNemar $p = 0.001$), a summary that neither protocol specified.
+Table~\ref{tab:results} gives each detector on each network. On Greece, the learned
+detector detected 150.3 chance-corrected events of 177 against 127.9 for \stalta{} at
+equal unmatched alarms: a difference of $+22.4$ (95\% interval $+11.7$ to $+33.5$;
+exact McNemar $p = 0.0001$, 25 events detected by the learned detector only against 4
+by \stalta{} only). The two settings did not, however, raise equal unmatched alarms
+on Greece, as they had on the development data: the learned detector raised 371 and
+\stalta{} 189, two thirds of the learned detector's in two sequences (121 at Epirus
+and 104 at Evia; Section~\ref{sec:discussion}). Restricted to the 175 events no deeper
+than 40~km the difference is the same, $+22.4$ ($+11.3$ to $+33.6$).
 
-The gain over \stalta{} is not specific to the pipeline's detector. Causal PhaseNet
-matched it on both sequences (pooled difference 1.4, $-8.1$ to 11.0), with 12 and 28
-unmatched alarms against 7 and 17 and with 15 quiet-window alarms against 16, whereas
-causal EQTransformer was not competitive at equal unmatched alarms. With look-ahead,
-PhaseNet detected the most events of any detector, but only offline and at three times
-the unmatched alarms and twice the quiet-window rate of the learned detector (7.2
-against 3.7 per day, exact $p = 0.04$). This gap does not come from scoring the
-window at the edge of the model input. Under a protocol committed before any of its
-scores, ending the input 1 or 2~s after the window left PhaseNet level with the
-learned detector and EQTransformer far below it (Section~S15). FilterPicker is the
-strongest classical detector tested. At equal unmatched alarms it detected fewer
-held-out events than the learned detector (difference 7.6, 1.4 to 14.1; McNemar
-$p = 0.021$) and as many on Simav, and at equal detections it matched the learned
-detector with two to three times its unmatched alarms. On the quiet windows, however,
-its two settings raised 82.4 and 207.1 alarms per day, 22 and 55 times the learned
-detector's rate, mostly at two stations, CMH and KIRK.
+On New Zealand, the learned detector detected 84.2 chance-corrected events of 151
+with 20 unmatched alarms, against 66.1 for \stalta{} at equal unmatched alarms, also
+with 20: a difference of $+18.1$ (95\% interval $+7.2$ to $+29.5$; exact McNemar
+$p = 0.002$, 25 events detected by the learned detector only against 7 by \stalta{}
+only). Restricted to the 137 events no deeper than 40~km (14 deeper, none without a
+depth), the difference is $+17.9$ ($+7.2$ to $+29.0$).
 
-\subsection{False alarms on quiet data}\label{sec:quiet}
-
-Over 102.8~h without a cataloged event within 250~km, the learned detector raised 16
-alarms, 3.74 per day (95\% interval 2.14--6.07), against 323, 75.4 per day
-(67.4--84.1), for \stalta{} at equal unmatched alarms (rate ratio 0.050,
-0.028--0.082). That ratio of about 20 belongs to the two selected settings, because
-\stalta{} was matched on unmatched rather than false alarms. Over the full grids
-(Figure~\ref{fig:curves}b), at equal tuning detections, the quietest \stalta{}
-setting raises 5 to 29 times the alarms of the quietest learned setting (4.9 against
-  0.93 per day at 30 chance-corrected detections, 14.7 against 1.63 at 44 and 60.5
-against 2.1 at 48.7). The rate of \stalta{} is similar in the held-out event window (72
-per day) and on quiet data, whereas the learned detector's falls from 56 to 3.7 per
-day, which suggests that most of its unmatched alarms in the event windows were
-uncataloged aftershocks. On 5.8~h of public KOERI quiet data the learned detector
-raised 1 alarm against 25 for \stalta{}.
+On KO, under the target with 36 scorable events, the learned detector detected 15.5
+chance-corrected events with 9 unmatched alarms against 13.0 for \stalta{} with 8: a
+difference of $+2.5$ (95\% interval $-0.5$ to $+5.9$; $p = 0.25$, 3 events detected by
+the learned detector only and none by \stalta{} only). All 36 events are shallower
+than 40~km, so the restricted result is the same. Most of KO's events are below M2 in
+EMSC's catalog, where neither detector finds much, and both detected all four events
+of M4.5 and above.
 
 \begin{table}[pos=htbp]
-  \centering\small
-  \caption{Alarms of the learned detector on the AFAD quiet windows (102.8~h), by criteria
-    that need no judgment of the waveforms.}\label{tab:quietclass}
-  \begin{tabular}{@{}lcl@{}}
+  \centering\scriptsize
+  \caption{Each detector at its setting of Table~\ref{tab:settings} on the three test networks: chance-corrected
+    detections (Corr.), unmatched alarms (Unm.), the difference from the learned detector
+  with its 95\% paired bootstrap interval, and alarms per day on the quiet windows.}\label{tab:results}
+  \setlength{\tabcolsep}{2.2pt}
+  \begin{tabular}{@{}lcccccccccccc@{}}
     \toprule
-    Class & Alarms & Criterion \\
+    & \multicolumn{4}{c}{Greece (177)} & \multicolumn{4}{c}{New Zealand (151)} & \multicolumn{4}{c}{KO (36), under target} \\
+    \cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+    Detector, rule & Corr. & Unm. & Difference & Quiet & Corr. & Unm. & Difference & Quiet & Corr. & Unm. & Difference & Quiet \\
     \midrule
-    KIRK's instrumental pulse & 9 & KIRK declared; its detection in pulse slot \\
-    seismic, picker-confirmed & 4 & S$-$P test with PhaseNet or EQTransformer picks \\
-    undetermined & 3 & neither \\
-    \midrule
-    all alarms & 16 & 3.74 (2.14--6.07) per day \\
-    excluding picker-confirmed & 12 & 2.80 (1.45--4.89) per day \\
-    KIRK's pulse only & 9 & 2.10 (0.96--3.99) per day \\
-    \midrule
-    \multicolumn{3}{@{}l}{\emph{Sensitivity: picker rule on any associated pair of stations}} \\
-    pulse / seismic / undetermined & 8 / 5 / 3 & alarm~1 confirmed through BAND--CMH \\
-    excluding picker-confirmed & 11 & 2.57 (1.28--4.60) per day \\
-    \bottomrule
-  \end{tabular}
-  \tablenote{Upper rows: classification committed before it was run; last two rows: same picker rule
-    on every pair of stations associated with an alarm, also specified before it was
-    run. Rates: alarms per day with exact Poisson 95\% intervals. Each alarm is listed
-  in Table~S11.}
-\end{table}
-
-The 16 alarms were classified by criteria that need no judgment of the waveforms
-(Table~\ref{tab:quietclass}). Nine were declared with KIRK, whose detection fell
-58.6--58.8~s after a 10-minute mark, the slot of a periodic instrumental pulse.
-Detections associate within the P travel time between their stations plus 3~s, 14 to
-67~s for the pairs with KIRK, so a faulty station raises the network's alarm rate
-through chance coincidences with the other stations' triggers. A rule
-fixed before it was run confirms a seismic source when a published picker finds P and
-S at two declaring stations and the two S$-$P distances fit the station separation
-and the P-time difference. It confirms four alarms of the learned detector, one an
-M2.4 listed by the European-Mediterranean Seismological Centre but not by AFAD, and
-three of the 323 \stalta{} alarms, all among the same events. Without them the rates
-are 2.80 and 74.7 per day, and under a classification that is the same for both
-detectors the contrast is unchanged. KIRK's pulse, confined to May--June 2024 and
-absent from the event replays, is a single 0.3~s pulse locked to UTC
-(Figure~\ref{fig:quietexamples}), and without KIRK the learned detector's rate would be 1.40 per day, a figure that
-also removes alarm~15, a picker-confirmed earthquake declared with KIRK outside the
-pulse slot (Table~S11). Of the 323 \stalta{} alarms, 263 rest on signals shorter than 3~s at both
-stations, most of them spikes under 0.5~s, such as the isolated spikes at CMH that
-the learned detector ignores.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig6_quiet_alarms.pdf}
-  \caption{Alarms of the learned detector on the AFAD quiet windows. (a)~Alarm~2, an
-    uncataloged earthquake (M2.4 in the EMSC catalog; origin time from EMSC) recorded at
-    both declaring stations, with the pipeline's P (solid) and S (dashed) picks.
-    (b)~Alarm~12: KIRK's instrumental pulse, about 0.3~s without S wave or coda,
-    coinciding with background noise at KAND. Records band-passed 1--20~Hz.
-    (c)~KIRK's 225 detections by time after each 10-minute mark in UTC (10~s bins).
-    (d)~Duration of the signal behind each alarm at each declaring station, as the
-    time its envelope stays above four times the noise of the preceding 25~s, for the
-    learned detector's 16 alarms and \stalta{}'s 323.}\label{fig:quietexamples}
-\end{figure}
-
-\subsection{Alert latency}\label{sec:latency}
-
-For the Marmara \Mw{}~6.2, the alarm came 11.0~s after origin, and the S wave reached
-station ELBA (38~km) 2.1~s later. Because the alarm carries no magnitude or shaking
-estimate, such margins bound the lead time a warning could have had. Because
-stations are processed independently, a recorded replay can be re-run through the
-network stage for every subset of stations. Over every subset that declared the
-\Mw{}~6.2, the alert exceeds the P travel time to the second-nearest station by a
-median of 2.05~s (interquartile range 0.6--2.8~s), and two stations alone, ARNA and
-ELBA, give the same alert as all eight (Sections~S5--S7).
-
-\subsection{Detector ranking on a continuous record}\label{sec:ranking}
-
-Six detectors were scored on a continuous 728-day record at station MANT: the
-pipeline's learned detector and \stalta{}, and four offline detectors, a classical
-\stalta{} \citep{allen1978}, two P-wave detectors that score 3.4~s windows and differ
-only in their noise windows, and a 6~s detector with station scaling
-(Table~\ref{tab:roc}, Figure~\ref{fig:recall}). The pipeline's two detectors are almost
-indistinguishable by event AUC (0.9910 for \stalta{}, 0.9892 for the learned
-detector; difference 0.0016, 0.0000--0.0035), yet at one window false alarm per day the learned detector finds 34.8\% of the events against 22.2\%, 1.6 times as many. Among
-the offline detectors, recall at one window false alarm per day is in the exact reverse
-order of event AUC. Because all six are scored on the same record, the inversion is a
-property of the metric, which integrates over all false positive rates whereas
-operation uses rates of order $10^{-4}$. The guard over which an event is scored
-extends 60~s past P, so that every detector can also score the S wave. Scored only
-from windows that end at least 1~s before the predicted S, over the 12\,206 events with
-S$-$P of at least 7~s, the inversion at one window false alarm per day remains (33.8\%
-against 21.4\%), although \stalta{} then draws level or ahead at ten per day
-(Section~S14).
-
-\begin{table}[pos=htbp]
-  \centering\small
-  \caption{Recall of 13\,056 events with SNR~$\geq 3$ over 728 days at MANT at three alarm
-    budgets (window false alarms per day at the one station, Section~\ref{sec:protocols}).}\label{tab:roc}
-  \begin{tabular}{@{}lcccc@{}}
-    \toprule
-    Detector & Event AUC & 100/day & 10/day & 1/day \\
-    \midrule
-    \multicolumn{5}{@{}l}{\emph{Run by the pipeline}} \\
-    \stalta{} (causal, 2--20~Hz) & 0.9910 & 0.991 & 0.730 & 0.222 \\
-    6~s detector (per-window)    & 0.9892 & 0.979 & 0.743 & 0.348 \\
+    learned & 150.3 & 371 & -- & 19.3 & 84.2 & 20 & -- & 0.9 & 15.5 & 9 & -- & 9.7 \\
+    \stalta{}, 1 & 127.9 & 189 & $+22.4$ ($+11.7$, $+33.5$) & 20.7 & 66.1 & 20 & $+18.1$ ($+7.2$, $+29.5$) & 1.6 & 13.0 & 8 & $+2.5$ ($-0.5$, $+5.9$) & 20.9 \\
+    \stalta{}, 2 & 138.9 & 401 & $+11.4$ ($+1.9$, $+21.0$) & 103.8 & 80.8 & 49 & $+3.4$ ($-7.2$, $+13.9$) & 6.0 & 16.6 & 56 & $-1.1$ ($-6.9$, $+4.6$) & 111.9 \\
+    \stalta{}, 3 & 100.3 & 66 & $+50.0$ ($+36.7$, $+63.5$) & 3.3 & 40.7 & 7 & $+43.5$ ($+32.0$, $+55.1$) & 0.4 & 8.0 & 1 & $+7.5$ ($+3.0$, $+12.7$) & 3.4 \\
+    \stalta{}, per station & 130.4 & 160 & $+19.9$ ($+9.7$, $+30.5$) & 4.2 & 54.4 & 15 & $+29.8$ ($+17.8$, $+41.6$) & 2.2 & 10.0 & 4 & $+5.5$ ($+1.4$, $+9.9$) & 2.5 \\
+    FilterPicker, 1 & 128.4 & 193 & $+21.9$ ($+11.0$, $+32.9$) & 44.9 & 89.2 & 67 & $-5.0$ ($-16.0$, $+5.6$) & 6.2 & 11.0 & 9 & $+4.5$ ($+0.6$, $+8.8$) & 31.2 \\
+    FilterPicker, 2 & 133.7 & 581 & $+16.5$ ($+5.1$, $+28.1$) & 270.2 & 105.0 & 247 & $-20.9$ ($-32.6$, $-9.5$) & 28.0 & 13.7 & 56 & $+1.8$ ($-2.6$, $+6.4$) & 201.7 \\
+    FilterPicker, 3 & 90.7 & 25 & $+59.6$ ($+46.9$, $+72.3$) & 2.4 & 58.1 & 7 & $+26.1$ ($+15.0$, $+37.2$) & 0.9 & 8.9 & 1 & $+6.7$ ($+2.3$, $+11.7$) & 1.6 \\
+    PhaseNet causal, 1 & 145.3 & 229 & $+5.0$ ($-2.1$, $+12.9$) & 12.9 & 78.4 & 15 & $+5.8$ ($-3.4$, $+15.4$) & 0.4 & 10.0 & 3 & $+5.5$ ($+1.4$, $+9.9$) & 7.2 \\
+    PhaseNet causal, 2 & 144.5 & 357 & $+5.8$ ($-2.3$, $+14.6$) & 25.4 & 98.7 & 43 & $-14.5$ ($-24.8$, $-4.7$) & 1.4 & 15.8 & 11 & $-0.3$ ($-3.3$, $+2.7$) & 11.5 \\
+    PhaseNet causal, 3 & 143.9 & 271 & $+6.4$ ($-1.6$, $+14.6$) & 12.9 & 87.5 & 26 & $-3.3$ ($-12.5$, $+5.9$) & 0.4 & 11.9 & 6 & $+3.6$ ($+0.4$, $+7.7$) & 6.9 \\
+    EQTransformer causal, 1 & 89.9 & 219 & $+60.4$ ($+45.7$, $+75.3$) & 3.6 & 25.9 & 13 & $+58.3$ ($+46.8$, $+70.0$) & 0.0 & 5.0 & 1 & $+10.5$ ($+5.2$, $+16.1$) & 1.6 \\
+    EQTransformer causal, 2 & 137.3 & 687 & $+13.0$ ($+2.9$, $+23.5$) & 16.6 & 65.5 & 50 & $+18.6$ ($+7.8$, $+29.4$) & 1.3 & 10.8 & 10 & $+4.8$ ($-0.1$, $+9.9$) & 11.5 \\
+    EQTransformer causal, 3 & 128.0 & 470 & $+22.2$ ($+10.6$, $+34.6$) & 8.6 & 44.4 & 27 & $+39.8$ ($+28.3$, $+51.1$) & 0.6 & 9.9 & 3 & $+5.7$ ($+0.6$, $+10.9$) & 4.4 \\
     \addlinespace
-    \multicolumn{5}{@{}l}{\emph{Offline}} \\
-    \stalta{} (classical)       & 0.9795 & 0.928 & 0.548 & 0.132 \\
-    P-wave, amplitude-matched   & 0.9622 & 0.903 & 0.627 & 0.183 \\
-    P-wave, natural negatives   & 0.9516 & 0.861 & 0.573 & 0.219 \\
-    6~s detector (station scaling) & 0.9403 & 0.864 & 0.741 & 0.316 \\
+    \multicolumn{13}{@{}l}{\emph{Look-ahead, offline only}} \\
+    PhaseNet, 1 & 143.9 & 266 & $+6.3$ ($-3.3$, $+16.0$) & 7.1 & 85.6 & 20 & $-1.5$ ($-11.9$, $+9.1$) & 0.2 & 11.0 & 3 & $+4.5$ ($+0.6$, $+8.8$) & 4.7 \\
+    PhaseNet, 2 & 144.1 & 301 & $+6.2$ ($-2.9$, $+15.3$) & 8.2 & 88.7 & 25 & $-4.5$ ($-15.1$, $+6.3$) & 0.7 & 12.0 & 6 & $+3.5$ ($+0.3$, $+7.6$) & 6.9 \\
+    PhaseNet, 3 & 145.6 & 352 & $+4.6$ ($-5.0$, $+14.6$) & 12.0 & 94.8 & 31 & $-10.6$ ($-21.3$, $-0.4$) & 0.7 & 12.0 & 7 & $+3.5$ ($-0.7$, $+7.9$) & 7.5 \\
+    EQTransformer, 1 & 115.5 & 291 & $+34.8$ ($+22.7$, $+47.0$) & 7.1 & 30.5 & 9 & $+53.7$ ($+40.9$, $+66.3$) & 0.2 & 1.0 & 2 & $+14.5$ ($+8.6$, $+20.6$) & 3.4 \\
+    EQTransformer, 2 & 150.6 & 291 & $-0.4$ ($-9.9$, $+9.0$) & 6.4 & 97.4 & 51 & $-13.3$ ($-24.8$, $-1.9$) & 2.5 & 17.8 & 3 & $-2.2$ ($-5.4$, $+0.0$) & 6.2 \\
+    EQTransformer, 3 & 154.7 & 385 & $-4.4$ ($-13.5$, $+4.7$) & 9.3 & 104.0 & 73 & $-19.9$ ($-30.9$, $-8.9$) & 3.3 & 18.7 & 4 & $-3.2$ ($-6.7$, $-0.2$) & 9.0 \\
     \bottomrule
   \end{tabular}
-  \tablenote{Event AUC: maximum score within each event's guard window against maximum
-    score over random stretches of equal length, away from cataloged events, of same
-  record.}
+  \tablenote{Rules as in Table~\ref{tab:settings}; the per-station \stalta{} uses rule
+    1's setting with each station's own ratio. In parentheses after each network, the
+    events ayzek scored. Unm.: unmatched alarms over the network's sequences. Quiet:
+    alarms per day on the network's quiet windows (Table~\ref{tab:selected}); the
+    counts and the rate ratios with their exact intervals are in Table~S22. The same
+    table for the events no deeper than 40~km is Table~S23. Rule 1 against the learned
+  detector is the primary endpoint; all other rows are secondary.}
 \end{table}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.85\textwidth]{figures/fig5_recall_budget.pdf}
-  \caption{Recall of the six detectors of Table~\ref{tab:roc} against the alarm budget
-    (window false alarms per day), 20 budgets a decade; dots mark the budgets of the
-    table. Solid wide lines: detectors run by the pipeline; dashed: their offline
-    counterparts.}\label{fig:recall}
-\end{figure}
+\subsection{Detection: secondary endpoints}\label{sec:secondary}
+
+All results of this section are secondary; Section~S24 gives each in full, network by
+network.
+
+The learned detector stayed ahead of the baselines whose settings kept their
+development operating point (Table~\ref{tab:results}): of \stalta{} at equal quiet
+alarms by $+50.0$ events on Greece and $+43.5$ on New Zealand, of the per-station
+\stalta{} by $+19.9$ and $+29.8$, and of causal EQTransformer by $+60.4$ and $+58.3$.
+FilterPicker at equal unmatched alarms was 21.9 events behind it on Greece and level
+on New Zealand, there at 67 unmatched alarms against 20. Causal PhaseNet was
+equivalent to the learned detector on Greece ($+5.0$; 90\% interval $-0.9$ to
+$+11.6$, margin $\pm 17.7$) and New Zealand ($+5.8$; $-1.8$ to $+13.9$, $\pm 15.1$),
+with fewer unmatched alarms on both, and behind it on KO ($+5.5$, $+1.9$ to $+9.5$,
+$\pm 3.6$). The transformer was level on Greece and 17.5 events ahead on New Zealand,
+at 31 unmatched alarms against 20.
+
+On the quiet windows the learned detector raised 0.9 alarms per day on New Zealand
+against 1.6 for \stalta{} at equal unmatched alarms (rate ratio 0.56, 0.15 to 1.85),
+19.3 against 20.7 on Greece (0.93, 0.71 to 1.22) and 9.7 against 20.9 on KO (0.46,
+0.29 to 0.72); on Greece and KO the settings matched on quiet alarms raised 1.6 to
+4.2 per day. Leaving out each network's two stations with the most \stalta{}
+detections lowers the Greek rates to 12.2 and 5.8 and changes no other ordering. The
+rule's neighbors with 6 windows detected 11 to 20 more events than the rule on New
+Zealand and none more than 0.2 more on Greece; those with 10 windows detected fewer on
+both. At least 97\% of the learned detector's alarm detections preceded the predicted
+S on each network, and restricted to the events detected before S the primary
+difference is $+15.7$ on both unseen networks. KO's station-split comparison is
+empty, all its stations being training-split stations. Of the events of M4.5 and
+above, the learned detector missed one, a Greek MLh~4.9 that came 19~s after an M1.9
+both detectors alarmed.
+
+\subsection{Magnitude}\label{sec:magnitude-results}
+
+On Greece, under StationXML gains and zero station terms, all 10 alarmed events of
+M4 and above received an estimate. For the seven MLh~4 to 5.5 events no deeper than
+40~km the final estimate has a bias of $+0.09$ and a mean absolute error of 0.11,
+with the size class right for all seven at the first and the final estimate; the
+MLh~5.8 of 29~March 2024 received M5.8 6.5~s after its alarm, and 56 of the 143
+smaller alarmed events received an estimate, biased by $+0.13$. On New Zealand, under
+the same conditions, all 10
+alarmed events of M4 and above received an estimate and 8 of the 77 smaller ones did.
+For the eight MLv~4 to 5.5 events no deeper than 40~km the final estimate has a bias
+of $+0.03$ and a mean absolute error of 0.20, with the size class right at the first
+and the final estimate for all eight; the expected bias of zero terms, about $+0.1$,
+is not visible at this count. On KO, with its calibration, the \Mw{}~5.3 received
+M5.7 2.5~s after its alarm and M5.6 at the end, the mb~4.7 M4.7 then M4.8, the
+mb~4.6 M4.5 then M4.8, and the M5.0 no estimate. Deeper events are in Section~S22.
+
+\subsection{Latency}\label{sec:latency}
+
+On Greece the learned detector's alarms came a median 12.0~s after origin (10.0 to
+13.5~s) and \stalta{}'s 10.8~s (9.0 to 12.4~s), and 126 of 130 detected events had a
+station still ahead of S at the alarm, by a median 4.8~s at the nearest such station
+against 5.1~s for \stalta{}; the dense Greek networks place a station close to most
+sources. On New Zealand the learned detector's alarms came a median 16.0~s
+after origin (interquartile range 14.5 to 18.5~s) and \stalta{}'s 14.2~s (13.5 to
+17.0~s), the gap seen on the development data, and every detected event had a station
+still ahead of its S wave at the alarm, by a median 13.0~s for the learned detector
+and 14.7~s for \stalta{}. On KO the medians are 20.8 and 17.9~s, with 5.4 and 7.7~s
+of warning at the nearest station; the \Mw{}~5.3 was declared 21.5~s after origin by
+the learned detector and 18.9~s by \stalta{}, 16~s before S at the nearest station.
 
 % ---------------------------------------------------------------------------
 \section{Discussion}\label{sec:discussion}
 
-A detector for early warning is best evaluated at the operating point at which it
-will be used and on the data it will see. Matched on unmatched alarms and replayed on
-quiet data, the learned detector and the classical triggers separate clearly, whereas
-event-level ROC-AUC barely separates the pipeline's two detectors and ranks four
-offline ones in the reverse order of their recall.
+We argue that a detector for early warning should be evaluated at the operating
+point at which it will be used, on data it has not seen, and under a comparison fixed
+before those data were chosen, and this study was designed accordingly. On the
+development data the learned detector and the classical triggers separated clearly
+once matched on unmatched alarms and replayed on quiet data, whereas event-level
+ROC-AUC barely separates the pipeline's two detectors and ranks four offline ones in
+the reverse order of their recall (Section~S14). The held-out tests answer the question posed in the
+Introduction. On New Zealand, a network no model had seen, the advantage held: 18
+more chance-corrected events than \stalta{} at equal unmatched alarms, out of 151,
+with an interval well clear of zero, and the same within 2 events for the shallow
+events alone and for the events detected before S. On Greece the difference was
+larger, 22 events out of 177, and the same for the shallow events, but it came with
+twice \stalta{}'s unmatched alarms, so the comparison was not at an equal operating
+point there.
+On KO, held out in time from the network the detector was trained on, the
+difference had the same sign but with 36 events its interval includes zero, as the
+protocol anticipated for a two-month pool; the KO result is evidence of consistency,
+not a test of its own.
 
-The classical detectors are neither obsolete nor superior. The learned detector gains
-in M2--4 events that an amplitude criterion cannot separate from noise, and it keeps
-that sensitivity at a small fraction of the classical detectors' alarm rate on quiet
-data. The classical detectors, however, alarm 1.0--1.3~s earlier on the largest
-events, cost orders of magnitude less, as measured for \stalta{}, and time the onset to
-a sample, which is why the pipeline uses \stalta{} for timing rather than for
-decisions. Causal PhaseNet, trained on another country's data, matched the learned
-detector, and no published model that can run in real time was shown to exceed it at
-an alarm rate matched on the tuning data. The gain thus comes from learned detection
-rather than from this particular detector, and what distinguishes the pipeline's
-detector is that it reaches this level in a self-contained program with 142\,059
-parameters per network.
+On these data the classical detectors are neither obsolete nor superior. On
+development data the learned detector gained in M2--4 events that an amplitude criterion cannot
+separate from noise, and it kept that sensitivity at a small fraction of the
+classical detectors' alarm rate on quiet data. On New Zealand it kept it: 0.9 alarms
+per day against 1.6 to 6.2 for the classical settings matched on detections or
+unmatched alarms. On Greece and KO it did not: 19.3 and 9.7 per day, while the
+baselines matched on quiet alarms stayed near their development rates. An analysis
+outside the protocol, made after the Greek result, separates two causes
+(Section~S25). In the two Greek sequences with the most unmatched alarms, 77 of the
+learned detector's 225 locate within 30~km of the mainshock, most from P and S picks,
+and 9 more follow events listed by the Aristotle University network but absent from
+NOA's catalog, so at least 86 are uncataloged aftershocks; the other 141 could not
+be located. On the quiet windows, one 6~h window in Crete holds 51 of the learned
+detector's 106 Greek alarms, nearly all with station STIA, on emergent signals with
+no impulsive onset, no location and no event in any catalog; \stalta{} did not fire
+on them, so the protocol's exclusion of the two stations noisiest for \stalta{} did
+not remove them. Without that window the learned detector raised 10.4 alarms per day
+against 21.2. The learned detector is thus more sensitive both to small earthquakes
+missing from the catalogs and to a kind of emergent station noise that \stalta{}
+ignores, and an unmatched or quiet-window alarm count does not separate the two. The classical detectors alarm about a second earlier on the largest
+events, since a window detector can trigger only once the P wave occupies part of its
+6~s window. They also cost orders of magnitude less and time the onset to a sample, which is
+what the pipeline uses them for. Causal PhaseNet, trained on another
+country's data, was equivalent to the learned detector on New Zealand under the
+equivalence test on both unseen networks, with fewer unmatched alarms, and behind it
+on KO.
+FilterPicker matched the learned detector's detections on New Zealand only at three
+times its unmatched alarms, and no published model that can run in real time exceeded
+the learned detector at an alarm rate matched on the development data. It does so in a self-contained program with 142\,059 parameters per network.
 
-The computational design carries much of the protocol's weight. Cached window
-probabilities and deterministic replays made trigger grids of hundreds of settings,
-seven scoring passes per setting and evaluations committed in advance practical, and
-replaying every station subset separated the geometric term of the alert time from
-the terms the detector controls. The P travel time to the second station dominates
-the alert, and the detector contributes about 2~s after it, so that stations near
-source regions shorten the alert more than a faster detector would. Two failures of
-the data path were found only by complete replays (Section~S2). The dataloggers
-nearest the \Mw{}~6.2 switched to uncompressed integers, which a decoder that accepted
-only Steim-2 silently rejected, and an earlier version that dropped samples under load
-shifted later samples in time and lost 15 of 44 detections.
+Much of the protocol rests on the computational design: cached window
+probabilities and deterministic replays made trigger grids of hundreds of settings
+and the retuning of all baselines practical, and the release, the request records
+and the file hashes let anyone fetch the same test data again and check them. Only
+complete replays exposed two failures of the data path, among them an earlier version
+that dropped samples under load and lost 15 of 44 detections (Section~S2).
 
 \subsection{Limitations}\label{sec:limits}
 
-The study rests on one regional network and two held-out sequences, the second with
-an advantage over \stalta{} that was not significant, and the first scored repeatedly
-for post hoc analyses. The ranking on a continuous record rests on one station. The catalog is incomplete for small events, so that unmatched alarms only bound false
-alarms, and absorbing detections within 40~s as coda trades the resolution of closely
-spaced events, a doublet among them, for fewer false alarms in dense sequences, and the quiet-window classes use no analyst picks. The published models ran
-with pre-trained weights and the pipeline's trigger rule, and fine-tuning them on the
-detector's training split might improve them. The input is a replay of archived
-files, and a live SeedLink client, with its latency, packet loss and clock problems,
-is not implemented. Further held-out sequences committed before extraction, more
-stations and a live shadow run beside AFAD's alerts would address these limits.
+The limitations below were stated in the protocol before any test waveform was
+fetched and are unchanged. The KO test is far under its target, with
+36 events in two sequences and 14 quiet windows, so its interval is wide; the
+prospective KO test will add to it. The catalogs are incomplete for
+small events, so that unmatched alarms only bound false alarms, and EMSC's catalog
+lists fewer small events in KO's region than AFAD's does, which lowers KO's scorable
+counts and raises all detectors' unmatched alarms there. The matcher predicts P and
+S in a uniform half-space, so events deeper than about 150~km are scored as missed
+for all detectors alike, which the depth-restricted results address. On Greece and
+New Zealand the magnitude runs with zero station terms, an expected bias of about
+$+0.1$, and without the noise levels that exclude dead channels and codas on KO.
+Several parameters applied to all detectors were not swept: the 40~s coda
+absorption, which trades the resolution of closely spaced events for fewer false
+alarms, the 15~s between a station's triggers, the trigger's release, the pick checks
+and the location's velocities and depth. The learned detector responds to emergent station noise that \stalta{} ignores
+(Section~\ref{sec:discussion}), which the protocol's station exclusion, keyed to
+\stalta{}, does not catch. The ranking on a continuous record rests on one station,
+and the published models ran with pre-trained weights that fine-tuning
+might improve. The input is a replay of archived files; a live SeedLink client, with
+its latency, packet loss and clock problems, was not part of the tests.
 
 % ---------------------------------------------------------------------------
 \section{Conclusions}\label{sec:conclusions}
 
 A self-contained, verified real-time pipeline and a replay protocol with chance
-correction and held-out sequences with protocols committed in advance measure
-seismic detectors at their
-operating point. Under this protocol, a learned detector found 36.4 chance-corrected
-events of 66 against 21.7 for \stalta{} at comparable unmatched alarms on one held-out
-sequence and 35.1 of 56 against 29.1, within the uncertainty, on a second. On quiet
-data it raised a small fraction of the classical detectors' alarms, and causal
-PhaseNet matched it. Two detectors with nearly equal event AUC differed by a factor of
-1.6 in recall at one window false alarm per day, and detectors for early warning are
-therefore best compared on continuous records at fixed alarm budgets.
+correction, paired tests and catalog-quiet data, fixed in a timestamped release
+before its test data were fetched, measure seismic detectors at their operating
+point. Under this protocol, on the Greek and New Zealand networks that no model had
+seen, a learned detector found 22.4 (Greece) and 18.1 (New Zealand) more
+chance-corrected events than \stalta{} at the settings matched on unmatched alarms,
+with 95\% intervals 11.7--33.5 and 7.2--29.5, on Greece at twice \stalta{}'s
+unmatched alarms; on the KO network it was trained on, held out in time and under its
+target, 2.5 more, with an interval including zero. On New Zealand's quiet data it
+raised a fraction of the classical detectors' alarms, on Greece's and KO's not, in
+part through station noise that \stalta{} ignores, and causal PhaseNet was equivalent
+to it on both unseen networks. Two detectors with nearly equal event AUC differed by a factor of 1.6 in recall at
+one window false alarm per day. Our results indicate that detectors for early warning
+are better compared on continuous records at fixed alarm budgets, under a comparison
+fixed before the records are seen.
 
 % ---------------------------------------------------------------------------
 \printcredits
@@ -740,28 +899,52 @@ therefore best compared on continuous records at fixed alarm budgets.
 
 Name of the software: ayzek. Developer: H. O\u{g}uz Bolat
 (\href{mailto:oguz.bolat@std.yildiz.edu.tr}{oguz.bolat@std.yildiz.edu.tr}), first
-available in 2026. Program language: C++23, with Python tools for model export and
+available in September 2026. Program language: C++23, with Python tools for model export and
 evaluation. Hardware requirements: an x86-64 or aarch64 processor; tested on a desktop
 computer and on a Raspberry Pi~4. Software required: Meson and Ninja and a C++23
 compiler (GCC~16 or Clang); no machine-learning runtime. Program size: about 9\,400
 lines of C++ and 6.5~MB of model weights. License: GNU General Public License,
-version~3 or later. The source code, model weights, documentation and the scripts that
-reproduce every result (\texttt{tools/reproduce\_all.sh}, with expected values in
-\texttt{bench/claims.json}) are available at \url{https://github.com/hogib/ayzek}
-(release v0.1.0-beta.6), archived at \url{https://doi.org/10.5281/zenodo.23672495}. The FilterPicker port is
+version~3 or later. The source code, model weights, the protocol, the test settings,
+the documentation and the scripts that reproduce each result
+(\texttt{tools/reproduce\_all.sh}, with expected values in \texttt{bench/claims.json};
+\texttt{tools/run\_heldout.py} for the tests) are available at
+\url{https://github.com/hogib/ayzek}. The tests run release v1.0.0
+(commit 3e43064, 30~October 2026), archived at
+\url{https://doi.org/10.5281/zenodo.23806743}; the release carries the SHA-256 of its
+static x86-64 binary and of each model file, and the tool that fetches the test data
+at commit 440a2d9, as a tarball; the tool's repository is
+\url{https://github.com/hogib/ayzek-heldout}. The FilterPicker port is
 derived from the C code of \citet{lomax2012} (GNU GPL version~2 or later). Software
 versions are listed in Table~S9.
 
 \section*{Data availability}
 
-Waveforms are from the Turkish National Seismic Network \citep{afad1990}, obtained
-through the AFAD archive service, and from the KO network of KOERI \citep{koeri1971}
-through its FDSN service; the AFAD and KOERI catalogs are public. The AFAD waveforms
-cannot be redistributed. The three KOERI datasets of Table~\ref{tab:replays}, which
-reproduce the principal results, are attached to the pipeline's release. The offline
-evaluation code is available at \url{https://github.com/SismoKaos-Research/cnn_earthquake},
-the training code of the detector at \url{https://github.com/hogib/cascade} and that of
-the picker at \url{https://github.com/hogib/sphase}.
+The AFAD waveforms are available from AFAD's data portal (TDVMS,
+\url{https://tdvms.afad.gov.tr}) on registration and request, and cannot be
+redistributed. The KOERI \citep{koeri1971}, Greek \citep{hl1975,ht1981,ha2008,hp2000,hc2006}
+and New Zealand \citep{geonet2021waveforms} waveforms are open, KOERI's under citation
+of the network, the Greek networks' under CC~BY~4.0 from the NOA EIDA node, and
+GeoNet's under CC~BY~3.0~NZ. The test waveforms are not redistributed: they are
+fetched from these data centers by the tool released with the pipeline, which
+keeps for each set a record of the request (\texttt{dataset.json}: services,
+stations, channels and windows, the canary check, and what arrived) and the SHA-256
+of each file it wrote, so that a later fetch can be checked against the data used in
+this study. The selection of the sequences and quiet windows, the station tables and the
+catalog requests are released with it. After the release the fetch tool received three
+commits (658ae03, 5d088c5 and 6fda3e2) that change only how it retries and splits its
+requests to NOA's availability service, none of what it selects or writes; KO was
+selected and fetched at 440a2d9, New Zealand and Greece fetched at 6fda3e2, as each
+set's record states. The catalogs are AFAD's for the development replays, EMSC's
+\citep{emsc2026catalogue} for the KO tests, which the European-Mediterranean
+Seismological Centre serves through its FDSN event service with the Turkish agencies'
+solutions (KOERI runs no event service, and AFAD's answered each request made when
+the protocol was written with an empty list), NOA's FDSN event service for Greece
+and GeoNet's \citep{geonet1970catalogue} for New Zealand. The three public KOERI
+development sets are attached to the pipeline's release. The offline evaluation code
+is available at \url{https://github.com/SismoKaos-Research/cnn_earthquake}, the
+training code of the detector at \url{https://github.com/hogib/cascade} and that of
+the picker at \url{https://github.com/hogib/sphase}. Maps use ETOPO~2022
+\citep{etopo2022}, GSHHG \citep{wessel1996} and GMT \citep{wessel2019}.
 
 \section*{Declaration of competing interests}
 
@@ -776,15 +959,21 @@ commercial, or not-for-profit sectors.
 \section*{Acknowledgments}
 
 The authors thank AFAD and KOERI for access to their waveform data and earthquake
-catalogs.
+catalogs. We acknowledge the New Zealand GeoNet programme and its sponsors NHC, Earth
+Sciences NZ, LINZ, NEMA and MBIE. The Greek waveforms were retrieved from the EIDA
+node of the National Observatory of Athens, and we thank the operators of the HL, HT,
+HA, HP and HC networks: the National Observatory of Athens, the Aristotle University
+of Thessaloniki, the University of Athens, the University of Patras and the
+Technological Educational Institute of Crete. The KO test catalog was retrieved from
+the FDSN event service of the European-Mediterranean Seismological Centre.
 
 \section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
 
-During the preparation of this work the authors used Claude Opus~5 and Claude
-Opus~5.5 (Anthropic) to develop and refactor parts of the pipeline code, extend the
-analysis and edit the manuscript text. After using these tools, the authors reviewed
-and edited the content as needed and take full responsibility for the content of the
-published article.
+During the preparation of this work the authors used Claude Opus~5, Claude
+Opus~5.5 and Claude Fable~5.1 (Anthropic) to develop and refactor parts of the
+pipeline code and to edit the manuscript text. After using these tools, the authors
+reviewed and edited the content as needed and take full responsibility for the
+content of the published article.
 
 \bibliographystyle{cas-model2-names}
 \bibliography{refs}

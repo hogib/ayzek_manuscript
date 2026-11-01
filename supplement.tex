@@ -27,6 +27,9 @@
 \newcommand{\VP}{$V_\mathrm{P}$}
 \newcommand{\VS}{$V_\mathrm{S}$}
 \newcommand{\tool}[1]{\nolinkurl{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{xcolor}
+\newcommand{\tbd}[1]{\textcolor{red}{[#1]}}
 % A note under a table, as in the paper.
 \newcommand{\tablenote}[1]{\par\vspace{4pt}%
   \begin{minipage}{\linewidth}\footnotesize\textit{Note.} #1
@@ -47,11 +50,11 @@
 \renewcommand{\thepage}{S\arabic{page}}
 
 \title{Supplementary material for\\[4pt]
-  \large A Self-Contained Real-Time Detection Pipeline and an Operating-Point Replay
-Protocol Applied to Turkish Broadband Stations}
+  \large A Lightweight Earthquake Early Warning Pipeline and Its Evaluation on Three
+Seismic Networks}
 \author{H. O\u{g}uz Bolat, Sibel \c{C}imen, B\"ulent Bolat, T\"ulay Y\i{}ld\i{}r\i{}m}
 
-\date{29 October 2026}
+\date{1 November 2026}
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
@@ -60,7 +63,12 @@ Protocol Applied to Turkish Broadband Stations}
 (\url{https://github.com/hogib/ayzek}, \tool{tools/}) or in the offline
 evaluation code, and the command is named with each table. The AFAD waveforms
 cannot be redistributed; the KOERI datasets are attached to the pipeline's
-releases.
+releases. Sections~\ref{s:stations} to~\ref{s:training} concern the development
+data, on which every choice of the method was made (main-text Section~3.1); the
+AFAD S\i{}nd\i{}rg\i{} \Mw{}~6.1 and Simav sequences, called "held out" in the
+development record, are development data under the test protocol.
+Sections~\ref{s:devresults} to~\ref{s:depth40} hold the development results in
+full, the selected test sets and the test results that the main text summarizes.
 
 \tableofcontents
 
@@ -83,8 +91,8 @@ the noise baseline and the \stalta{} and are not scored.
   \centering\small
   \caption{Stations and quiet windows.}\label{t:stations}
   \panel{a} Stations. Datasets: S30, S\i{}nd\i{}rg\i{} 30~min (tuning);
-  Mar, Marmara (tuning); S61, S\i{}nd\i{}rg\i{} \Mw{}~6.1 (held out); Sim, Simav
-  \Mw{}~4.8 (second held out); Q, the AFAD quiet windows; and the three KOERI
+  Mar, Marmara (tuning); S61, S\i{}nd\i{}rg\i{} \Mw{}~6.1; Sim, Simav
+  \Mw{}~4.8 (both development sequences); Q, the AFAD quiet windows; and the three KOERI
   datasets.\par\smallskip
   \begin{tabular}{@{}llrrll@{}}
     \toprule
@@ -290,7 +298,8 @@ all.
 \end{table}
 
 \noindent Reproduction: \tool{python3 tools/quiet_stations.py --runs
-learned=data/runs/quiet100 stalta=data/runs/quiet100_stalta}. An alarm is
+learned=LEARNED_RUNS stalta=STALTA_RUNS}, with the two detectors' quiet-window run
+directories. An alarm is
 declared by two stations, so the per-station alarm counts sum to twice the
 alarms.
 
@@ -306,7 +315,7 @@ the Raspberry~Pi~4 (Cortex-A72, 4 cores at 1.8~GHz) runs the static aarch64
 build with NEON kernels, each group starting below 55~\textdegree C with the
 clock held at 1.8~GHz throughout. A station needs one window every 0.5~s; the
 capacity is the stations whose windows one to all cores sustain. The published
-models of main-text Section~4.3 were timed separately under PyTorch, one forward
+models of main-text Section~3.2 were timed separately under PyTorch, one forward
 pass per 0.5~s step and station as the evaluation ran them.
 
 \begin{table}[htbp]
@@ -446,7 +455,7 @@ probabilities of stage~7 of \tool{tools/reproduce_all.sh}.
 
 Requiring a third station halves the unmatched alarms of the dense Marmara
 network for 1.2~s of median delay and 0.5~s on the \Mw{}~6.2. In the sparse
-held-out network the third station is 230--290~km away, and the \Mw{}~6.1 alarm
+S\i{}nd\i{}rg\i{} \Mw{}~6.1 network the third station is 230--290~km away, and the \Mw{}~6.1 alarm
 comes 20~s later (Table~\ref{t:minstations}). Two stations remain the default;
 three are worth requiring only where the network is dense. A larger reduction
 of unmatched alarms would need the declaration to test whether the detections
@@ -495,8 +504,9 @@ the best setting of the other weight sets at most 26 unmatched alarms reached
 15.9 (EQTransformer ETHZ), 3.5 (original) and none (STEAD) chance-corrected
 detections in the causal mode, and PhaseNet ETHZ 45.4 and STEAD 31.4.
 Table~\ref{t:seisbench}b and~c add, for the evaluation run once with these
-settings, the held-out magnitude bands and alarm delays and the KOERI datasets
-one by one.
+settings, the S\i{}nd\i{}rg\i{} \Mw{}~6.1 magnitude bands and alarm delays and the KOERI
+datasets one by one; marmara\_ko overlaps the detector's training data (134 windows
+at four stations) and demonstrates the pipeline without comparing detectors.
 
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
@@ -518,7 +528,7 @@ one by one.
   \end{tabular}
 
   \bigskip
-  \panel{b} Held-out replay: detected per magnitude band, median alarm delay and
+  \panel{b} S\i{}nd\i{}rg\i{} \Mw{}~6.1 replay: detected per magnitude band, median alarm delay and
   the \Mw{}~6.1 alarm. Look-ahead delays are in parentheses: their input extends
   past the window and they cannot be achieved in real time.\par\smallskip
   \begin{tabular}{@{}lccccc@{}}
@@ -560,7 +570,7 @@ one by one.
 \noindent With blocks of origin time instead of single events, the advantage of
 look-ahead PhaseNet's equal-unmatched setting becomes significant over the three
 AFAD replays together ($-10.8$, interval $-20.4$ to $-1.4$ with 10-minute blocks)
-and, with 15-minute blocks, on the held-out replay alone ($-11.9$ to $-0.2$); it
+and, with 15-minute blocks, on the S\i{}nd\i{}rg\i{} \Mw{}~6.1 replay alone ($-11.9$ to $-0.2$); it
 remains a setting with three times the unmatched alarms that cannot run in real
 time.
 
@@ -571,15 +581,17 @@ time.
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
   \caption{Software and hardware with which the results were produced.}\label{t:software}
-  \begin{tabular}{@{}lll@{}}
+  \begin{tabular}{@{}lL{3.4cm}L{8.6cm}@{}}
     \toprule
     Component & Version & Used for \\
     \midrule
     ayzek & v0.1.0-beta.3 & every pipeline result but FilterPicker \\
     ayzek & v0.1.0-beta.5 & FilterPicker (the only change to the pipeline) \\
     ayzek & v0.1.0-beta.6 & analysis tools only (pipeline as in beta.5) \\
-    GCC & 16.2.1 & the x86 build (release, glibc 2.44) \\
-    zig & clang 21.1, musl 1.2.5 & the static aarch64 build (Raspberry~Pi) \\
+    ayzek & v1.0.0 (commit 3e43064) & the release of the tests: held-out tests, Pd magnitude, early location, retuned baselines \\
+    held-out tool & 440a2d9; 6fda3e2 & selection and fetch of the test sets (KO; New Zealand and Greece) \\
+    GCC & 16.2.1 & the x86 development build (glibc 2.44) \\
+    zig & clang 21.1, musl 1.2.5 & the static aarch64 build (Raspberry~Pi) and the static x86-64 build of the tests (SHA-256 a40e7d23\ldots a6899) \\
     meson / ninja & 1.12.1 / 1.13.2 & build \\
     qemu-aarch64 & 11.1 & the aarch64 test suite on x86 \\
     \addlinespace
@@ -609,7 +621,7 @@ The adopted trigger rule fires on eight consecutive windows at 0.8 or one at
 thresholds just below the 0.90--0.907 saturation plateau, with the instant
 branch off and chance corrected as in the main text. Placed just below the
 plateau, a single threshold performs comparably to the adopted rule. At 0.895 it detects 50.0 chance-corrected tuning events with 18 unmatched alarms and
-33.6 held-out events with 3, against 48.7 with 26 and 36.4 with 7. It is also sensitive to the third decimal, since at 0.899 the held-out detections fall to 26.
+33.6 S\i{}nd\i{}rg\i{} \Mw{}~6.1 events with 3, against 48.7 with 26 and 36.4 with 7. It is also sensitive to the third decimal, since at 0.899 the \Mw{}~6.1 detections fall to 26.
 None of these thresholds was in the grid from which the adopted rule was
 selected.
 
@@ -643,10 +655,10 @@ three replays.
 \section{The quiet-window alarms, one by one}\label{s:waveforms}
 
 Table~\ref{t:alarms} lists the 16 alarms of the learned detector on the AFAD
-quiet windows with the class of main-text Table~3. The classes use two criteria
+quiet windows with the class of Table~\ref{t:devresults}b. The classes use two criteria
 that need no judgment of the waveforms. \emph{KIRK pulse}: KIRK declared the
 alarm and its detection fell in the slot of its periodic pulse, 50--60~s after a
-10-minute mark (218 of its 225 detections fall there, main-text Figure~4c; in
+10-minute mark (218 of its 225 detections fall there, Figure~\ref{f:quietexamples}c; in
 these nine alarms at 58.6--58.8~s); the alarm itself follows when the partner
 station's detection completes the pair, 62--105~s after the mark.
 \emph{Seismic, picker-confirmed}: the rule below confirms a seismic source in at
@@ -685,7 +697,7 @@ rule) rather than to the first two declaring stations, the rule also confirms al
 8 and 16 undetermined. For \stalta{} it confirms six alarms, two of them on events
 the learned detector did not alarm on. Without the confirmed alarms the rates are
 2.57 and 74.0 per day. KOERI's FDSN service has no event service, so the EMSC
-catalog and the ISC bulletin, which carries KOERI's own locations, were searched for every alarm (origin up to 180~s before it, within 300~km). The only events that fit an alarm are the M2.4 of alarm~2 (EMSC and KOERI) and an M1.9 located by KOERI for alarm~13. Neither catalog lists any event for the undetermined alarms 4, 8 and 16, or for any pulse alarm. KIRK's pulse does not appear in the event replays. One of 38 KIRK detections on the Marmara replay falls in the pulse slot, in no unmatched alarm, and none of 20 on the held-out replay, and every pulse alarm on the quiet windows falls between 23 May and 9 June 2024.
+catalog and the ISC bulletin, which carries KOERI's own locations, were searched for every alarm (origin up to 180~s before it, within 300~km). The only events that fit an alarm are the M2.4 of alarm~2 (EMSC and KOERI) and an M1.9 located by KOERI for alarm~13. Neither catalog lists any event for the undetermined alarms 4, 8 and 16, or for any pulse alarm. KIRK's pulse does not appear in the event replays. One of 38 KIRK detections on the Marmara replay falls in the pulse slot, in no unmatched alarm, and none of 20 on the \Mw{}~6.1 replay, and every pulse alarm on the quiet windows falls between 23 May and 9 June 2024.
 
 \noindent Reproduction: \tool{tools/classify_alarms.py --pairs any} and
 \tool{tools/alarm_catalogues.py}.
@@ -897,8 +909,9 @@ and \tool{tools/significance.py} give the paired tests of the main text.
 \clearpage
 \section{Record of protocols committed in advance}\label{s:prereg}
 
-Every choice that fixed a setting or an analysis before held-out or quiet data
-were scored, with the commit that records it. Commits in \emph{ayzek} are in the
+Every choice that fixed a setting or an analysis before the development sequences or
+quiet data were scored, and the steps of the release and the tests, with the commit
+that records it. Commits in \emph{ayzek} are in the
 pipeline's repository, the others in the paper's. Times are commit times
 (UTC+3), recorded by the authors' own repositories and not timestamped by a third
 party; the order of steps therefore rests on these records.
@@ -906,7 +919,7 @@ party; the order of steps therefore rests on these records.
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
   \caption{The steps committed in advance, their records and what preceded each.}\label{t:prereg}
-  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm}l>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{6.2cm}@{}}
+  \begin{tabular}{@{}L{3.6cm}L{2.9cm}L{2.3cm}L{5.6cm}@{}}
     \toprule
     Step & Commit & Date & Run before it \\
     \midrule
@@ -938,29 +951,111 @@ party; the order of steps therefore rests on these records.
     one check that \tool{--ahead 0} reproduces the causal scores \\
     published models, 1--2~s look-ahead: selection & a6bdd22 & 2026-10-27 21:58 &
     the tuning grid; no held-out, Simav or quiet-window run \\
+    \addlinespace
+    \multicolumn{4}{@{}l}{\emph{The release and the tests (UTC)}} \\
+    baselines retuned on the five development replays (three rules) &
+    \emph{ayzek} (protocol, section 6) & 2026-10-29 &
+    every development replay; no test pool touched \\
+    protocol fixed; release v1.0.0 tagged, pushed and deposited on Zenodo &
+    \emph{ayzek} 3e43064 & 2026-10-30 12:55:36 &
+    no waveform from any test pool fetched \\
+    KO selection written &
+    held-out tool 440a2d9 & 2026-10-30 13:05 &
+    the KO catalog and availability requests only \\
+    New Zealand selection written &
+    held-out tool 440a2d9 (stamped 6fda3e2) & 2026-10-30 23:04 &
+    GeoNet's catalog and day-file listing only \\
+    Greece selection written &
+    held-out tool 6fda3e2 & 2026-10-31 06:42 &
+    NOA's catalog and availability requests; four earlier attempts died in the availability stage \\
+    KO test run (\tool{tools/run\_heldout.py}, static v1.0.0 binary) &
+    v1.0.0 & 2026-10-31 10:55 to 14:00 &
+    the fetched KO sets, verified against their request records; the analysis
+    stage was rerun at 14:01 with \tool{tools/network\_subsets} rebuilt from the
+    tagged source (the static copy predated its \tool{--quiet} option), no replay
+    repeated \\
+    New Zealand test run &
+    v1.0.0 & 2026-10-31 14:00 to 20:22 &
+    the fetched New Zealand sets, verified \\
+    Greece test run (on a second machine, same binary by SHA-256) &
+    v1.0.0 & 2026-10-31 19:52 to 2026-11-01 02:48 &
+    the fetched Greek sets, verified; the published models' window scores from an
+    RTX 3050 on the second machine, all replays and the analysis on the first (the
+    replays not needing published-model scores ran while the scores were computed),
+    instead of the RTX 3060 Ti of the other two runs (checked on one KO set:
+    2 of 151\,116 values differ by $10^{-6}$, the last printed digit; the learned
+    detector's scores and reports are identical) \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \noindent The evaluation runs followed the protocols. The published models were evaluated in fba5ffb (2026-10-22 19:16) and the Simav sequence in 49fe24f (2026-10-23 13:01). FilterPicker was evaluated on 2026-10-26 between 21:15 and 21:20, with its results in c06566f, and the look-ahead settings on 2026-10-27 between 22:02 and 23:16, with their results in 40003af.
-No setting was changed after any evaluation run.
+No setting was changed after any evaluation run. The commits from the release on are
+timestamped by GitHub and, for the release, by Zenodo (10.5281/zenodo.23806743).
 
 % ---------------------------------------------------------------------------
 \clearpage
-\section{The continuous-record ranking without the S wave}\label{s:swave}
+\section{Detector ranking on a continuous record}\label{s:swave}
 
-Main-text Table~4 scores an event by the highest window score in its guard, from 10~s before the predicted P (minus the window length) to 60~s after it, and every detector can therefore score the S wave and coda as well as the P wave. Here an event
+Six detectors were scored on a continuous 728-day record at the development station
+MANT: the learned detector and the pipeline's \stalta{}, and four offline detectors,
+a classical \stalta{} (Allen, 1978), two P-wave detectors that score 3.4~s windows
+and differ only in their noise windows, and a 6~s detector with station scaling
+(Table~\ref{t:swave}a, Figure~\ref{f:recall}). Windows from 10~s before to 60~s after
+the P arrival of any cataloged event within 500~km form its guard and the rest the
+background; the threshold for a budget of $B$ window false alarms per day is the
+score that $B$ background windows a day exceed, and an event is detected when the
+highest score in its guard exceeds it. The pipeline's two detectors are almost
+indistinguishable by event AUC (0.9910 for \stalta{}, 0.9892 for the learned
+detector; paired difference on the common events 0.0016, 0.0000--0.0035), yet at one
+window false alarm per day the learned detector finds 34.8\% of the events against
+22.2\%, 1.6 times as many, and among the offline detectors recall at that budget is in
+the exact reverse order of event AUC. The inversion is a property of the metric,
+which integrates over all false positive rates whereas operation uses rates of order
+$10^{-4}$.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figures/fig5_recall_budget.pdf}
+  \caption{Recall of the six detectors of Table~\ref{t:swave}a against the alarm budget
+    (window false alarms per day), 20 budgets a decade; dots mark the budgets of the
+    table. Solid wide lines: detectors run by the pipeline; dashed: their offline
+    counterparts.}\label{f:recall}
+\end{figure}
+
+\paragraph{Without the S wave.} Panel (a) scores an event by the highest window score in its guard, from 10~s before the predicted P (minus the window length) to 60~s after it, and every detector can therefore score the S wave and coda as well as the P wave. Here an event
 is scored only from windows that end at least a margin before its predicted S
 arrival (IASP91), and only events whose S$-$P interval is at least 6~s plus the
 margin are counted, so that every detector, including the 6~s detectors on their
-6~s grid, has a window ending between P and that limit. Thresholds are those of Table~4, because they are set by the background, which does not depend on how events are scored. The event AUC compares each event's maximum with the maximum over one
+6~s grid, has a window ending between P and that limit. Thresholds are those of panel (a), because they are set by the background, which does not depend on how events are scored. The event AUC compares each event's maximum with the maximum over one
 random stretch of record of the same length, clear of every cataloged event.
 
 \begin{table}[htbp]
   \centering\footnotesize\setlength{\tabcolsep}{4pt}
-  \caption{Recall at three alarm budgets and event AUC on the 728-day MANT record,
-    with each event scored over its full guard and only before its S wave (margin
-  1~s; 12{,}206 events with SNR~$\geq 3$ and S$-$P~$\geq 7$~s).}\label{t:swave}
+  \caption{Recall at three alarm budgets (window false alarms per day at the one
+  station) and event AUC on the 728-day MANT record.}\label{t:swave}
+  \panel{a} The 13{,}056 events with SNR~$\geq 3$. Event AUC: maximum score within each
+  event's guard window against the maximum over random stretches of equal length, away
+  from cataloged events, of the same record.\par\smallskip
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    Detector & Event AUC & 100/day & 10/day & 1/day \\
+    \midrule
+    \multicolumn{5}{@{}l}{\emph{Run by the pipeline}} \\
+    \stalta{} (causal, 2--20~Hz) & 0.9910 & 0.991 & 0.730 & 0.222 \\
+    learned detector             & 0.9892 & 0.979 & 0.743 & 0.348 \\
+    \addlinespace
+    \multicolumn{5}{@{}l}{\emph{Offline}} \\
+    \stalta{} (classical)       & 0.9795 & 0.928 & 0.548 & 0.132 \\
+    P-wave, amplitude-matched   & 0.9622 & 0.903 & 0.627 & 0.183 \\
+    P-wave, natural negatives   & 0.9516 & 0.861 & 0.573 & 0.219 \\
+    6~s detector, station scaling & 0.9403 & 0.864 & 0.741 & 0.316 \\
+    \bottomrule
+  \end{tabular}
+
+  \bigskip
+  \panel{b} Each event scored over its full guard and only before its S wave (margin
+  1~s; 12{,}206 events with SNR~$\geq 3$ and S$-$P~$\geq 7$~s).\par\smallskip
   \begin{tabular}{@{}lcccccccc@{}}
     \toprule
     & \multicolumn{4}{c}{Full guard} & \multicolumn{4}{c}{Before the S wave} \\
@@ -969,7 +1064,7 @@ random stretch of record of the same length, clear of every cataloged event.
     \midrule
     \multicolumn{9}{@{}l}{\emph{Run by the pipeline}} \\
     \stalta{} (causal, 2--20~Hz)   & 0.9911 & 0.991 & 0.724 & 0.217 & 0.9889 & 0.966 & 0.688 & 0.214 \\
-    6~s detector (per-window)      & 0.9896 & 0.980 & 0.753 & 0.350 & 0.9765 & 0.899 & 0.649 & 0.338 \\
+    learned detector               & 0.9896 & 0.980 & 0.753 & 0.350 & 0.9765 & 0.899 & 0.649 & 0.338 \\
     \addlinespace
     \multicolumn{9}{@{}l}{\emph{Offline}} \\
     \stalta{} (classical)          & 0.9784 & 0.927 & 0.546 & 0.130 & 0.9830 & 0.886 & 0.531 & 0.127 \\
@@ -987,18 +1082,18 @@ and at ten window false alarms per day \stalta{} draws level or ahead in both pa
 Margins of 0~s (12{,}566 events) and 2~s (11{,}944 events) give the same rankings
 at one window false alarm per day; the pipeline's detector then finds 0.339 and 0.336 of
 the events against 0.213 and 0.211 for its \stalta{}. Over the full guard, the
-values on this subset differ from Table~4, which counts all 13{,}056 events, by
+values on this subset differ from panel (a), which counts all 13{,}056 events, by
 at most 0.010 in recall and 0.003 in AUC.
 
 \noindent The event AUC also depends on which events are counted. Over all
 48{,}432 cataloged events within 500~km of MANT in the scanned record, whatever
 their SNR, the event AUC of the offline 6~s detector is 0.675; it rises to 0.912,
 0.940 and 0.960 when only events with an SNR of at least 2, 3 and 5 are counted.
-Table~4 uses the 13{,}056 events with SNR~$\geq 3$, from a complete rescan of the 728-day record (79 million window scores, 10.5 million for each 6~s detector and 18.5 million for each 3.4~s detector).
+Panel (a) uses the 13{,}056 events with SNR~$\geq 3$, from a complete rescan of the 728-day record (79 million window scores, 10.5 million for each 6~s detector and 18.5 million for each 3.4~s detector).
 
 \noindent Reproduction: \tool{tools/s_wave_control.py --runs <cnn_earthquake
 runs_mant> --margins 0 1 2}; it first reproduces the thresholds and full-guard
-recalls of Table~4 and stops if they differ.
+recalls of panel (a) and stops if they differ.
 
 % ---------------------------------------------------------------------------
 \clearpage
@@ -1015,7 +1110,7 @@ tuning replays and committed before the one evaluation run (Table~S13). Alarm ti
 \begin{table}[htbp]
   \centering\scriptsize\setlength{\tabcolsep}{2.5pt}
   \caption{Published models with 1 or 2~s of input past the window, beside the
-  causal (0~s) and centered settings of main-text Section~4.3.}\label{t:ahead}
+  causal (0~s) and centered settings of Table~\ref{t:devresults}a.}\label{t:ahead}
   \begin{tabular}{@{}llcccccc@{}}
     \toprule
     Model, look-ahead & Rule, setting & \multicolumn{2}{c}{Held out} & \multicolumn{2}{c}{Simav} & Quiet & \Mw{}~6.1 \\
@@ -1046,7 +1141,7 @@ difference: the learned detector's chance-corrected detections minus the model's
 with the 95\% paired bootstrap interval by events. Quiet: alarms on the 102.8~h of
 AFAD quiet windows. On the tuning replays the 1~s PhaseNet setting selected by the
 equal-unmatched rule had 52.2 chance-corrected detections with 21 unmatched alarms,
-against 48.7 with 26 for the learned detector; on the held-out data it fell to
+against 48.7 with 26 for the learned detector; on the \Mw{}~6.1 data it fell to
 35.4. Every quiet-window rate test against the learned detector gives
 $p \geq 0.15$.
 
@@ -1064,9 +1159,9 @@ anchoring of P times, introduced later, moved the learned detector to 48.7
 chance-corrected detections and 26 unmatched alarms without changing either
 selection; applied to 26, the rule would select another \stalta{} setting
 (1--10~Hz, STA 0.5~s, LTA 10~s, ratio 8), with 44.8 chance-corrected detections and
-26 unmatched alarms on the tuning data, 26.7 with 3 on the held-out data and 14.7
-alarms per day on the quiet windows (the open diamond of main-text Figure~2). The
-learned detector remains ahead on the held-out data by about ten events rather
+26 unmatched alarms on the tuning data, 26.7 with 3 on the \Mw{}~6.1 data and 14.7
+alarms per day on the quiet windows (the open diamond of Figure~\ref{f:curves}). The
+learned detector remains ahead on the \Mw{}~6.1 data by about ten events rather
 than 15, against a \stalta{} with fewer unmatched alarms.
 
 \paragraph{Anchoring.} Anchoring changes only the time attached to a detection,
@@ -1088,11 +1183,13 @@ Marmara \Mw{}~6.2 and the following hour, recorded by eight KO stations, the
 \Mw{}~6.2 alarms at +10.5~s and the \Mw{}~5.9 at +11.0~s, and 28 of 37 catalog
 events are detected. Because 11 of the 15 KO stations contributed training or
 validation windows to the detector, these sets reproduce the pipeline's behavior
-on public data but cannot test its generalization.
+on public data but cannot test its generalization; marmara\_ko moreover overlaps the
+detector's training windows (134 windows at CTKS, SLVT, BOTS and BGKT) and is a
+demonstration only.
 
 \paragraph{Location.} Location serves the report that follows an alarm and is not
 part of the evaluation. It is good where several stations surround the source and
-poor on the held-out replay, where only two of six stations lie within 100~km. There, half of the located events are within 10~km and the rest tens of kilometers
+poor on the \Mw{}~6.1 replay, where only two of six stations lie within 100~km. There, half of the located events are within 10~km and the rest tens of kilometers
 off (Table~\ref{t:more}).
 
 \begin{table}[htbp]
@@ -1105,7 +1202,7 @@ off (Table~\ref{t:more}).
     \midrule
     S\i{}nd\i{}rg\i{} 30 min & 7 & 7 & 5.3 km & 4.7--6.1 km & 5 \\
     Marmara & 44 & 35 & 10.6 km & 6.5--24.6 km & 17 \\
-    S\i{}nd\i{}rg\i{} \Mw{} 6.1 (held out) & 39 & 27 & 32.2 km & 2.8--67.9 km & 13 \\
+    S\i{}nd\i{}rg\i{} \Mw{} 6.1 & 39 & 27 & 32.2 km & 2.8--67.9 km & 13 \\
     S\i{}nd\i{}rg\i{} \Mw{} 4.9, KO & 8 & 7 & 3.7 km & 3.5--3.7 km & 6 \\
     Marmara \Mw{} 6.2, KO & 28 & 20 & 6.2 km & 3.8--33.5 km & 12 \\
     \bottomrule
@@ -1122,14 +1219,14 @@ sensitivity from \tool{tools/select_setting.py} with \tool{--unmatched 26}.
 The chance level $c$ of main-text Equation~2 is the share of catalog events
 matched when every catalog time is shifted by $\pm 127$, $\pm 263$ or $\pm 391$~s.
 Inside an aftershock sequence most shifted events land within 60~s of a real one
-(52 of 69 per shift on the held-out replay, 48 of 62 on Marmara), where a true
+(52 of 69 per shift on the \Mw{}~6.1 replay, 48 of 62 on Marmara), where a true
 detection of the real event can match them; $c$ then measures chance matching where
 alarms are densest. Table~\ref{t:chance} gives $c$ for every real-time detector on
 every event replay, as used and with the shifted events that land within 60~s of a
 real one removed. Without them $c$ falls for every detector; it falls most for the
 detectors with the most true detections, and the chance-corrected counts rise by
 1.5 to 3.5 events. The paired differences between detectors move by at most 0.8
-events (held out against \stalta{} at equal unmatched alarms, 14.7, then 14.6 with 30~s and 14.6 with 60~s removed), and the correction is therefore conservative for every
+events (\Mw{}~6.1 against \stalta{} at equal unmatched alarms, 14.7, then 14.6 with 30~s and 14.6 with 60~s removed), and the correction is therefore conservative for every
 detector and favors none.
 
 \begin{table}[htbp]
@@ -1166,7 +1263,7 @@ on the per-event outcome files, then \tool{tools/significance.py}.
 
 Table~\ref{t:grid}a gives a section of the learned detector's trigger grid on the
 three event replays of the original protocol, and Table~\ref{t:grid}b the learned
-detector and the two selected \stalta{} settings on the tuning and held-out data,
+detector and the two selected \stalta{} settings on the tuning and \Mw{}~6.1 data,
 with the alarm times of the largest events and the detections per magnitude band.
 The \stalta{} settings were selected over 648 combinations of pass band (1--10, 2--10
 or 2--20~Hz), STA length (0.5 or 1~s), LTA length (10, 30 or 60~s), trigger ratio (3,
@@ -1200,14 +1297,14 @@ selected after correction was therefore among the candidates.
 
   \bigskip
   \panel{b} Tuning replays (S\i{}nd\i{}rg\i{} 30~min and Marmara, 66 catalog events)
-  and held-out replay (S\i{}nd\i{}rg\i{} \Mw{}~6.1, 66 events). Det.: detected; Corr.:
+  and the S\i{}nd\i{}rg\i{} \Mw{}~6.1 replay (66 events). Det.: detected; Corr.:
   chance-corrected; Unm.: unmatched alarms; alarm times after origin. Of the six M4--5
-  held-out events the learned detector detects five and both \stalta{} settings
+  \Mw{}~6.1 events the learned detector detects five and both \stalta{} settings
   six.\par\smallskip
   \setlength{\tabcolsep}{3.5pt}
   \begin{tabular}{@{}lcccccccccc@{}}
     \toprule
-    & \multicolumn{4}{c}{Tuning} & \multicolumn{6}{c}{Held out} \\
+    & \multicolumn{4}{c}{Tuning} & \multicolumn{6}{c}{S\i{}nd\i{}rg\i{} \Mw{}~6.1} \\
     \cmidrule(lr){2-5}\cmidrule(lr){6-11}
     Detector & Det. & Corr. & Unm. & \makecell{\Mw{}~6.2\\alarm} & Det. & Corr. & Unm. &
     M2--3 & M3--4 & \makecell{\Mw{}~6.1\\alarm} \\
@@ -1283,11 +1380,567 @@ disjoint windows, reproduces the pipeline's scores to a median of $2\times10^{-6
 (maximum $1.3\times10^{-4}$ over 3\,702 windows).
 
 % ---------------------------------------------------------------------------
+\clearpage
+\section{Development results in full}\label{s:devresults}
+
+Before the release, the two AFAD sequences of main-text Table~1 (S\i{}nd\i{}rg\i{}
+\Mw{}~6.1 and Simav \Mw{}~4.8) and the 23 quiet windows served as this study's test
+bed, and the settings in use then were the ones selected on the two tuning windows
+alone. Those results fixed the method, from the trigger rule to the third selection
+rule of the retuning, and the test protocol counts them as development data. They are
+given here as they stood, at the pre-retuning settings; the retuned settings of
+main-text Table~3 replaced them before the tests.
+
+\paragraph{Trigger rule.} Relative to the single window at $p \geq 0.9$, the adopted
+rule detects 39 instead of 24 of the 66 \Mw{}~6.1 events, at 7 instead of 2 unmatched
+alarms (Section~\ref{s:grid}). The gain lies in M2--4 events, and large events, which
+saturate the detector and fire the instant branch, keep their alarm times (\Mw{}~6.2 at
++11.0~s, \Mw{}~6.1 at +17.0~s and \Mw{}~4.9 at +18.0~s after origin). On the \Mw{}~6.1
+replay 8, 10 and 12 windows detect 39, 29 and 25 events, so that the adopted setting
+lies at the edge of a steep decline. Over the full grids (Figure~\ref{f:curves}a), the
+learned detector's envelope lies above that of \stalta{} at every count of unmatched
+alarms from 1 upward except 14, where both reach 38.6. A single threshold just below the
+plateau ($p \geq 0.895$) performs comparably but is as sensitive to the plateau's
+height (Section~\ref{s:singlewindow}).
+
+\paragraph{Learned detector versus \stalta{}.} \stalta{} settings were tuned over 648
+combinations, and two rules fixed before the run selected one setting at equal
+unmatched alarms (2--20~Hz, 1 and 30~s, ratio 8, vertical) and one at equal detections
+(2--10~Hz, 0.5 and 10~s, ratio 6, vertical). At comparable unmatched alarms (7 and 9),
+the learned detector detects 68\% more \Mw{}~6.1 events, with 36.4 against 21.7
+chance-corrected detections, a difference of 14.7 (95\% interval 5.9--23.7; 7.9--22.2
+with 10-minute blocks; exact McNemar $p = 0.003$). The difference lies in M2--4 events
+(12 against 4 of 27 M2--3 events and 21 against 14 of 32 M3--4 events), whereas
+\stalta{} detects all six M4--5 events and the learned detector five. At comparable
+detections (37.9 against 36.4), \stalta{} raises about three times the unmatched
+alarms, 26 against 7 on the \Mw{}~6.1 replay and 63 against 26 on the tuning data
+(Table~\ref{t:devresults}a, Section~\ref{s:grid}). \stalta{} alarms 1.0--1.3~s earlier
+on the two largest events, because it triggers on the onset sample whereas the window
+detector must see the P wave inside a 6~s window.
+
+\paragraph{Other detectors and the Simav sequence.} For each published model and for
+FilterPicker, the weights and trigger setting were selected on the tuning replays by
+the two rules above, and both rules chose the INSTANCE weights for the published
+models. The Simav sequence was replayed once with every setting fixed, on the six
+archive stations within 300~km, against 56 cataloged events, 39 of them below M2
+(Table~\ref{t:devresults}a, Figure~\ref{f:detectors}). On Simav the direction of the
+\stalta{} comparison repeats, but not its size: at comparable unmatched alarms (17 and
+14) the learned detector detected 35.1 chance-corrected events against 29.1, a
+difference of 6.0 whose interval includes zero, and the gain again lies in M2--4
+events. Most of Simav's events are below M2, the lower limit of the detector's training
+events. Pooled over both sequences, with the chance correction and bootstrap within
+each, the difference is 20.7 (8.8--32.8; exact McNemar $p = 0.001$), a summary that
+neither protocol specified. The gain over \stalta{} is not specific to the pipeline's
+detector: causal PhaseNet matched it on both sequences (pooled difference 1.4, $-8.1$
+to 11.0), with 12 and 28 unmatched alarms against 7 and 17 and with 15 quiet-window
+alarms against 16, whereas causal EQTransformer was not competitive at equal unmatched
+alarms. With look-ahead, PhaseNet detected the most events of any detector, but only
+offline and at three times the unmatched alarms and twice the quiet-window rate of the
+learned detector (7.2 against 3.74 per day, exact $p = 0.04$); ending the input 1 or
+2~s after the window left PhaseNet level with the learned detector and EQTransformer far
+below it (Section~\ref{s:ahead}). FilterPicker is the strongest classical detector
+tested: at equal unmatched alarms it detected fewer \Mw{}~6.1 events than the learned
+detector (difference 7.6, 1.4 to 14.1; McNemar $p = 0.021$) and as many on Simav, and
+at equal detections it matched the learned detector with two to three times its
+unmatched alarms. On the quiet windows its two settings raised 82.4 and 207.1 alarms
+per day, 22 and 55 times the learned detector's rate, mostly at two stations, CMH and
+KIRK.
+
+\paragraph{False alarms on quiet data.} Over 102.8~h without a cataloged event within
+250~km, the learned detector raised 16 alarms, 3.74 per day (95\% interval 2.14--6.07),
+against 323, 75.4 per day (67.4--84.1), for \stalta{} at equal unmatched alarms (rate
+ratio 0.050, 0.028--0.082). That ratio of about 20 belongs to the two selected
+settings, because \stalta{} was matched on unmatched rather than false alarms; the
+third selection rule of the retuning answers it. Over the full grids
+(Figure~\ref{f:curves}b), at equal tuning detections, the quietest \stalta{} setting
+raises 5 to 29 times the alarms of the quietest learned setting (4.9 against 0.93 per
+day at 30 chance-corrected detections, 14.7 against 1.63 at 44 and 60.5 against 2.1 at
+48.7). The rate of \stalta{} is similar in the \Mw{}~6.1 window (72 per day) and on
+quiet data, whereas the learned detector's falls from 56 to 3.74 per day, which
+suggests that most of its unmatched alarms in the event windows were uncataloged
+aftershocks. On 5.8~h of public KOERI quiet data the learned detector raised 1 alarm
+against 25 for \stalta{}. The 16 alarms were classified by criteria that need no
+judgment of the waveforms (Table~\ref{t:devresults}b, Section~\ref{s:waveforms}). Nine
+were declared with KIRK, whose detection fell 58.6--58.8~s after a 10-minute mark, the
+slot of a periodic instrumental pulse, a single 0.3~s pulse locked to UTC
+(Figure~\ref{f:quietexamples}), confined to May--June 2024 and absent from the event
+replays; a faulty station raises the network's alarm rate through chance coincidences
+with the other stations' triggers. A rule fixed before it was run confirms a seismic
+source when a published picker finds P and S at two declaring stations and the two
+S$-$P distances fit the station separation and the P-time difference; it confirms four
+alarms of the learned detector, one an M2.4 listed by EMSC but not by AFAD, and three
+of the 323 \stalta{} alarms, all among the same events. Without them the rates are 2.80
+and 74.7 per day, and without KIRK the learned detector's rate would be 1.40 per day.
+Of the 323 \stalta{} alarms, 263 rest on signals shorter than 3~s at both stations,
+most of them spikes under 0.5~s.
+
+\paragraph{Alert latency and station subsets.} For the Marmara \Mw{}~6.2, the alarm
+came 11.0~s after origin, and the S wave reached station ELBA (38~km) 2.1~s later.
+Over every subset of stations that declared the \Mw{}~6.2, the alert exceeds the P
+travel time to the second-nearest station by a median of 2.05~s (interquartile range
+0.6--2.8~s), and two stations alone, ARNA and ELBA, give the same alert as all eight
+(Section~\ref{s:subsets}).
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{The development results at the pre-retuning settings.}\label{t:devresults}
+  \panel{a} Every detector at the settings selected on the two tuning windows: the two
+  AFAD sequences, the quiet windows and the public KOERI event sets.\par\smallskip
+  \setlength{\tabcolsep}{2.6pt}
+  \begin{tabular}{@{}lcccccccc@{}}
+    \toprule
+    & \multicolumn{3}{c}{S\i{}nd\i{}rg\i{} \Mw{}~6.1 (66)} & \multicolumn{3}{c}{Simav \Mw{}~4.8 (56)} & Quiet & KO (46) \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-8}\cmidrule(lr){9-9}
+    Detector, rule & Corr. & Unm. & Difference & Corr. & Unm. & Difference & per day & Det./Unm. \\
+    \midrule
+    learned                       & 36.4 & 7  &                       & 35.1 & 17 &                      & 3.74  & 36/25 \\
+    \stalta{}, equal unm.         & 21.7 & 9  & $+14.7$ (5.9, 23.7)   & 29.1 & 14 & $+6.0$ ($-2.4$, 14.3) & 75.4  & 23/5 \\
+    \stalta{}, equal det.         & 37.9 & 26 & $-1.5$ ($-9.7$, 6.6)  & 40.9 & 41 & $-5.8$ ($-12.5$, 0.8) & 127.0 & 39/17 \\
+    FilterPicker, equal unm.      & 28.8 & 8  & $+7.6$ (1.4, 14.1)    & 33.8 & 18 & $+1.3$ ($-7.4$, 9.8)  & 82.4  & 31/12 \\
+    FilterPicker, equal det.      & 34.9 & 16 & $+1.5$ ($-5.6$, 8.7)  & 39.0 & 49 & $-3.9$ ($-12.7$, 4.7) & 207.1 & 36/32 \\
+    PhaseNet, both                & 33.3 & 12 & $+3.1$ ($-4.0$, 10.5) & 36.8 & 28 & $-1.8$ ($-8.2$, 4.1)  & 3.5   & 32/15 \\
+    EQTransformer, equal unm.     & 11.0 & 13 & $+25.5$ (15.3, 35.4)  & 22.7 & 15 & $+12.4$ (2.9, 21.5)  & 1.6   & 24/16 \\
+    EQTransformer, equal det.     & 34.0 & 50 & $+2.4$ ($-9.1$, 13.9) & 32.3 & 55 & $+2.8$ ($-5.5$, 11.1) & 6.1   & 34/37 \\
+    \addlinespace
+    \multicolumn{9}{@{}l}{\emph{Look-ahead, offline only}} \\
+    PhaseNet, equal unm.          & 42.8 & 23 & $-6.4$ ($-15.4$, 2.3) & 41.2 & 35 & $-6.1$ ($-13.5$, 1.0) & 7.2   & 38/23 \\
+    PhaseNet, equal det.          & 38.8 & 9  & $-2.3$ ($-9.2$, 4.3)  & 41.4 & 27 & $-6.3$ ($-13.1$, 0.3) & 3.3   & 32/14 \\
+    EQTransformer, both           & 32.2 & 11 & $+4.2$ ($-6.7$, 15.3) & 33.4 & 25 & $+1.7$ ($-6.2$, 9.7)  & 2.6   & 35/15 \\
+    \bottomrule
+  \end{tabular}
+  \par\smallskip\footnotesize Corr.: chance-corrected detections; Unm.: unmatched alarms;
+  difference: learned detector's chance-corrected detections minus other's, with 95\%
+  paired bootstrap interval by events. Quiet: alarms per day on 102.8~h of AFAD quiet
+  windows. KO: detected events and unmatched alarms on demo\_ko and marmara\_ko
+  together. Settings: \stalta{} as above; FilterPicker windows 6/10/0.4~s with
+  thresholds 15 and 10 (equal unm.) and 3/5/0.2~s with 4 and 10 (equal det.); published
+  models with INSTANCE weights at threshold $\times$ windows $0.7\times2$ (PhaseNet),
+  $0.8\times2$ and $0.3\times8$ (EQTransformer), and with look-ahead $0.4\times8$,
+  $0.6\times8$ (PhaseNet) and $0.5\times8$ (EQTransformer). These are the pre-retuning
+  settings; those of the tests are in main-text Table~3.
+
+  \bigskip
+  \panel{b} Alarms of the learned detector on the AFAD quiet windows (102.8~h), by
+  criteria that need no judgment of the waveforms.\par\smallskip
+  \begin{tabular}{@{}lcl@{}}
+    \toprule
+    Class & Alarms & Criterion \\
+    \midrule
+    KIRK's instrumental pulse & 9 & KIRK declared; its detection in pulse slot \\
+    seismic, picker-confirmed & 4 & S$-$P test with PhaseNet or EQTransformer picks \\
+    undetermined & 3 & neither \\
+    \midrule
+    all alarms & 16 & 3.74 (2.14--6.07) per day \\
+    excluding picker-confirmed & 12 & 2.80 (1.45--4.89) per day \\
+    KIRK's pulse only & 9 & 2.10 (0.96--3.99) per day \\
+    \midrule
+    \multicolumn{3}{@{}l}{\emph{Sensitivity: picker rule on any associated pair of stations}} \\
+    pulse / seismic / undetermined & 8 / 5 / 3 & alarm~1 confirmed through BAND--CMH \\
+    excluding picker-confirmed & 11 & 2.57 (1.28--4.60) per day \\
+    \bottomrule
+  \end{tabular}
+  \par\smallskip\footnotesize Upper rows: classification committed before it was run;
+  last two rows: the same picker rule on every pair of stations associated with an
+  alarm, also specified before it was run. Rates: alarms per day with exact Poisson 95\%
+  intervals. Each alarm is listed in Table~\ref{t:alarms}.
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig7_operating_curves.pdf}
+  \caption{Every trigger setting of both detectors (60 of the learned detector, and the
+    216 of \stalta{}'s 648 that have the re-arm ratio of 1.5 at which it was fixed,
+    Section~\ref{s:grid}; dots), with each detector's envelope (lines) and the
+    pre-retuning selected settings (markers). (a)~S\i{}nd\i{}rg\i{} \Mw{}~6.1 replay,
+    post hoc: chance-corrected detections against unmatched alarms. (b)~Alarms per day on
+    102.8~h of quiet data against chance-corrected detections on the tuning replays;
+    settings without an alarm are drawn on the bottom edge. Open diamond: the \stalta{}
+    setting that the equal-unmatched rule selects when applied to 26 rather than 25
+    unmatched alarms (Section~\ref{s:more}).}\label{f:curves}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig3_detectors.pdf}
+  \caption{Every detector of Table~\ref{t:devresults}a: chance-corrected detections on
+    each AFAD sequence against alarms per day on 102.8~h of quiet data (logarithmic). Up
+    and to the left is better. Filled markers run in real time; hollow markers use input
+    past the window and cannot.}\label{f:detectors}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig6_quiet_alarms.pdf}
+  \caption{Alarms of the learned detector on the AFAD quiet windows. (a)~Alarm~2, an
+    uncataloged earthquake (M2.4 in the EMSC catalog; origin time from EMSC) recorded at
+    both declaring stations, with the pipeline's P (solid) and S (dashed) picks.
+    (b)~Alarm~12: KIRK's instrumental pulse, about 0.3~s without S wave or coda,
+    coinciding with background noise at KAND. Records band-passed 1--20~Hz. (c)~KIRK's
+    225 detections by time after each 10-minute mark in UTC (10~s bins). (d)~Duration of
+    the signal behind each alarm at each declaring station, as the time its envelope
+    stays above four times the noise of the preceding 25~s, for the learned detector's 16
+    alarms and \stalta{}'s 323.}\label{f:quietexamples}
+\end{figure}
+
+\noindent Reproduction: stages 5 to 8 of \tool{tools/reproduce_all.sh};
+\tool{tools/sweep_trigger.py}, \tool{tools/select_setting.py} and
+\tool{tools/quiet_sweep.py} for the grids.
+
+% ---------------------------------------------------------------------------
+\clearpage
+\section{The selected test sets}\label{s:selected}
+
+\tool{heldout select} of the held-out repository applied the rules of
+main-text Section~3.1 to each pool after the release and wrote
+\tool{selection.json}: every qualifying sequence with its coin, stations and scorable
+count, the stopping point and every quiet pass. Table~\ref{t:selected} lists the
+selected sequences; the quiet windows (24 for Greece and New Zealand, 14 for KO) are
+in each \tool{selection.json}, released with the pipeline (\tool{docs/heldout-selections/}).
+Stations are given by code without their network prefix; the two Greek stations that
+delivered no data in their window, ZKR in sequence 004 and KOKK in sequence 020, are
+listed as selected and absent from the replay, as each set's \tool{dataset.json}
+records. KO's pool held three qualifying sequences; the coin assigned the first
+(21~September 2026, M4.9) to the reserve.
+
+\begin{table}[htbp]
+  \centering
+  \caption{The selected sequences of the three test networks.}\label{t:selected}
+  \panel{a} Greece: the selected sequences. First event (UTC, catalog magnitude and depth), stations of the replay, scorable events and the running total.\par\smallskip
+  {\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llrrrL{6.2cm}rr@{}}
+    \toprule
+    Seq. & First event (UTC) & $M$ & Depth (km) & St. & Stations & Scorable & Total \\
+    \midrule
+    002 & 2023-03-21 00:20:14 & 4.6 & 18 & 8 & EVR TETR AMPL PDO PVO LKD2 NYDR TSLK & 41 & 41 \\
+    003 & 2023-03-31 16:05:18 & 4.8 & 123 & 8 & EPID KARY MDRA MRTH VILL ATH PTL VLI & 3 & 44 \\
+    004 & 2023-04-26 20:00:36 & 5.2 & 108 & 6 & STIA APE NISR NISR2 THERA ZKR & 2 & 46 \\
+    008 & 2023-11-03 06:26:37 & 5.1 & 11 & 8 & DOMV MDRA MRTH THIV VILL LKR NEO XOR & 17 & 63 \\
+    009 & 2024-01-16 05:20:51 & 4.8 & 14 & 8 & ACOR EPID LOUT THAL VLI GUR LTK VLX & 15 & 78 \\
+    010 & 2024-01-19 14:14:13 & 4.8 & 14 & 8 & KARY MDRA MRTH THIV VILL ATH LKR PTL & 21 & 99 \\
+    011 & 2024-03-29 07:12:48 & 5.8 & 30 & 8 & ITM ORTH RLS AMT AXS DRO LTHK VLX & 15 & 114 \\
+    013 & 2024-07-02 19:34:32 & 4.6 & 6 & 8 & CHAN IPPL KNDR KNSS PFKS STIA IMMV SIVA & 5 & 119 \\
+    014 & 2024-07-06 17:34:29 & 4.9 & 11 & 8 & ORTH RLS VLS AMT AXS DRO LTHK PLEV & 24 & 143 \\
+    017 & 2024-07-26 16:02:27 & 4.5 & 14 & 8 & CHAN IPPL KNSS PFKS STIA SIVA THERA ZKR & 6 & 149 \\
+    020 & 2024-09-22 09:50:23 & 4.6 & 14 & 8 & PLG HORT KAVA KOKK OUR PAIG SOH THAS & 29 & 178 \\
+    \bottomrule
+  \end{tabular}}
+
+  \panel{b} New Zealand: the selected sequences. First event (UTC, catalog magnitude and depth), stations of the replay, scorable events and the running total.\par\smallskip
+  {\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llrrrL{6.2cm}rr@{}}
+    \toprule
+    Seq. & First event (UTC) & $M$ & Depth (km) & St. & Stations & Scorable & Total \\
+    \midrule
+    002 & 2023-02-02 13:02:43 & 4.8 & 6 & 7 & HIZ KPRZ KUZ MKAZ RATZ TLZ URZ & 11 & 11 \\
+    003 & 2023-02-03 23:14:22 & 5.0 & 86 & 8 & BKZ HIZ KPRZ RATZ TLZ TSZ URZ VRZ & 3 & 14 \\
+    004 & 2023-03-17 15:31:06 & 4.7 & 3 & 7 & BKZ KPRZ MWZ PUZ RATZ TLZ URZ & 92 & 106 \\
+    008 & 2023-10-15 03:15:20 & 4.6 & 202 & 6 & BKZ HIZ KPRZ RATZ TLZ VRZ & 2 & 108 \\
+    009 & 2023-10-23 09:09:04 & 5.1 & 5 & 5 & DSZ KHZ RPZ WHSZ WVZ & 3 & 111 \\
+    010 & 2024-02-18 04:09:10 & 4.8 & 175 & 8 & BKZ KPRZ KUZ MKAZ MWZ RATZ TLZ URZ & 5 & 116 \\
+    011 & 2024-02-26 08:21:12 & 5.1 & 5 & 5 & CVZ FOZ RPZ WHSZ WVZ & 7 & 123 \\
+    013 & 2024-04-02 05:39:44 & 4.5 & 5 & 5 & CVZ FOZ RPZ WHSZ WVZ & 4 & 127 \\
+    014 & 2024-04-22 21:57:41 & 4.6 & 39 & 8 & BKZ KPRZ MWZ RATZ TLZ TSZ URZ VRZ & 9 & 136 \\
+    017 & 2024-11-26 14:46:49 & 4.9 & 198 & 7 & BKZ HIZ KPRZ RATZ TLZ TSZ VRZ & 4 & 140 \\
+    020 & 2025-07-18 11:00:56 & 4.6 & 33 & 6 & BKZ KPRZ MWZ PUZ RATZ URZ & 4 & 144 \\
+    023 & 2025-11-01 00:47:37 & 4.8 & 5 & 5 & DSZ KHZ RPZ WHSZ WVZ & 5 & 149 \\
+    024 & 2025-11-10 18:51:35 & 4.6 & 211 & 7 & BKZ HIZ KPRZ RATZ TLZ TSZ VRZ & 5 & 154 \\
+    \bottomrule
+  \end{tabular}}
+
+  \panel{c} KO: the selected sequences. First event (UTC, catalog magnitude and depth), stations of the replay, scorable events and the running total.\par\smallskip
+  {\footnotesize\setlength{\tabcolsep}{3pt}\begin{tabular}{@{}llrrrL{6.2cm}rr@{}}
+    \toprule
+    Seq. & First event (UTC) & $M$ & Depth (km) & St. & Stations & Scorable & Total \\
+    \midrule
+    002 & 2026-09-24 07:40:58 & 5.3 & 7 & 7 & AKDG DYBB GAZ MAZI MLTY NURH SVRC & 7 & 7 \\
+    003 & 2026-10-04 11:19:25 & 4.7 & 8 & 6 & BNN CEYT GAZ KARA NURH SARI & 29 & 36 \\
+    \bottomrule
+  \end{tabular}}
+
+  \par\smallskip\footnotesize Catalog magnitudes are the catalogs' preferred ones (NOA
+  MLh, GeoNet MLv or M, EMSC mw or mb). Scorable: the stopping rule's count of catalog
+  events in the replay within 250~km of the stations' centroid. Reproduction:
+  \tool{heldout select greece|nz|ko --allow-test-period} at the commits of Table~\ref{t:software}.
+\end{table}
+
+% ---------------------------------------------------------------------------
+\clearpage
+\section{Quiet-window alarm rates on the test networks}\label{s:quietrates}
+
+Table~\ref{t:quietrates} gives each detector's alarms on each network's quiet
+windows (main-text Table~4: 24 windows of 5.5 scored hours on Greece and New Zealand,
+14 on KO) and the ratio of its rate to the learned detector's with the exact
+conditional 95\% interval of the two Poisson counts
+(\tool{tools/quiet_sweep.py}, written by \tool{run\_heldout.py} to
+\tool{analysis/quiet.txt}). With the two stations of most \stalta{} station
+detections at equal unmatched alarms left out for every detector alike
+(\tool{tools/quiet_without_stations.py}): on New Zealand, WHSZ and CVZ, the learned
+detector 3 alarms (0.55 per day) and \stalta{} at equal unmatched alarms 8 (1.45);
+on KO, GAZ and SVRC, 27 (8.42) and 18 (5.61); on Greece, CHAN and PFKS, 67 (12.18) and 32 (5.82). The transformer
+detector of the companion paper, run under the same protocol, raised 24 alarms on
+Greece (4.36 per day), 17 on New Zealand (3.09) and 11 on KO (3.43). Events deeper than 40~km with a Pd
+estimate (main-text Section~4.5): on New Zealand, one MLv~4 to 5.5 event, final
+error $-0.3$ for the learned detector, and one smaller event, $+1.1$.
+
+\begin{table}[htbp]
+  \centering\scriptsize\setlength{\tabcolsep}{1.6pt}
+  \caption{Alarms on the quiet windows of each test network: the count, the rate per
+  day and the ratio of the detector's rate to the learned detector's with its exact
+  95\% interval.}\label{t:quietrates}
+  \resizebox{\textwidth}{!}{\begin{tabular}{@{}lcccccccccc@{}}
+    \toprule
+    & \multicolumn{3}{c}{Greece (132~h)} & \multicolumn{3}{c}{New Zealand (132~h)} & \multicolumn{3}{c}{KO (77~h)} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+    Detector, rule & Alarms & Per day & Ratio & Alarms & Per day & Ratio & Alarms & Per day & Ratio \\
+    \midrule
+    learned & 106 & 19.27 & -- & 5 & 0.91 & -- & 31 & 9.66 & -- \\
+    \stalta{}, 1 & 114 & 20.73 & 0.93 (0.71--1.22) & 9 & 1.64 & 0.56 (0.15--1.85) & 67 & 20.88 & 0.46 (0.29--0.72) \\
+    \stalta{}, 2 & 571 & 103.82 & 0.19 (0.15--0.23) & 33 & 6.00 & 0.15 (0.05--0.39) & 359 & 111.90 & 0.09 (0.06--0.12) \\
+    \stalta{}, 3 & 18 & 3.27 & 5.89 (3.55--10.30) & 2 & 0.36 & 2.50 (0.41--26.30) & 11 & 3.43 & 2.82 (1.38--6.21) \\
+    \stalta{}, per station & 23 & 4.18 & 4.61 (2.92--7.58) & 12 & 2.18 & 0.42 (0.12--1.27) & 8 & 2.49 & 3.88 (1.74--9.76) \\
+    FilterPicker, 1 & 247 & 44.91 & 0.43 (0.34--0.54) & 34 & 6.18 & 0.15 (0.04--0.38) & 100 & 31.17 & 0.31 (0.20--0.47) \\
+    FilterPicker, 2 & 1486 & 270.18 & 0.07 (0.06--0.09) & 154 & 28.00 & 0.03 (0.01--0.08) & 647 & 201.66 & 0.05 (0.03--0.07) \\
+    FilterPicker, 3 & 13 & 2.36 & 8.15 (4.57--15.80) & 5 & 0.91 & 1.00 (0.23--4.35) & 5 & 1.56 & 6.20 (2.39--20.40) \\
+    PhaseNet causal, 1 & 71 & 12.91 & 1.49 (1.10--2.05) & 2 & 0.36 & 2.50 (0.41--26.30) & 23 & 7.17 & 1.35 (0.76--2.42) \\
+    PhaseNet causal, 2 & 140 & 25.45 & 0.76 (0.58--0.98) & 8 & 1.45 & 0.62 (0.16--2.17) & 37 & 11.53 & 0.84 (0.50--1.39) \\
+    PhaseNet causal, 3 & 71 & 12.91 & 1.49 (1.10--2.05) & 2 & 0.36 & 2.50 (0.41--26.30) & 22 & 6.86 & 1.41 (0.79--2.55) \\
+    EQTransformer causal, 1 & 20 & 3.64 & 5.30 (3.27--9.03) & 0 & 0.00 & inf (0.92--inf) & 5 & 1.56 & 6.20 (2.39--20.40) \\
+    EQTransformer causal, 2 & 91 & 16.55 & 1.17 (0.87--1.56) & 7 & 1.27 & 0.71 (0.18--2.61) & 37 & 11.53 & 0.84 (0.50--1.39) \\
+    EQTransformer causal, 3 & 47 & 8.55 & 2.25 (1.59--3.25) & 3 & 0.55 & 1.67 (0.32--10.70) & 14 & 4.36 & 2.21 (1.14--4.50) \\
+    PhaseNet look-ahead, 1 & 39 & 7.09 & 2.72 (1.87--4.03) & 1 & 0.18 & 5.00 (0.56--236.00) & 15 & 4.68 & 2.07 (1.08--4.12) \\
+    PhaseNet look-ahead, 2 & 45 & 8.18 & 2.36 (1.65--3.42) & 4 & 0.73 & 1.25 (0.27--6.30) & 22 & 6.86 & 1.41 (0.79--2.55) \\
+    PhaseNet look-ahead, 3 & 66 & 12.00 & 1.61 (1.17--2.22) & 4 & 0.73 & 1.25 (0.27--6.30) & 24 & 7.48 & 1.29 (0.73--2.30) \\
+    EQTransformer look-ahead, 1 & 39 & 7.09 & 2.72 (1.87--4.03) & 1 & 0.18 & 5.00 (0.56--236.00) & 11 & 3.43 & 2.82 (1.38--6.21) \\
+    EQTransformer look-ahead, 2 & 35 & 6.36 & 3.03 (2.05--4.57) & 14 & 2.55 & 0.36 (0.10--1.05) & 20 & 6.23 & 1.55 (0.86--2.87) \\
+    EQTransformer look-ahead, 3 & 51 & 9.27 & 2.08 (1.47--2.96) & 18 & 3.27 & 0.28 (0.08--0.78) & 29 & 9.04 & 1.07 (0.62--1.84) \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+% ---------------------------------------------------------------------------
+\clearpage
+\section{Detection endpoints for events no deeper than 40 km}\label{s:depth40}
+
+Table~\ref{t:depth40} repeats main-text Table~5 for the events no deeper than 40~km
+by the catalog (\tool{tools/significance.py --max-depth 40}; the restriction is
+applied to the per-event outcome tables before any statistic, in the observed and in
+the shifted runs). New Zealand keeps 137 of 151 events (14 deeper, none without a
+depth); Greece keeps 175 of 177 (2 deeper); KO keeps all 36. No conclusion changes: on Greece the primary difference is $+22.4$ ($+11.3$ to $+33.6$) and the equivalence with causal PhaseNet holds ($+5.0$, 90\% interval $-1.0$ to $+11.3$, margin $\pm 17.5$); on New Zealand the
+primary difference is $+17.9$ ($+7.2$ to $+29.0$) against $+18.1$ for all events,
+the equivalence with causal PhaseNet holds ($+4.8$, 90\% interval $-2.6$ to $+12.3$,
+margin $\pm 13.7$), the adjacent settings with 6 windows remain ahead of the rule and
+those with 10 behind it, and the comparison restricted to events detected before S is
+$+15.5$ ($+4.6$ to $+26.7$). The five New Zealand sequences whose first event is
+deeper than 40~km (86, 175, 198, 202 and 211~km) contribute most of the 14 events left
+out.
+
+\begin{table}[htbp]
+  \centering\footnotesize\setlength{\tabcolsep}{3pt}
+  \caption{Each detector on the test networks, restricted to the events no deeper than
+  40~km: chance-corrected detections and the difference from the learned detector
+  with its 95\% paired bootstrap interval.}\label{t:depth40}
+  \resizebox{\textwidth}{!}{\begin{tabular}{@{}lcccccc@{}}
+    \toprule
+    & \multicolumn{2}{c}{Greece (175)} & \multicolumn{2}{c}{New Zealand (137)} & \multicolumn{2}{c}{KO (36)} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Detector, rule & Corr. & Difference & Corr. & Difference & Corr. & Difference \\
+    \midrule
+    learned & 148.3 & -- & 80.2 & -- & 15.5 & -- \\
+    \stalta{}, 1 & 125.9 & $+22.4$ ($+11.3$, $+33.6$) & 62.2 & $+17.9$ ($+7.2$, $+29.0$) & 13.0 & $+2.5$ ($-0.5$, $+5.9$) \\
+    \stalta{}, 2 & 136.9 & $+11.4$ ($+2.2$, $+21.2$) & 75.9 & $+4.3$ ($-6.2$, $+14.3$) & 16.6 & $-1.1$ ($-6.9$, $+4.6$) \\
+    \stalta{}, 3 & 98.3 & $+50.0$ ($+36.9$, $+63.3$) & 37.7 & $+42.5$ ($+31.0$, $+54.3$) & 8.0 & $+7.5$ ($+3.0$, $+12.7$) \\
+    \stalta{}, per station & 128.4 & $+19.9$ ($+9.3$, $+30.5$) & 51.4 & $+28.8$ ($+17.1$, $+40.0$) & 10.0 & $+5.5$ ($+1.4$, $+9.9$) \\
+    FilterPicker, 1 & 126.4 & $+21.9$ ($+10.9$, $+33.1$) & 85.2 & $-5.0$ ($-15.3$, $+5.2$) & 11.0 & $+4.5$ ($+0.6$, $+8.8$) \\
+    FilterPicker, 2 & 131.6 & $+16.7$ ($+5.1$, $+28.5$) & 99.2 & $-19.0$ ($-29.7$, $-8.4$) & 13.7 & $+1.8$ ($-2.6$, $+6.4$) \\
+    FilterPicker, 3 & 88.7 & $+59.6$ ($+47.0$, $+72.1$) & 55.1 & $+25.1$ ($+14.7$, $+35.9$) & 8.9 & $+6.7$ ($+2.3$, $+11.7$) \\
+    PhaseNet causal, 1 & 143.3 & $+5.0$ ($-2.1$, $+12.5$) & 75.4 & $+4.8$ ($-3.9$, $+13.8$) & 10.0 & $+5.5$ ($+1.4$, $+9.9$) \\
+    PhaseNet causal, 2 & 142.5 & $+5.8$ ($-2.4$, $+14.5$) & 95.7 & $-15.5$ ($-25.5$, $-5.8$) & 15.8 & $-0.3$ ($-3.3$, $+2.7$) \\
+    PhaseNet causal, 3 & 141.9 & $+6.4$ ($-1.5$, $+14.5$) & 84.5 & $-4.3$ ($-13.0$, $+4.4$) & 11.9 & $+3.6$ ($+0.4$, $+7.7$) \\
+    EQTransformer causal, 1 & 87.9 & $+60.4$ ($+45.7$, $+75.5$) & 23.9 & $+56.3$ ($+44.9$, $+67.5$) & 5.0 & $+10.5$ ($+5.2$, $+16.1$) \\
+    EQTransformer causal, 2 & 135.3 & $+13.0$ ($+3.0$, $+23.7$) & 62.5 & $+17.6$ ($+7.1$, $+28.5$) & 10.8 & $+4.8$ ($-0.1$, $+9.9$) \\
+    EQTransformer causal, 3 & 126.0 & $+22.2$ ($+10.5$, $+34.1$) & 41.4 & $+38.8$ ($+27.6$, $+50.1$) & 9.9 & $+5.7$ ($+0.6$, $+10.9$) \\
+    PhaseNet look-ahead, 1 & 141.9 & $+6.3$ ($-3.0$, $+16.1$) & 83.6 & $-3.5$ ($-13.5$, $+6.6$) & 11.0 & $+4.5$ ($+0.6$, $+8.8$) \\
+    PhaseNet look-ahead, 2 & 142.1 & $+6.2$ ($-2.9$, $+15.4$) & 86.7 & $-6.5$ ($-16.8$, $+4.1$) & 12.0 & $+3.5$ ($+0.3$, $+7.6$) \\
+    PhaseNet look-ahead, 3 & 143.6 & $+4.6$ ($-4.9$, $+14.4$) & 92.8 & $-12.6$ ($-23.1$, $-2.3$) & 12.0 & $+3.5$ ($-0.7$, $+7.9$) \\
+    EQTransformer look-ahead, 1 & 115.5 & $+32.8$ ($+20.7$, $+45.0$) & 29.6 & $+50.6$ ($+37.6$, $+63.0$) & 1.0 & $+14.5$ ($+8.6$, $+20.6$) \\
+    EQTransformer look-ahead, 2 & 148.6 & $-0.4$ ($-9.6$, $+8.8$) & 88.4 & $-8.3$ ($-18.8$, $+2.0$) & 17.8 & $-2.2$ ($-5.4$, $+0.0$) \\
+    EQTransformer look-ahead, 3 & 152.7 & $-4.4$ ($-13.7$, $+4.6$) & 95.1 & $-14.9$ ($-25.2$, $-5.0$) & 18.7 & $-3.2$ ($-6.7$, $-0.2$) \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+% ---------------------------------------------------------------------------
+\clearpage
+\section{The test protocol's rules in full, and the secondary endpoints}\label{s:protocolfull}
+
+The protocol's text is \tool{docs/protocol-heldout.md} of release v1.0.0; this section
+gives the rules the main text summarizes and the secondary endpoints in full.
+
+\paragraph{Per-station \stalta{}.} The network-wide equal-unmatched setting
+(main-text Table~3) with each station's trigger ratio replaced by the lowest of 3, 4,
+5, 6, 8, 10, 12 and 15 at which the station's trigger rate on four 6~h windows from
+before the test period (drawn with seed 20221231; Greece and New Zealand in 2022, KO
+from 1~July to 29~August 2026) does not exceed its network group's target. The rate
+counts only the time outside the arrivals of cataloged events the station could have
+recorded; the target is the median station rate of the network-wide setting on the
+same windows, 0.845, 0.548 and 0.318 triggers per quiet hour for Greece, KO and New
+Zealand. A station above the target at every ratio gets 15, and a test station
+without tuning data keeps ratio~8 (\tool{tools/stalta\_station\_ratios.py}). Before
+the release the target was changed, on 29~October 2026, from the median station rate
+on the AFAD quiet windows (0.307 per quiet hour, with the grid ending at 10), against
+which most Greek and KO stations ended at the grid's top ratio.
+
+\paragraph{Seeds and counts.} Reserve coin 42 (Python's \tool{random.Random(42)}, one
+draw per sequence, below 0.5 is this study's); quiet windows 43, prospective quiet
+windows 44, tuning windows 20221231. The stopping rule counts a sequence's scorable
+events as the pool catalog's events with origin within the replay and epicenter
+within 250~km of the stations' centroid, any magnitude, with or without depth; ayzek
+scores the set's catalog excerpt, which leaves out events without depth or magnitude,
+with origin from 30~s after the replay's start to 30~s before its end.
+
+\paragraph{Deviations.} A bug found after the test data are fetched is fixed and the
+results reported both ways, labeled as a deviation; nothing is retuned on test data.
+None was found in the three runs. The one tooling fault, an out-of-date build of \tool{tools/network\_subsets} that stopped KO's analysis stage before it wrote any output, changed no number (Table~\ref{t:prereg}).
+
+\paragraph{Prospective tests.} New Zealand and KO, on data recorded from the release
+date on: every qualifying sequence in time order with no reserve split, until the
+network's scorable events reach its target (150, 240) or 12 months have passed,
+whichever comes first, in which case every sequence is used and the result is
+reported as under target. Once a month, the qualifying sequences whose first event is
+at least four weeks old are identified from the network's catalog and fetched with
+the released tool, each once, with its catalog excerpt at that time; later catalog
+revisions are not taken up. After the span closes, 24 quiet windows are drawn over it
+with seed 44 on the station sets of its sequences. Detectors, settings, scoring and
+endpoints are those of the retrospective tests. The archive delivers the post-release
+data intact, so the test replays them; a live SeedLink run, if made, is reported
+apart.
+
+\paragraph{The secondary endpoints in full.} Main-text Section~4.4 condenses the
+following, written from \tool{analysis/significance.txt}, \tool{quiet.txt},
+\tool{quiet\_without\_stations.txt}, \tool{neighbours.txt},
+\tool{significance\_pre\_s.txt} and \tool{station\_split.txt} of each run.
+
+\subparagraph{Against the other baselines (ii, iii).} On New Zealand, \stalta{} at equal
+quiet alarms detected 40.7 chance-corrected events (difference $+43.5$, $+32.0$ to
+$+55.1$) and the per-station \stalta{} 54.4 ($+29.8$, $+17.8$ to $+41.6$).
+FilterPicker at equal unmatched alarms detected as many events as the learned
+detector (89.2; $-5.0$, $-16.0$ to $+5.6$) but with 67 unmatched alarms against 20, so
+its development-data setting did not hold its operating point on this network; at
+equal quiet alarms it detected 58.1 ($+26.1$). Causal EQTransformer detected 25.9 at
+equal unmatched alarms ($+58.3$) and 65.5 at equal detections. The look-ahead
+settings, which cannot run in real time, reached 85.6 to 104.0 at 20 to 73 unmatched
+alarms. On KO, with its 36 events, the learned detector was ahead of \stalta{} at
+equal quiet alarms ($+7.5$, $+3.0$ to $+12.7$), the per-station \stalta{} ($+5.5$,
+$+1.4$ to $+9.9$), FilterPicker at equal unmatched alarms ($+4.5$, $+0.6$ to $+8.8$)
+and causal EQTransformer ($+10.5$, $+5.2$ to $+16.1$), and level with the
+equal-detection settings.
+
+\subparagraph{Equivalence with causal PhaseNet (iv).} On New Zealand the learned
+detector and causal PhaseNet at equal unmatched alarms differ by $+5.8$ events (90\%
+interval $-1.8$ to $+13.9$) against a margin of $\pm 15.1$, so the two are
+equivalent under the two one-sided tests, with PhaseNet at 15 unmatched alarms
+against 20. On KO the difference is $+5.5$ ($+1.9$ to $+9.5$) against a margin of
+$\pm 3.6$: not shown equivalent, in the learned detector's favor. On Greece the
+difference is $+5.0$ ($-0.9$ to $+11.6$) against $\pm 17.7$, equivalent, with PhaseNet
+at 229 unmatched alarms against the learned detector's 371.
+
+\subparagraph{Quiet windows (v).} On New Zealand's 132 scored hours the learned detector
+raised 5 alarms, 0.9 per day, against 1.6 for \stalta{} at equal unmatched alarms
+(rate ratio 0.56, exact 95\% interval 0.15 to 1.85), 6.0 at equal detections, 0.4 at
+equal quiet alarms and 2.2 for the per-station \stalta{}; FilterPicker's three
+settings raised 6.2, 28.0 and 0.9 per day, causal PhaseNet's 0.4 to 1.4 and causal
+EQTransformer's 0.0 to 1.3. Without WHSZ and CVZ, the two stations with the most
+\stalta{} detections, the learned detector's rate is 0.5 per day and \stalta{}'s 1.5.
+On KO's 77 scored hours the learned detector raised 31 alarms, 9.7 per day, against
+20.9 for \stalta{} at equal unmatched alarms (ratio 0.46, 0.29 to 0.72) and 111.9 at
+equal detections; but \stalta{} at equal quiet alarms (3.4), the per-station
+\stalta{} (2.5), FilterPicker at equal quiet alarms (1.6) and causal EQTransformer at
+equal unmatched alarms (1.6) were all quieter than the learned detector, and causal
+PhaseNet's rates (6.9 to 11.5) were not distinguishable from it. The learned
+detector's KO rate is 2.6 times its rate on the AFAD quiet windows; leaving out GAZ
+and SVRC lowers it only to 8.4 per day while it lowers \stalta{}'s to 5.6.
+On Greece's 132 scored hours the learned detector raised 106 alarms, 19.3 per day,
+against 20.7 for \stalta{} at equal unmatched alarms (ratio 0.93, 0.71 to 1.22),
+103.8 at equal detections, 3.3 at equal quiet alarms and 4.2 for the per-station
+\stalta{}; FilterPicker's settings raised 44.9, 270.2 and 2.4, causal PhaseNet's 12.9
+to 25.4 and causal EQTransformer's 3.6 to 16.6. Without CHAN and PFKS the learned
+detector's rate is 12.2 per day and \stalta{}'s 5.8; one window holds half of the
+learned detector's alarms (Section~\ref{s:exploratory}).
+
+\subparagraph{Adjacent settings (vi).} On New Zealand the rule's neighbors with 6
+consecutive windows instead of 8 detected 11 to 20 more chance-corrected events than
+the rule (thresholds 0.85, 0.8 and 0.75), and those with 10 windows 8 to 9 fewer; on
+KO the neighbors lie within 2 events of the rule. On Greece no neighbor detected more
+than 0.2 events beyond the rule, and those with 10 windows 8.5 to 14.4 fewer. The rule
+was not retuned.
+
+\subparagraph{Detection before S (vii).} On Greece 322 of the learned detector's 332 alarm detections (97\%) preceded the predicted S, 143 of its 153 detected events were detected before S at every station, and the primary difference on them is $+15.7$ ($+4.1$ to $+27.0$). On New Zealand 170 of the learned detector's
+176 station detections that formed an alarm (97\%) were declared before the predicted
+S, and 82 of its 87 detected events were detected before S at every such station;
+restricted to those events, the primary difference is $+15.7$ ($+4.7$ to $+27.1$). On
+KO every detection of both detectors preceded S.
+
+\subparagraph{KO's station split (viii).} Every station of KO's two sequences is a
+training-split station of the learned detector, so the comparison on test-split
+stations is empty; the training-split result is the KO result above.
+
+
+% ---------------------------------------------------------------------------
+\clearpage
+\section{Exploratory: the Greek unmatched and quiet-window alarms}\label{s:exploratory}
+
+This analysis is outside the protocol. It was made after the Greek result, when the
+learned detector's 371 unmatched alarms (against 189 for \stalta{} at the setting
+matched on the development data) and its 19.3 quiet-window alarms per day asked for an
+explanation. Nothing in it changes a number of the protocol's endpoints.
+
+\paragraph{Unmatched alarms in the two noisiest sequences.} An alarm counts as located
+if the pipeline gave it a P-time location from at least five stations with a 68\%
+radius of at most 20~km, or a pick location from at least three stations with an rms
+of at most 1~s, and as located in the sequence if that location lies within 30~km of
+the sequence's first event. At Epirus (MLh~4.6, 21~March 2023; station AMPL 5~km from
+the epicenter, the other seven 41 to 52~km), 52 of the learned detector's 121
+unmatched alarms locate in the sequence, 43 of them from P and S picks, 5 elsewhere
+and 64 not at all; AMPL takes part in 77. An event located from eight stations at the
+epicenter 8~min before the mainshock is absent from NOA's catalog. At Evia (MLh~5.1,
+3~November 2023; all stations 51 to 77~km away), 25 of 104 locate in the sequence, 23
+from picks, 2 elsewhere and 77 not at all, and the unmatched alarms per half hour rise
+and decay as an aftershock sequence does (15, 21, 28, 17, 15, 8 from 10~min before the
+mainshock). The ISC bulletin lists 9 events in the Evia window and 1 in the Epirus
+window from the Aristotle University network that NOA's catalog lacks, and an
+unmatched alarm of the learned detector follows each within 60~s. At least 86 of the
+225 unmatched alarms are therefore earthquakes missing from the catalog. \stalta{}'s
+114 unmatched alarms in the same two sequences include 22 located in them. The
+unlocated alarms, mostly declared by two stations 40 to 80~km from the source, cannot
+be classified from the reports.
+
+\paragraph{The quiet windows.} Window 14 (central and eastern Crete, 19~November 2025,
+03:20 to 09:20~UTC; stations CHAN, IPPL, KNDR, KNSS, PFKS, STIA, IMMV and SIVA) holds
+51 of the learned detector's 106 Greek quiet alarms. STIA takes part in 49, KNSS in
+35 and CHAN in 18; STIA triggered 162 times and KNSS 102 in the 6~h, and only 16 of
+the window's 312 triggers had an \stalta{} onset in their window, so the signals were
+emergent rather than impulsive. None of the 51 alarms has a pick location, and neither
+EMSC nor the ISC lists an event within 1.5\textdegree{} in the window. \stalta{}
+raised 2 alarms there. Without window 14 the learned detector raised 55 alarms in
+126.5~h, 10.4 per day, against 112, 21.2 per day, for \stalta{} at equal unmatched
+alarms. The protocol leaves out the two stations with the most \stalta{} detections,
+CHAN and PFKS, which does not reach STIA because \stalta{} does not fire on its
+signals.
+
+\noindent Reproduction: \tool{python3 tools/classify\_unmatched.py REPORT LAT LON} of
+the pipeline's repository on the Greek test's reports; the ISC and EMSC listings
+come from their FDSN event services for each replay's span within 2.25\textdegree{}
+of the first event (1.5\textdegree{} of 35.2\textdegree N, 25.0\textdegree E for
+the Crete window).
+
+% ---------------------------------------------------------------------------
+\clearpage
 \section*{References}
 
-The two works cited in this supplement, both also in the references of the main text.
+The three works cited in this supplement, all also in the references of the main text.
 
 \begin{description}\setlength{\itemsep}{2pt}\small
+\item[] Allen, R.V., 1978. Automatic earthquake recognition and timing from single
+  traces. Bulletin of the Seismological Society of America 68(5), 1521--1532.
+  \url{https://doi.org/10.1785/BSSA0680051521}
 \item[] Lomax, A., Satriano, C., Vassallo, M., 2012. Automatic picker developments
   and optimization: FilterPicker---a robust, broadband picker for real-time seismic
   monitoring and earthquake early warning. Seismological Research Letters 83(3),
