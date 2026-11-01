@@ -85,12 +85,12 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
   a timestamped release before testing on three networks: the Greek networks and New
   Zealand's GeoNet, unseen by the learned detector, and the KOERI network, held out in time. The
   learned detector is compared with a short-term average/long-term average
-  (\stalta{}) trigger, FilterPicker, EQTransformer and PhaseNet in the same pipeline. At settings matched to its development unmatched alarms, it detected 150.3 of 177
+  (\stalta{}) trigger, FilterPicker, EQTransformer and PhaseNet in the same pipeline. At its development alarm level, it detected 150.3 of 177
   Greek events after chance correction against 127.9 for \stalta{} (difference 22.4,
   95\% interval 11.7--33.5), though with 371 unmatched alarms against 189, and 84.2 of
   151 New Zealand events against 66.1 (18.1, 7.2--29.5); KOERI's 36 events gave 2.5
   ($-0.5$ to 5.9). Causal PhaseNet was equivalent
-  to it on both unseen networks, so the gain is not specific to our detector. Its
+  to it within a $\pm$10\% margin on both unseen networks, so the gain is not specific to our detector. Its
   catalog-quiet alarm rates did not differ distinguishably from \stalta{}'s (New Zealand
   0.9 against 1.6 per day; Greece 19.3 against 20.7, half from one noisy station), and
   its alarms came 1.2--2.9~s later. The pipeline runs on a Raspberry Pi~4; code and protocol are open.
@@ -103,14 +103,14 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 \begin{highlights}
 \item Self-contained detection pipeline reproduces its PyTorch networks to rounding
 \item Method and baselines fixed in a timestamped release before any test data
-\item 18 and 22 more events than STA/LTA on unseen networks, at twice its alarms on Greece
-\item Quiet-data alarm rates not distinguishable from STA/LTA's; alarms 1.2-2.9 s later
-\item Causal PhaseNet was equivalent to the learned detector on both unseen networks
+\item 18--22 more events than STA/LTA on unseen networks; 2$\times$ unmatched alarms on Greece
+\item Quiet-data alarm rates not distinguishable from STA/LTA's; alarms 1.2--2.9 s later
+\item Causal PhaseNet equivalent to the learned detector within $\pm$10\% on unseen networks
 \end{highlights}
 
 \begin{keywords}
   Earthquake early warning \sep Seismic event detection \sep Deep learning \sep
-  Real-time processing \sep False alarms \sep Replay testing \sep Pre-registration
+  Real-time processing \sep False alarms \sep Replay testing \sep Pre-specified evaluation
 \end{keywords}
 
 \maketitle
@@ -394,9 +394,8 @@ unchanged.
 The pipeline, written in C++23, runs from ingestion to location and magnitude (Figure~\ref{fig:pipeline}). Each station is served by an
 ingestion and a processing thread that feed one network stage through an ordered
 message bus, and the build is one binary and a directory of weights. Records are
-released when the replay clock reaches their last sample, which reproduces the
-arrival order of a live feed, and samples are held in a ring whose positions give
-their times, so that writes do not drop or wait (Section~S2).
+released in the arrival order of a live feed, and a ring buffer whose positions give
+the sample times neither drops nor blocks writes (Section~S2).
 
 Windows are scored on an absolute grid every 0.5~s. Label smoothing makes the
 learned detector's outputs saturate between 0.90 and 0.907, so that a single threshold at
@@ -525,7 +524,9 @@ same protocol at its defaults; it is reported in a companion paper.
 
 \begin{table}
   \centering\small
-  \caption{Detector settings of the tests, selected on the development event replays.}\label{tab:settings}
+  \caption{Detector settings of the tests, selected on the development event replays.
+  Rule 1 matches the learned detector's unmatched alarms, rule 2 its detections and
+  rule 3 its alarms on the quiet windows.}\label{tab:settings}
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{@{}L{4.1cm}cL{5.7cm}rrr@{}}
     \toprule
@@ -631,9 +632,8 @@ The selections were run after the release date, on 30 and 31~October 2026, and e
 set was fetched and verified against its request record (Table~\ref{tab:selected}).
 Greece reached its target with 11 sequences and 178 scorable events, New Zealand with
 13 sequences and 154. KO's two-month pool held three qualifying sequences, two of them
-assigned to this study, with 36 scorable events against a target of 240; as the
-protocol provides, both are used and the KO result is reported as under the target,
-an outcome the protocol anticipated. KO's quiet draws also fell short, 14 windows
+assigned to this study, with 36 scorable events against a target of 240; both are
+used, as the protocol provides. KO's quiet draws also fell short, 14 windows
 against 24. Two Greek stations, ZKR and KOKK, delivered no data in their window, so two
 Greek replays run on 5 and 7 stations. Four of New Zealand's 13 sequences start with
 an event deeper than 170~km.
@@ -693,7 +693,7 @@ single events, as on the development data, widens the intervals to at most $+10.
 $+35.6$ on Greece and $+6.7$ to $+30.0$ on New Zealand, and leaving out any one
 sequence keeps both above zero. New Zealand's largest sequence holds 89 of its 151
 events; without it the difference is $+7.4$ ($+3.2$ to $+12.3$) of 62, the same share
-(Section~S25).
+(Section~S26).
 
 \begin{table}[pos=htbp]
   \centering\scriptsize
@@ -763,7 +763,7 @@ alarms against 9; rate ratio 0.56, 0.15 to 1.85) or Greece (19.3 against 20.7; 0
 0.71 to 1.22), and was lower on KO (9.7 against 20.9; 0.46, 0.29 to 0.72); on Greece and KO the classical settings matched on quiet alarms raised
 1.6 to 3.4 per day and the published models' 4.4 to 12.9. Leaving out each network's
 two stations with the most \stalta{} detections lowers the Greek rates to 12.2 and
-5.8, which reverses their order, and changes no other ordering. The
+5.8 (rate ratio 2.09, 1.35 to 3.30), which reverses their order, and changes no other ordering. The
 rule's neighbors with 6 windows detected 11 to 20 more events than the rule on New
 Zealand and none more than 0.2 more on Greece; those with 10 windows detected fewer on
 both. At least 97\% of the learned detector's alarm detections preceded the predicted
@@ -783,6 +783,9 @@ MLh~5.8 of 29~March 2024 received M5.8 6.5~s after its alarm, and 56 of the 143
 smaller alarmed events received an estimate, biased by $+0.13$. On New Zealand, under
 the same conditions, all 10
 alarmed events of M4 and above received an estimate and 8 of the 77 smaller ones did.
+An estimate needs a station whose Pd exceeds three times its noise; the smaller Greek
+events that received one had a station a median 12~km away, those that did not
+41~km, and New Zealand's smaller events 42~km.
 For the eight MLv~4 to 5.5 events no deeper than 40~km the final estimate has a bias
 of $+0.03$ and a mean absolute error of 0.20, with the size class right at the first
 and the final estimate for all eight; the expected bias of zero terms, about $+0.1$,
@@ -792,18 +795,41 @@ and the M5.0 none. Deeper events are in Section~S22.
 
 \subsection{Latency}\label{sec:latency}
 
-On Greece the learned detector's alarms came a median 12.0~s after origin
-(interquartile range 10.0 to 13.5~s) and \stalta{}'s 10.8~s (9.0 to 12.4~s), and 151
-of 153 detected events had a station still ahead of S at the alarm, by a median 4.5~s
-at the nearest such station against 5.3~s for \stalta{}. On New Zealand the medians
-are 16.0~s (14.5 to 18.5~s) and 14.2~s (13.5 to 17.0~s), the gap seen on the
-development data, and every detected event had a station ahead of S, by a median
-7.7~s against 8.5~s. On KO the medians are 20.8 and 17.9~s, with 3.7 and 7.6~s of
-warning; the \Mw{}~5.3 was declared 21.5~s after origin by the learned detector and
-18.9~s by \stalta{}, 10.2 and 12.9~s before S at the nearest station. These warning
-times include the S arrivals the pipeline picked, which the release's analysis tool
-dropped; as a deviation, reported both ways (Section~S24), its values were 4.8 and
-5.1~s on Greece, 13.0 and 14.7~s on New Zealand, and 5.4 and 7.7~s on KO.
+Table~\ref{tab:latency} gives the alarm delays and warning times. The learned
+detector's alarms came a median 1.2~s (Greece), 1.8~s (New Zealand) and 2.9~s (KO)
+after \stalta{}'s. Warning time uses the S arrival the pipeline
+picked where it has one and the predicted one otherwise. The release's analysis tool
+read only the predicted arrivals, a bug that dropped the stations with a pick, those
+nearest the source, so that its nearest station ahead of S lay farther away (on New
+Zealand a median 105~km instead of 78~km) and its warnings were longer; as the
+protocol's deviation rule requires, the table gives both (Section~S24).
+
+\begin{table}[pos=htbp]
+  \centering\small
+  \caption{Alarm delay after origin and warning before S at the nearest station still
+  ahead of S, for the learned detector and \stalta{} at rule 1.}\label{tab:latency}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & & & \multicolumn{2}{c}{Median warning (s)} \\
+    \cmidrule(lr){5-6}
+    Network & Detector & \makecell{Alarm delay (s),\\median (IQR)} & \makecell{Events with a\\station ahead of S} & Fixed & \makecell{Release's\\tool} \\
+    \midrule
+    Greece & learned & 12.0 (10.0--13.5) & 151 / 153 & 4.5 & 4.8 \\
+    & \stalta{} & 10.8 (9.0--12.4) & 132 / 132 & 5.3 & 5.1 \\
+    New Zealand & learned & 16.0 (14.5--18.5) & 87 / 87 & 7.7 & 13.0 \\
+    & \stalta{} & 14.2 (13.5--17.0) & 69 / 69 & 8.5 & 14.7 \\
+    KO & learned & 20.8 (17.5--23.5) & 16 / 16 & 3.7 & 5.4 \\
+    & \stalta{} & 17.9 (13.1--21.5) & 13 / 13 & 7.6 & 7.7 \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{Events: detected events with a station ahead of S at the alarm, of those
+    detected. Fixed: S picked where the pipeline has a pick, predicted otherwise; release's
+    tool: predicted S only, counting 126 of 130 and 103 of 104 Greek events (Table~S24).
+    KO's \Mw{}~5.3 was declared 21.5~s after origin by the learned detector and 18.9~s by
+    \stalta{}, 10.2 and 12.9~s before S at the nearest station (16.0 and 18.6~s by the
+    release's tool).}
+\end{table}
 
 % ---------------------------------------------------------------------------
 \section{Discussion}\label{sec:discussion}
@@ -825,31 +851,35 @@ zero, as the protocol anticipated; it is evidence of consistency, not a test.
 
 On these data the classical detectors are neither obsolete nor superior. On
 development data the learned detector gained in M2--4 events that an amplitude criterion cannot
-separate from noise, and it kept that sensitivity at a small fraction of the
-classical detectors' alarm rate on quiet data. On New Zealand its rate stayed low,
+separate from noise, and it kept that sensitivity at a quarter of the quiet-data
+alarm rate of \stalta{} at rule 1 (3.74 against 14.7 per day), though \stalta{} at
+rule 3 was quieter still. On New Zealand its rate stayed low,
 0.9 alarms per day, but at 5 alarms against \stalta{}'s 9 not distinguishably lower.
 On Greece and KO it did not stay low: 19.3 and 9.7 per day, while the
 classical baselines matched on quiet alarms stayed near their development rates. An analysis
-outside the protocol, made after the Greek result, separates two causes
-(Section~S25). In the two Greek sequences with the most unmatched alarms, 77 of the
-learned detector's 225 locate within 30~km of the mainshock,
-and 7 others follow within 60~s events listed by the Aristotle University network but
-absent from NOA's catalog, so at least 84 are uncataloged aftershocks; 135 could not
-be located. On the quiet windows, one 6~h window in Crete holds 51 of the learned
+outside the protocol, made after the Greek result, separates the causes
+(Section~S25). In the two Greek sequences with the most unmatched alarms, the learned
+detector's 225 divide into 77 that locate within 30~km of the mainshock, 7 that follow
+within 60~s events missing from NOA's catalog, 135 that could not be located and 6
+located elsewhere. Causal PhaseNet, at the same development operating point and with
+equivalent detections, raised 115 there, 53 located in the sequences: of the learned
+detector's excess, 24 locate in the sequences and 84 cannot be located, at Evia
+mostly with one station. On the quiet windows, one 6~h window in Crete holds 51 of the learned
 detector's 106 Greek alarms, nearly all with station STIA, on emergent signals that no
 catalog explains; \stalta{} did not fire
 on them, so the protocol's exclusion of the two stations noisiest for \stalta{} did
 not remove them. Without that window the learned detector raised 10.4 alarms per day
-against 21.2. The learned detector is thus more sensitive both to small earthquakes
-missing from the catalogs and to a kind of emergent station noise that \stalta{}
-ignores, and an unmatched or quiet-window alarm count does not separate the two.
+against 21.2, with that exclusion 12.2 against 5.8. The learned detector thus finds a
+few more small uncataloged earthquakes than the other detectors, but most of its
+excess alarms on Greece are station responses that \stalta{} and PhaseNet do not
+share, and an unmatched or quiet-window alarm count does not separate the two.
 \stalta{} alarmed earlier at the median on every network, by 1.2~s on Greece, 1.8~s
 on New Zealand and 2.9~s on KO, since a window detector can trigger only once the P
 wave occupies part of its 6~s window; for early warning this is a real cost. Classical
 triggers also cost orders of magnitude less and time the onset to a sample, which is
 what the pipeline uses them for. Causal PhaseNet, trained on Italian data, was
-equivalent to the learned detector on both unseen networks, and on Greece it raised
-fewer unmatched alarms (229 against 371) and quiet alarms (12.9 against 19.3 per day).
+equivalent to the learned detector on both unseen networks, with fewer alarms on
+Greece.
 The gain over \stalta{} is therefore that of learned detectors generally, not of this
 one; what this study adds is a pipeline that runs such a detector, with 142\,059
 parameters per ensemble member and no machine-learning runtime, and a protocol that
@@ -892,7 +922,8 @@ detector had not seen, it found 22.4 (Greece) and 18.1 (New Zealand) more
 chance-corrected events than \stalta{} at the settings matched on development data,
 with 95\% intervals 11.7--33.5 and 7.2--29.5. On Greece this came at twice
 \stalta{}'s unmatched alarms, on both networks at quiet-data alarm rates not
-distinguishable from \stalta{}'s and with alarms 1.2 to 1.8~s later; on KO, held out in
+distinguishable from \stalta{}'s, though on Greece the comparison turns on which
+stations are included, and with alarms 1.2 to 1.8~s later; on KO, held out in
 time and under its target, the difference was 2.5, with an interval including zero.
 Causal PhaseNet was equivalent to the learned detector on both unseen networks, so the
 gain is that of learned detectors over an amplitude trigger. At one development

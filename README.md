@@ -25,7 +25,7 @@ make clean       # remove intermediate files
 | file | content |
 |---|---|
 | `paper.tex`, `refs.bib` | manuscript and references |
-| `supplement.tex` | supplementary material, Sections S1–S25 (each table numbered after its section) |
+| `supplement.tex` | supplementary material, Sections S1–S26 (each table numbered after its section) |
 | `cover_text.tex`, `cover_letter.tex` | cover letter text (included by `paper.tex`) and a standalone cover letter |
 | `figures/` | figures of the manuscript, with the CSV files their plots are drawn from; `figures/supp/` holds the supplement's figures |
 | `cas-sc.cls`, `cas-common.sty`, `cas-model2-names.bst`, `thumbnails/` | the journal's LaTeX template files, copied unchanged from https://github.com/cageo/CAGEO_LaTeXTemplate (commit 965ebcc; Elsevier CAS bundle, LaTeX Project Public License) |

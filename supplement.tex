@@ -1930,9 +1930,9 @@ stations is empty; the training-split result is the KO result above.
 
 % ---------------------------------------------------------------------------
 \clearpage
-\section{Exploratory: the Greek unmatched and quiet-window alarms, and clustering within sequences}\label{s:exploratory}
+\section{Exploratory: the Greek unmatched and quiet-window alarms}\label{s:exploratory}
 
-These analyses are outside the protocol. The first was made after the Greek result, when the
+This analysis is outside the protocol. It was made after the Greek result, when the
 learned detector's 371 unmatched alarms (against 189 for \stalta{} at the setting
 matched on the development data) and its 19.3 quiet-window alarms per day asked for an
 explanation. Nothing in it changes a number of the protocol's endpoints.
@@ -1953,11 +1953,47 @@ mainshock). The ISC bulletin lists 9 events in the Evia window and 1 in the Epir
 window from the Aristotle University network that NOA's catalog lacks, and an
 unmatched alarm of the learned detector follows each within 60~s. Four of the alarms
 that follow them are among those located in the sequences, and 7 are not (6 unlocated,
-1 located elsewhere). At least 84 of the 225 unmatched alarms (77 located and these
-7) are therefore earthquakes missing from the catalog, and 135 remain unlocated. \stalta{}'s
-114 unmatched alarms in the same two sequences include 22 located in them. The
-unlocated alarms, mostly declared by two stations 40 to 80~km from the source, cannot
-be classified from the reports.
+1 located elsewhere). The 225 unmatched alarms therefore divide into 77 located in
+the sequences, 7 others following an event missing from NOA's catalog, 135 other
+unlocated alarms and 6 others located elsewhere; at least 84 (the first two groups)
+are earthquakes missing from the catalog. The unlocated alarms, mostly declared by two
+stations 40 to 80~km from the source, cannot be classified from the reports.
+
+\paragraph{The same classification for the other detectors.} If the learned
+detector's excess of unmatched alarms were mostly sensitivity to small earthquakes,
+an equally sensitive detector would share it. Causal PhaseNet at rule 1 had the same
+development operating point (52 unmatched alarms) and detected as many of the Greek
+cataloged events (Table~5 of the main text). Table~\ref{t:control} classifies the
+unmatched alarms of the three detectors in the two sequences by the same rule. Of the
+learned detector's 110 unmatched alarms beyond causal PhaseNet's, 24 locate in the
+sequences and 84 cannot be located; at Evia station VILL takes part in 50 of the
+learned detector's unmatched alarms and in 5 of PhaseNet's, and in 38 of its 77
+unlocated ones against 3 of PhaseNet's 20. Of the 9 Evia events
+missing from NOA's catalog, the learned detector alarmed after 9, \stalta{} after 6 and
+causal PhaseNet after 5. The learned detector thus finds a few more of the small
+uncataloged events than the other two, but most of its excess over PhaseNet consists
+of alarms that cannot be located and that PhaseNet, at equal detections of cataloged
+events, does not raise.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{Unmatched alarms of three detectors (rule 1) in the Epirus and Evia
+  sequences, by where they locate.}\label{t:control}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lccccc@{}}
+    \toprule
+    Detector & Unmatched & In the sequence & Unlocated & Elsewhere & \makecell{After the 9 Evia events\\missing from NOA's catalog} \\
+    \midrule
+    Learned & 225 (121 + 104) & 77 (52 + 25) & 141 (64 + 77) & 7 & 9 \\
+    Causal PhaseNet & 115 (82 + 33) & 53 (42 + 11) & 57 (37 + 20) & 5 & 5 \\
+    \stalta{} & 114 (54 + 60) & 22 (14 + 8) & 90 (40 + 50) & 2 & 6 \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{In parentheses, Epirus + Evia. Located in the sequence: within 30~km of
+    NOA's epicenter of the sequence's first event (38.963\textdegree N,
+    21.208\textdegree E at Epirus; 38.738\textdegree N, 23.581\textdegree E at Evia),
+    by the rule above. Last column: an unmatched alarm within 60~s after the event.}
+\end{table}
 
 \paragraph{The quiet windows.} Window 14 (central and eastern Crete, 19~November 2025,
 03:20 to 09:20~UTC; stations CHAN, IPPL, KNDR, KNSS, PFKS, STIA, IMMV and SIVA) holds
@@ -1979,7 +2015,9 @@ of the first event (1.5\textdegree{} of 35.2\textdegree N, 25.0\textdegree E for
 the Crete window).
 
 % ---------------------------------------------------------------------------
-\paragraph{Clustering within sequences.} The protocol's bootstrap resamples events
+\section{Exploratory: clustering within sequences}\label{s:clustering}
+
+This analysis is outside the protocol. The protocol's bootstrap resamples events
 within each sequence, and the exact McNemar test treats events as independent, but
 the events of an aftershock sequence share stations, noise and the 40~s coda
 absorption, and a few sequences hold most of the events: New Zealand's sequence 004
