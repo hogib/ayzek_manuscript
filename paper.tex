@@ -121,20 +121,66 @@ Technical University, Davutpa\c{s}a Campus, 34220 Esenler, \.Istanbul, T\"urkiye
 % ---------------------------------------------------------------------------
 \section{Introduction}\label{sec:intro}
 
-Earthquake early warning (EEW) systems run a detector continuously on every station,
-and the P travel time to the stations needed to declare an event bounds the warning
-they can give \citep{allen2009}. Over hours without seismicity, the detector's false
-alarms accumulate. Learned detectors, however, are typically evaluated on curated windows
-with balanced classes, where a metric such as the area under the receiver operating
-characteristic curve (ROC-AUC) says little about the false-alarm rate at the
-operating point. When a detector is evaluated on continuous records, it and its
-baselines are usually tuned on records from the same network and period.
+Earthquake early warning (EEW) systems detect an earthquake from the first seconds
+of P waves and alert sites before the strong shaking reaches them. Public systems
+share a design: a telemetered network, a pipeline that detects and characterizes the
+event, and an alert policy. Japan's nationwide system has run since 2007 on
+point-source estimates from the stations nearest the hypocenter \citep{hoshiba2008},
+joined in 2018 by PLUM, which propagates observed shaking instead of a source
+\citep{kodera2020}. Taiwan's system reports an event within 20~s from a strong-motion
+network \citep{hsiao2009} densified by low-cost MEMS sensors \citep{wu2013}.
+ShakeAlert's EPIC and FinDer were tested on a replay platform before public rollout
+\citep{kohler2018,cochran2018,chung2019,kohler2020}; Mexico's SASMEX has alerted for
+thirty years \citep{suarez2022}; Israel's TRUAA \citep{nof2021} and Istanbul's
+threshold-based system \citep{alcik2009} are regional examples. In each, a detector
+runs continuously on every station, and the P travel time to the stations needed to
+declare an event bounds the warning the system can give \citep{allen2009}.
+
+In Europe, PRESTo \citep{zollo2009} is a free regional platform, tested on Greek
+Ionian stations \citep{bracale2021}, and the Virtual Seismologist and FinDer run as
+modules of the SeisComP monitoring framework \citep{behr2016,massin2021,porras2021};
+EPIC has been replayed on Turkish data \citep{tunc2024,marcou2025,budakoglu2026}.
+\citet{meier2020} ran PLUM, EPIC and FinDer on 219 Japanese earthquakes with common
+scoring, the closest precedent to the replay comparisons of this study. Low-cost
+designs move processing toward the sensor, from fixed smartphones with a cloud back
+end \citep{brooks2021} to PLUM on Raspberry Shake nodes \citep{prasanna2022};
+deep-learning workflows such as QuakeFlow \citep{zhu2023} and single-station models
+such as CREIME \citep{chakraborty2022} run under Python runtimes, offline or in the
+cloud. All of these detect with amplitude or picker triggers, or with learned models
+that need a runtime, inside a hosting framework.
+
+Classical triggers such as the ratio of short- to long-term averages
+\citep{allen1978,withers1998} and multi-band pickers such as FilterPicker
+\citep{lomax2012} are inexpensive and time an onset to the sample, but an amplitude
+criterion sensitive enough for small earthquakes also fires on impulsive cultural and
+instrumental transients. Deep networks trained to detect earthquakes
+\citep{perol2018,ross2018,mousavi2019cred} and to pick phases
+\citep{zhu2019,mousavi2020eqt} are mostly evaluated on curated windows with balanced
+classes, as the standardized datasets \citep{mousavi2019stead} and model collections
+\citep{woollam2022} encourage, although learned pickers do run on continuous data
+\citep{mousavi2020eqt,yeck2021} and transfer well between regions at similar
+distances \citep{munchmeyer2022}.
+
+Curated windows hide the cost that matters in operation: over hours without
+seismicity, a detector's false alarms accumulate. On balanced windows, a metric such
+as the area under the receiver operating characteristic curve (ROC-AUC) says little
+about the false-alarm rate at the operating point. ROC-AUC is insensitive to class
+prevalence \citep{fawcett2006}, which precision--recall analysis
+\citep{davis2006,saito2015} and partial areas at low false positive rates
+\citep{mcclish1989} address; in seismic detection the operating region is extreme,
+one window false alarm per day among 172\,800 decisions per station and day being a
+false positive rate below $10^{-5}$. When a detector is evaluated on continuous
+records, it and its baselines are usually tuned on records from the same network and
+period. Comparisons of detectors at a fixed alarm budget on continuous records remain
+rare, and rarer still with false alarms measured on catalog-quiet data.
 
 The computational contribution of this study is twofold. The first is ayzek, a
 lightweight, self-contained pipeline from miniSEED decoding to the network
 alarm and a first magnitude, with hand-written inference and no machine-learning
 runtime, verified against its PyTorch models, deterministic in replay, and running
-unchanged on a Raspberry Pi~4. The second is a replay protocol,
+unchanged on a Raspberry Pi~4. Unlike the systems above, its station stage is a
+learned detector in one binary that runs on a single-board computer, without a
+hosting framework. The second is a replay protocol,
 implemented as a reproducible workflow, that measures detection at the operating
 point. Chance matches with the catalog are corrected by shifting the catalog in time,
 only the stations that raised an alarm are matched, detectors are compared with
@@ -155,55 +201,6 @@ than a warning that an operational system could issue, and all results come from
 replays of archived data. The study asks whether the advantage of a learned detector
 over classical triggers, measured on development data, survives on networks it has
 not seen, at equal false-alarm rates.
-
-% ---------------------------------------------------------------------------
-\section{Background}\label{sec:lit}
-
-Public EEW systems share a design: a telemetered network, a pipeline that detects
-and characterizes the event from the first seconds of P waves, and an alert policy.
-Japan's nationwide system has run since 2007 on point-source estimates from the
-stations nearest the hypocenter \citep{hoshiba2008}, joined in 2018 by PLUM, which
-propagates observed shaking instead of a source \citep{kodera2020}. Taiwan's system reports an
-event within 20~s from a strong-motion network \citep{hsiao2009} densified by
-low-cost MEMS sensors \citep{wu2013}.
-ShakeAlert's EPIC and FinDer were tested on a replay platform before public rollout
-\citep{kohler2018,cochran2018,chung2019,kohler2020}; Mexico's SASMEX has alerted for
-thirty years \citep{suarez2022}; Israel's TRUAA \citep{nof2021} and Istanbul's
-threshold-based system \citep{alcik2009} are regional examples. In Europe, PRESTo
-\citep{zollo2009} is a free regional platform, tested on Greek Ionian stations
-\citep{bracale2021}, and the Virtual Seismologist and FinDer run as modules of the
-SeisComP monitoring framework \citep{behr2016,massin2021,porras2021}; EPIC has been
-replayed on Turkish data \citep{tunc2024,marcou2025,budakoglu2026}. \citet{meier2020}
-ran PLUM, EPIC and FinDer on 219 Japanese earthquakes with common scoring, the
-closest precedent to the replay comparisons of this study. Low-cost designs move processing
-toward the sensor, from fixed smartphones with a cloud back end \citep{brooks2021} to
-PLUM on Raspberry Shake nodes \citep{prasanna2022}; deep-learning workflows such as
-QuakeFlow \citep{zhu2023} and single-station models such as CREIME
-\citep{chakraborty2022} run under Python runtimes, offline or in the cloud. All of
-these detect with amplitude or picker triggers, or with learned models that need a
-runtime, inside a hosting framework. The pipeline of this study differs in
-both respects: the station stage is a learned detector with hand-written inference in one
-binary that runs on a single-board computer, and the whole pipeline, with its
-classical and published baselines, is evaluated by replay of continuous records.
-
-Classical triggers such as the ratio of short- to long-term averages
-\citep{allen1978,withers1998} and multi-band pickers such as FilterPicker
-\citep{lomax2012} are inexpensive and time an onset to the sample, but an amplitude
-criterion sensitive enough for small earthquakes also fires on impulsive cultural and
-instrumental transients. Deep networks trained to detect earthquakes
-\citep{perol2018,ross2018,mousavi2019cred} and to pick phases
-\citep{zhu2019,mousavi2020eqt} are mostly evaluated on curated windows, as the
-standardized datasets \citep{mousavi2019stead} and model collections
-\citep{woollam2022} encourage, although learned pickers do run on continuous data
-\citep{mousavi2020eqt,yeck2021} and transfer well between regions at similar
-distances \citep{munchmeyer2022}. Comparisons of detectors at a fixed alarm budget on
-continuous records remain rare, and rarer still with false alarms measured on
-catalog-quiet data. ROC-AUC is
-insensitive to class prevalence \citep{fawcett2006}, which precision--recall analysis
-\citep{davis2006,saito2015} and partial areas at low false positive rates
-\citep{mcclish1989} address; in seismic detection the operating region is extreme,
-one window false alarm per day among 172\,800 decisions per station and day being a
-false positive rate below $10^{-5}$.
 
 % ---------------------------------------------------------------------------
 \section{Material and methods}\label{sec:methods}
