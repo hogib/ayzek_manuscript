@@ -17,6 +17,8 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
+% Commands in \tool{} keep their spaces (url drops them by default).
+\PassOptionsToPackage{obeyspaces}{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{tocloft}
@@ -39,7 +41,10 @@
 \setlength{\emergencystretch}{1.5em}
 \renewcommand{\arraystretch}{1.15}
 \renewcommand{\thesection}{S\arabic{section}}
-\renewcommand{\thetable}{S\arabic{table}}
+% One table per section at most: a table takes its section's number, so that
+% Table Sn is always in Section Sn.
+\renewcommand{\thetable}{S\arabic{section}}
+\renewcommand{\thefigure}{S\arabic{figure}}
 % One table per section, so that Table Sn belongs to Section Sn.
 \newcommand{\panel}[1]{\par\smallskip\noindent\textbf{(#1)}\enskip}
 
@@ -50,8 +55,8 @@
 \renewcommand{\thepage}{S\arabic{page}}
 
 \title{Supplementary material for\\[4pt]
-  \large A Lightweight Earthquake Early Warning Pipeline and Its Evaluation on Three
-Seismic Networks}
+  \large A Lightweight Detection Pipeline for Earthquake Early Warning and Its
+  Evaluation on Three Seismic Networks}
 \author{H. O\u{g}uz Bolat, Sibel \c{C}imen, B\"ulent Bolat, T\"ulay Y\i{}ld\i{}r\i{}m}
 
 \date{1 November 2026}
@@ -1674,9 +1679,7 @@ conditional 95\% interval of the two Poisson counts
 detections at equal unmatched alarms left out for every detector alike
 (\tool{tools/quiet_without_stations.py}): on New Zealand, WHSZ and CVZ, the learned
 detector 3 alarms (0.55 per day) and \stalta{} at equal unmatched alarms 8 (1.45);
-on KO, GAZ and SVRC, 27 (8.42) and 18 (5.61); on Greece, CHAN and PFKS, 67 (12.18) and 32 (5.82). The transformer
-detector of the companion paper, run under the same protocol, raised 24 alarms on
-Greece (4.36 per day), 17 on New Zealand (3.09) and 11 on KO (3.43). Events deeper than 40~km with a Pd
+on KO, GAZ and SVRC, 27 (8.42) and 18 (5.61); on Greece, CHAN and PFKS, 67 (12.18) and 32 (5.82). Events deeper than 40~km with a Pd
 estimate (main-text Section~4.5): on New Zealand, one MLv~4 to 5.5 event, final
 error $-0.3$ for the learned detector, and one smaller event, $+1.1$.
 
@@ -1798,7 +1801,42 @@ with origin from 30~s after the replay's start to 30~s before its end.
 
 \paragraph{Deviations.} A bug found after the test data are fetched is fixed and the
 results reported both ways, labeled as a deviation; nothing is retuned on test data.
-None was found in the three runs. The one tooling fault, an out-of-date build of \tool{tools/network\_subsets} that stopped KO's analysis stage before it wrote any output, changed no number (Table~\ref{t:prereg}).
+One was found after the three runs, in the analysis tool and not in the pipeline.
+Each report lists, for the stations of a detected event, the S arrival and the warning
+before it, the S arrival picked where the pipeline's picker has a pick and predicted
+otherwise. The tool of the release read only the predicted rows, so the warning-time
+endpoint (x) left out the stations with a pick, those nearest the source, and on
+Greece 23 of the learned detector's 153 detected events, every station of which had a
+pick. The fix (commit 87e692c of the pipeline's repository) reads both kinds of row.
+Rerun on the same reports, the analysis stage reproduces every other output file byte
+for byte; Table~\ref{t:warning} gives the endpoint both ways. The one tooling fault, an out-of-date build of \tool{tools/network\_subsets} that stopped KO's analysis stage before it wrote any output, changed no number (Table~\ref{t:prereg}).
+
+\begin{table}[htbp]
+  \centering\small
+  \caption{Warning time before S at the alarm (endpoint x): events with a station still
+  ahead of S out of the detected events with a warning row, and the median warning at
+  the nearest such station, as computed by the release's tool (predicted S only) and
+  after the fix (picked and predicted S).}\label{t:warning}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    & & \multicolumn{2}{c}{Release's tool} & \multicolumn{2}{c}{Fixed} \\
+    \cmidrule(lr){3-4}\cmidrule(lr){5-6}
+    Network & Detector & Events ahead & Median (s) & Events ahead & Median (s) \\
+    \midrule
+    Greece & learned & 126 / 130 & 4.8 & 151 / 153 & 4.5 \\
+    & \stalta{}, rule 1 & 103 / 104 & 5.1 & 132 / 132 & 5.3 \\
+    New Zealand & learned & 83 / 83 & 13.0 & 87 / 87 & 7.7 \\
+    & \stalta{}, rule 1 & 64 / 64 & 14.7 & 69 / 69 & 8.5 \\
+    KO & learned & 16 / 16 & 5.4 & 16 / 16 & 3.7 \\
+    & \stalta{}, rule 1 & 13 / 13 & 7.7 & 13 / 13 & 7.6 \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{KO's \Mw{}~5.3: 16.0 and 18.6~s at AKDG (131~km, predicted S) before the
+    fix, 10.2 and 12.9~s at MLTY (107~km, picked S) after it. Alarm delays after origin
+    do not use these rows and are unchanged. Reproduction: \tool{tools/run\_heldout.py
+    --stages analysis} at 87e692c on the release-time reports.}
+\end{table}
 
 \paragraph{Prospective tests.} New Zealand and KO, on data recorded from the release
 date on: every qualifying sequence in time order with no reserve split, until the
@@ -1885,9 +1923,9 @@ stations is empty; the training-split result is the KO result above.
 
 % ---------------------------------------------------------------------------
 \clearpage
-\section{Exploratory: the Greek unmatched and quiet-window alarms}\label{s:exploratory}
+\section{Exploratory: the Greek unmatched and quiet-window alarms, and clustering within sequences}\label{s:exploratory}
 
-This analysis is outside the protocol. It was made after the Greek result, when the
+These analyses are outside the protocol. The first was made after the Greek result, when the
 learned detector's 371 unmatched alarms (against 189 for \stalta{} at the setting
 matched on the development data) and its 19.3 quiet-window alarms per day asked for an
 explanation. Nothing in it changes a number of the protocol's endpoints.
@@ -1906,8 +1944,10 @@ from picks, 2 elsewhere and 77 not at all, and the unmatched alarms per half hou
 and decay as an aftershock sequence does (15, 21, 28, 17, 15, 8 from 10~min before the
 mainshock). The ISC bulletin lists 9 events in the Evia window and 1 in the Epirus
 window from the Aristotle University network that NOA's catalog lacks, and an
-unmatched alarm of the learned detector follows each within 60~s. At least 86 of the
-225 unmatched alarms are therefore earthquakes missing from the catalog. \stalta{}'s
+unmatched alarm of the learned detector follows each within 60~s. Four of the alarms
+that follow them are among those located in the sequences, and 7 are not (6 unlocated,
+1 located elsewhere). At least 84 of the 225 unmatched alarms (77 located and these
+7) are therefore earthquakes missing from the catalog, and 135 remain unlocated. \stalta{}'s
 114 unmatched alarms in the same two sequences include 22 located in them. The
 unlocated alarms, mostly declared by two stations 40 to 80~km from the source, cannot
 be classified from the reports.
@@ -1932,6 +1972,43 @@ of the first event (1.5\textdegree{} of 35.2\textdegree N, 25.0\textdegree E for
 the Crete window).
 
 % ---------------------------------------------------------------------------
+\paragraph{Clustering within sequences.} The protocol's bootstrap resamples events
+within each sequence, and the exact McNemar test treats events as independent, but
+the events of an aftershock sequence share stations, noise and the 40~s coda
+absorption, and a few sequences hold most of the events: New Zealand's sequence 004
+holds 89 of its 151 scored events, and Greece's 002, 020 and 014 hold half of its 177.
+Table~\ref{t:clustering} gives the primary comparison with blocks of 10 and 15~min of
+origin time resampled whole, as on the development data (Section~\ref{s:devresults}),
+and with each sequence left out in turn.
+
+\begin{table}[htbp]
+  \centering\footnotesize
+  \caption{The primary comparison (learned detector against \stalta{} at rule 1) under
+  clustering: the difference in chance-corrected detections and its 95\% bootstrap
+  interval.}\label{t:clustering}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lcccccc@{}}
+    \toprule
+    & & & \multicolumn{2}{c}{Blocks resampled} & \multicolumn{2}{c}{One sequence left out} \\
+    \cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Network & Events & Events resampled & 10 min & 15 min & Difference & Lowest bound \\
+    \midrule
+    Greece & 177 & $+22.4$ ($+11.7$, $+33.5$) & ($+11.0$, $+34.3$) & ($+10.1$, $+35.6$) & $+15.7$ to $+23.5$ & $+6.6$ \\
+    New Zealand & 151 & $+18.1$ ($+7.2$, $+29.5$) & ($+7.6$, $+28.6$) & ($+6.7$, $+30.0$) & $+7.4$ to $+18.1$ & $+3.2$ \\
+    KO & 36 & $+2.5$ ($-0.5$, $+5.9$) & ($-0.4$, $+5.8$) & ($-0.4$, $+5.8$) & $0.0$ to $+2.5$ & $-0.5$ \\
+    \bottomrule
+  \end{tabular}
+  \tablenote{Greece's lowest difference is without sequence 002 (137 events left), its
+  lowest bound without 014. New Zealand's lowest difference and bound are without
+  sequence 004: $+7.4$ ($+3.2$, $+12.3$) of 62 events, 12\% of them as with all 151;
+  without any other sequence its difference is $+16.0$ to $+18.1$, the lowest bound
+  $+5.1$. KO without its sequence 002 keeps 7 events.}
+\end{table}
+
+\noindent Reproduction: \tool{python3 tools/significance.py} on the test's outcome
+tables with \tool{--against stalta\_eqfa}, adding \tool{--block-minutes 10} or
+\tool{15}, or with one sequence removed from \tool{--groups}.
+
 \clearpage
 \section*{References}
 
