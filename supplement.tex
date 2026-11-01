@@ -45,7 +45,6 @@
 % Table Sn is always in Section Sn.
 \renewcommand{\thetable}{S\arabic{section}}
 \renewcommand{\thefigure}{S\arabic{figure}}
-% One table per section, so that Table Sn belongs to Section Sn.
 \newcommand{\panel}[1]{\par\smallskip\noindent\textbf{(#1)}\enskip}
 
 \pagestyle{fancy}
@@ -69,10 +68,10 @@
 evaluation code, and the command is named with each table. The AFAD waveforms
 cannot be redistributed; the KOERI datasets are attached to the pipeline's
 releases. Sections~\ref{s:stations} to~\ref{s:training} concern the development
-data, on which every choice of the method was made (main-text Section~3.1); the
+data, on which every choice of the method was made (main-text Section~2.1); the
 AFAD S\i{}nd\i{}rg\i{} \Mw{}~6.1 and Simav sequences, called "held out" in the
 development record, are development data under the test protocol.
-Sections~\ref{s:devresults} to~\ref{s:depth40} hold the development results in
+Sections~\ref{s:devresults} to~\ref{s:clustering} hold the development results in
 full, the selected test sets and the test results that the main text summarizes.
 
 \tableofcontents
@@ -320,7 +319,7 @@ the Raspberry~Pi~4 (Cortex-A72, 4 cores at 1.8~GHz) runs the static aarch64
 build with NEON kernels, each group starting below 55~\textdegree C with the
 clock held at 1.8~GHz throughout. A station needs one window every 0.5~s; the
 capacity is the stations whose windows one to all cores sustain. The published
-models of main-text Section~3.2 were timed separately under PyTorch, one forward
+models of main-text Section~2.2 were timed separately under PyTorch, one forward
 pass per 0.5~s step and station as the evaluation ran them.
 
 \begin{table}[htbp]
@@ -695,7 +694,7 @@ the picks whether or not the picks lie on seismic arrivals; for an alarm without
 seismic source they have no physical meaning.
 
 \paragraph{Sensitivity analyses.} Two analyses, specified before they were run
-(Table~S13), test how conservative the classification is. Applied to
+(Table~\ref{t:prereg}), test how conservative the classification is. Applied to
 every pair of stations associated with an alarm (the declaring stations and any
   station whose detection is compatible with theirs under the pipeline's association
 rule) rather than to the first two declaring stations, the rule also confirms alarm~1 in three of its four runs, through the BAND--CMH pair, as a local event that coincided with KIRK's pulse. It confirms no other pulse alarm and leaves alarms 4,
@@ -1117,7 +1116,7 @@ centered modes, the input was made to end 1 or 2~s after the window (EQTransform
 and PhaseNet, INSTANCE weights), a live system then scoring each window that much
 later. The protocol, the grid and the two rules are those of Section~\ref{s:seisbench},
 committed before any of these scores existed; the settings were selected on the
-tuning replays and committed before the one evaluation run (Table~S13). Alarm times include the look-ahead.
+tuning replays and committed before the one evaluation run (Table~\ref{t:prereg}). Alarm times include the look-ahead.
 
 \begin{table}[htbp]
   \centering\scriptsize\setlength{\tabcolsep}{2.5pt}
@@ -1603,7 +1602,7 @@ travel time to the second-nearest station by a median of 2.05~s (interquartile r
 \section{The selected test sets}\label{s:selected}
 
 \tool{heldout select} of the held-out repository applied the rules of
-main-text Section~3.1 to each pool after the release and wrote
+main-text Section~2.1 to each pool after the release and wrote
 \tool{selection.json}: every qualifying sequence with its coin, stations and scorable
 count, the stopping point and every quiet pass. Table~\ref{t:selected} lists the
 selected sequences; the quiet windows (24 for Greece and New Zealand, 14 for KO) are
@@ -1687,7 +1686,7 @@ detections at equal unmatched alarms left out for every detector alike
 (\tool{tools/quiet_without_stations.py}): on New Zealand, WHSZ and CVZ, the learned
 detector 3 alarms (0.55 per day) and \stalta{} at equal unmatched alarms 8 (1.45);
 on KO, GAZ and SVRC, 27 (8.42) and 18 (5.61); on Greece, CHAN and PFKS, 67 (12.18) and 32 (5.82). Events deeper than 40~km with a Pd
-estimate (main-text Section~4.5): on New Zealand, one MLv~4 to 5.5 event, final
+estimate (main-text Section~3.5): on New Zealand, one MLv~4 to 5.5 event, final
 error $-0.3$ for the learned detector, and one smaller event, $+1.1$.
 
 \begin{table}[htbp]
@@ -1858,7 +1857,7 @@ endpoints are those of the retrospective tests. The archive delivers the post-re
 data intact, so the test replays them; a live SeedLink run, if made, is reported
 apart.
 
-\paragraph{The secondary endpoints in full.} Main-text Section~4.4 condenses the
+\paragraph{The secondary endpoints in full.} Main-text Section~3.4 condenses the
 following, written from \tool{analysis/significance.txt}, \tool{quiet.txt},
 \tool{quiet\_without\_stations.txt}, \tool{neighbours.txt},
 \tool{significance\_pre\_s.txt} and \tool{station\_split.txt} of each run.
